@@ -1,0 +1,16 @@
+[VERSION 0.3, SPEED 9, PROFILE pmmini_profile.json]
+
+:CORE0
+	mov $4, 0
+	mov $5, 1
+	mov $6, 2
+	mov $7, 3
+	#regs
+	add reg[0], reg[1]
+	sub reg[2], reg[3]
+	mov reg[1], ram[0]
+	mov $0xFF, reg[1]
+	xor reg[1], reg[2]
+	mov ram[0], reg[1]
+	#ram
+	#regs
