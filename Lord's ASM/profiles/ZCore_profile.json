@@ -669,6 +669,57 @@
                     }
                 ]
             },
+            
+            "jump less const":{
+                "name":"jl",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_less_const_reg",
+
+                "description":"Jump to adress if value is less to register",
+                "example":"jl {}, reg[{}], {}",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"const",
+                        "description":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "description":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            "jump less reg":{
+                "name":"jl",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_less_reg_reg",
+
+                "description":"Jump to adress if register is less to other register",
+                "example":"jl reg[{}], reg[{}], {}",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"reg",
+                        "description":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "description":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
 
             "jump not equal const":{
                 "name":"jne",

@@ -11,7 +11,7 @@ def load_program(path : str, definitions: list = []):
     Program = []
     Settings = []
     with open(path,"r") as file:
-        for line in file:
+        for i, line in enumerate(file):
             if line[0] == '[' and line[-2] == ']':
                 Settings = {a:b for a,b in [x.strip(" ").split(" ") for x in line[1:-2].split(",")]}
             else:

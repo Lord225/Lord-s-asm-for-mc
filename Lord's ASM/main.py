@@ -236,14 +236,13 @@ def main():
     #                INTERPRETING                   #
     #################################################
 
+    for i in range(0, 16):
+        DEVICE.RAM[i] = rnd.randint(0,15)
 
     while True:
         for active in actives:
             core_id = loading.CORE_ID_MAP[active]
-            for i in range(0, 16):
-                DEVICE.RAM[i] = rnd.randint(0,15)
-
-
+            
             #GET AND EXECUTE COMMAND            
             if ACTION == "build":
                 try:

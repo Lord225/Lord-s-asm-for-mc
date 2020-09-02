@@ -262,7 +262,7 @@ def execute_debug_command(device, target_core:int, debug_cmd:str):
             print("CPU hit breakpoint")
             input()
         elif debug_cmd == "ram":
-            print("Ram =", generate_ram_display(device.RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "dec", ADD_ASCII_VIEW = True))
+            print("Ram =", generate_ram_display(device.RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "dec", ADD_ASCII_VIEW = False))
         elif debug_cmd == "ramslice":
             raise error.CurrentlyUnsupported("ramslice")
             print("Ram =",device.RAM)
@@ -418,7 +418,8 @@ def args_equal(args1, args2, TypesOnly = False):
 
 def form_full_log_command(_type, formed_command, device, target_core, args, jump_adress):
     """Will create standarised, redable command line with fancy synax and only with dec number representation"""
-
+    if _type == "debug":
+        return ""
     fancy_command = "Core[{}]: ".format(target_core)
     fancy_command = COMMANDSETFULL[formed_command]["name"]
     fancy_command += " "
