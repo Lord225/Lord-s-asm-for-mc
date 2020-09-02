@@ -17,10 +17,10 @@ help="""Name of file to proces
 Default: Program.lor
 """)
 
-parser.add_argument("-a", "--action", choices=["build", "compile", "refactor", "interprate", "everything"], type=str, default="compile",
+parser.add_argument("-a", "--action", choices=["build", "compile", "refactor", "interprate", "everything"], type=str, default="build",
 help="""What script is supposed to do with file 
 > build      - Build source and execute 
-> compile     - Build source and save as binary to outfile
+> compile    - Build source and save as binary to outfile
 > refactor   - Build source and save as redable commands
 > interprate - Execute without building (interpretate command in runtime)
 > everything - Build source, execute, save as binary and as refactored asm
@@ -38,7 +38,7 @@ Default: None
 """)
 parser.add_argument("-i", "--info", choices=["warnings", "errors", "both", "None"], type=str, default="None",
 help="""Choose CPU warning level
-> warninWgs - Warnings only
+> warnings  - Warnings only
 > errors    - Errors only
 > both      - Errors and warnings
 > None      - No CPU warnings in console
@@ -158,10 +158,13 @@ def main():
 
     def end_sequence():
         time_end = time.thread_time_ns()
-        
+        TOTAL = (time_end-time_start)/1000000000.0
+        PER_CMD = 0.0
+        if COMMAND_COUNTER[core_id] != 0:
+            PER_CMD = (time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000)
         print("="*50)
         print("Core {} finished work ({} ticks, apr. {}s on device)".format(core_id, COMMAND_COUNTER[core_id], COMMAND_COUNTER[core_id]*TIME_MILTIPLAYER))
-        print("Total execution time: {:0.4}s, {:0.3} ms per command".format((time_end-time_start)/1000000000,(time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000)))
+        print("Total execution time: {:0.4}s, {:0.3} ms per command".format(PER_CMD, PER_CMD))
         actives.remove(active)
 
     #################################################
@@ -213,9 +216,15 @@ def main():
 
         time_end = time.thread_time_ns()
         
+
+        TOTAL = (time_end-time_start)/1000000.0
+        PER_CMD = 0.0
+        if total_command_count != 0:
+            PER_CMD = (time_end-time_start)/(total_command_count*1000000.0)
+
         print("="*50)
         print("Builded {} commands".format(total_command_count))
-        print("Total build time: {:0.4}ms, {:0.3} ms per command".format((time_end-time_start)/1000000,(time_end-time_start)/(total_command_count*1000000)))
+        print("Total build time: {:0.4}ms, {:0.3} ms per command".format(TOTAL, PER_CMD))
 
         if ACTION in ["compile", "refactor"]:
             loading.save(OUTPUT_FILE, to_save)
@@ -231,6 +240,8 @@ def main():
     while True:
         for active in actives:
             core_id = loading.CORE_ID_MAP[active]
+            for i in range(0, 16):
+                DEVICE.RAM[i] = rnd.randint(0,15)
 
 
             #GET AND EXECUTE COMMAND            

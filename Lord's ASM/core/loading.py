@@ -1,5 +1,6 @@
 import core.error as error
 import json
+import re
 
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
 CORE_ID_MAP = {"CORE0":0, "CORE1":1, "CORE2":2, "CORE3":3, "SHADER":4}
@@ -124,10 +125,13 @@ def const_evaluation(program, definitions):
         raise error.LoadError("Expected #endif expression")
 
     #swap const's
+    def smart_replace(line: str, From: str, To: str):
+        line = re.sub("(?![^a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
+        return line
 
     for i, _ in enumerate(new_program):
         for const, value in const_values.items():
-            new_program[i] = new_program[i].replace(const, value)
+            new_program[i] = smart_replace(new_program[i], const, value)
     
     return new_program
 

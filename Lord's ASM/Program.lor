@@ -1,16 +1,43 @@
-[VERSION 0.3, SPEED 9, PROFILE pmmini_profile.json]
+[VERSION 0.3, SPEED 9, PROFILE ZCore_profile.json]
+
+const i reg[1]
+const j reg[2]
 
 :CORE0
-	mov $4, 0
-	mov $5, 1
-	mov $6, 2
-	mov $7, 3
-	#regs
-	add reg[0], reg[1]
-	sub reg[2], reg[3]
-	mov reg[1], ram[0]
-	mov $0xFF, reg[1]
-	xor reg[1], reg[2]
-	mov ram[0], reg[1]
-	#ram
-	#regs
+#ram
+	//ram[0] - ram[15] - losowe liczby z zakresu od 0 do 15
+	mov $0, i   //licznik petli zewnetrznej
+	mov $0, j   //licznik petli wewnetrznej
+    mov $15, reg[7]
+    mov $14, reg[6]
+
+
+	:OUTER
+    
+	//reg[5] = ARR_SIZE-i-1 
+	sub reg[7], i, reg[5]
+	dec reg[5]
+
+
+	:INNER
+    
+	mov ram[j], reg[3] //element j
+	inc j
+	mov ram[j], reg[4] //element j+1
+	
+	jl reg[3], reg[4], SKIP_SWAP
+
+	//zamien ram[j] z ram[j+1]
+	mov reg[4], ram[j] // ram[j+1] = reg[4]
+	dec j
+	mov reg[3], ram[j] //ram[j] = reg[3]
+	inc j
+	:SKIP_SWAP
+
+	jl j, reg[5], INNER
+
+	inc i
+
+	jl i, reg[6], OUTER
+
+

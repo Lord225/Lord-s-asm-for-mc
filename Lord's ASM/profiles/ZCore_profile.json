@@ -378,7 +378,6 @@
                 "emulator":"alu_const_reg_or",
                 "description":"Set reg[z] to value x | reg[y]",
                 "example":"or {}, reg[{}], reg[{}]",
-                "arguments pass":"0",
 
                 "numofargs":3,
                 "args":[
@@ -403,7 +402,6 @@
                 "emulator":"alu_reg_reg_or",
                 "description":"Set reg[z] to value reg[x] | reg[y]",
                 "example":"or {}, reg[{}], reg[{}]",
-                "arguments pass":"0",
 
                 "numofargs":3,
                 "args":[
@@ -443,6 +441,126 @@
                     }
                 ]
             },
+            "dec reg":{
+                "name":"dec",
+                "type":"alu",
+                "subtype":"alu_short",
+                "emulator":"alu_const_reg_dec",
+                "description":"Add one to register",
+                "example":"dec reg[{}]",
+                "arguments pass":[
+                    {"const":0},
+                    {"arg":0},
+                    {"arg":0}
+                ],
+
+                "numofargs":1,
+                "args":[
+                    {
+                        "type":"reg",
+                        "description":"register to decrement"
+                    }
+                ]
+            },
+            
+            "add const reg":{
+                "name":"add",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_add",
+                "description":"Set reg[z] to value x + reg[y]",
+                "example":"add {}, reg[{}], reg[{}]",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"const",
+                        "description":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register to write output"
+                    }
+                ]
+            },
+            "add reg reg":{
+                "name":"add",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_add",
+                "description":"Set reg[z] to value reg[x] + reg[y]",
+                "example":"add {}, reg[{}], reg[{}]",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"reg",
+                        "description":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register to write output"
+                    }
+                ]
+            },
+            
+            "sub const reg":{
+                "name":"sub",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_sub",
+                "description":"Set reg[z] to value x - reg[y]",
+                "example":"sub {}, reg[{}], reg[{}]",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"const",
+                        "description":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register to write output"
+                    }
+                ]
+            },
+            "sub reg reg":{
+                "name":"sub",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_sub",
+                "description":"Set reg[z] to value reg[x] + reg[y]",
+                "example":"sub {}, reg[{}], reg[{}]",
+
+                "numofargs":3,
+                "args":[
+                    {
+                        "type":"reg",
+                        "description":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "description":"register to write output"
+                    }
+                ]
+            },
+            
 
             "not reg":{
                 "name":"not",
