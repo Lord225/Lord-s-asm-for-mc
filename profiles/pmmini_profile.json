@@ -1,0 +1,602 @@
+  {
+    "CPU":{
+        "Name": "PM-Mini",
+        "Architecture": "PM",
+        "Author": "Gwiezdny Kartofel",
+        "emulator":"pmmini_emulator",
+        
+        "ARGUMENTS":{
+            "CU":{
+                "size":4
+            },
+            "r2":{
+                "size":2
+            },
+            "r1":{
+                "size":2
+            },
+            "n1":{
+                "size":8
+            }
+        },
+
+        "DEFINES":[
+            "__PMMINI__"
+        ],
+
+        "parametrs":{
+            "clock_speed":"3.33",
+            "word len":8,
+            "num of regs":4,
+
+            "ram adress space":{
+                "min":0,
+                "max":255
+            },
+            "rom adress space":{
+                "min":0,
+                "max":255
+            },
+            "cores":2,
+            "arguments sizes":{
+                "const":255,
+                "reg":3,
+                "ram":255,
+                "ptr":3,
+                "adress":255
+            },
+            "SUPPORTED TECHNOLOGIES":[
+                "",
+                ""
+            ]
+        },
+        "COMMANDS":{
+            "mov const reg":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"mov_const_reg",
+                "description":"Write const to register",
+                "example":"mov {}, reg[{}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":1,
+                    "r1":"to",
+                    "n1":"value"
+                }
+            },
+            "mov reg reg":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"mov_reg_reg",
+                "description":"Copy register to register",
+                "example":"mov reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"from"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":2,
+                    "r1":"to",
+                    "r2":"from"
+                }
+            },
+
+            "add reg reg":{
+                "name":"add",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_add",
+                "description":"Add reg[x] to reg[y]",
+                "example":"add reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to add"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"reg to be added"
+                    }
+                ],
+                "bin":{
+                    "CU":3,
+                    "r1":"reg to be added",
+                    "r2":"reg to add"
+                }
+
+            },
+            "sub reg reg":{
+                "name":"sub",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_sub",
+                "description":"Sub reg[x] from reg[y]",
+                "example":"sub reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to sub"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"reg to be subed"
+                    }
+                ],
+                "bin":{
+                    "CU":4,
+                    "r1":"reg to be subed",
+                    "r2":"reg to sub"
+                }
+            },
+
+            "rsh reg reg":{
+                "name":"rsh",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_rsh",
+                "description":"shift right reg[x] and save to reg[y]",
+                "example":"rsh reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to shift"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"save to"
+                    }
+                ],
+                "bin":{
+                    "CU":5,
+                    "r1":"reg to shift",
+                    "r2":"save to"
+                }
+            },
+            "lsh reg reg":{
+                "name":"lsh",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_lsh",
+                "description":"shift left reg[x] and save to reg[y]",
+                "example":"rsh reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to shift"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"save to"
+                    }
+                ],
+                "bin":{
+                    "CU":6,
+                    "r1":"reg to shift",
+                    "r2":"save to"
+                }
+            },
+
+            "and reg reg":{
+                "name":"and",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_and",
+                "description":"reg[y] = reg[y] & reg[x]",
+                "example":"and reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to perform and"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"reg to be anded"
+                    }
+                ],
+                "bin":{
+                    "CU":7,
+                    "r1":"reg to be anded",
+                    "r2":"reg to perform and"
+                }
+            },
+            "xor reg reg":{
+                "name":"xor",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_xor",
+                "description":"reg[y] = reg[y] ^ reg[x]",
+                "example":"xor reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to perform xor"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"reg to be xored"
+                    }
+                ],
+                "bin":{
+                    "CU":9,
+                    "r1":"reg to be xored",
+                    "r2":"reg to perform xor"
+                }
+            },
+            "or reg reg":{
+                "name":"or",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_or",
+                "description":"reg[y] = reg[y] | reg[x]",
+                "example":"or reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to perform or"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"reg to be ored"
+                    }
+                ],
+                "bin":{
+                    "CU":8,
+                    "r1":"reg to be ored",
+                    "r2":"reg to perform or"
+                }
+            },
+            
+
+            "jump equal reg":{
+                "name":"je",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_equal_reg_reg",
+
+                "description":"Jump to adress if register is equal to other register",
+                "example":"je reg[{}], reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":10,
+                    "r1":"register a",
+                    "r2":"register b",
+                    "n1":"to"
+                }
+            },
+            "jump greater reg":{
+                "name":"jg",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_greater_reg_reg",
+
+                "description":"Jump to adress if register is greater that other register",
+                "example":"je reg[{}], reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":11,
+                    "r1":"register a",
+                    "r2":"register b",
+                    "n1":"to"
+                }
+            },
+            
+            "mov ptr reg":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"read_reg_pointer",
+                "description":"Set register to pointer value",
+                "example":"mov ram[reg[{}]], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"ptr",
+                        "name":"ptr to read"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+                "parent":"read reg reg"
+            },
+            "read reg reg":{
+                "name":"read",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"read_reg_pointer",
+                "description":"Set register to pointer value",
+                "example":"read reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"ptr to read"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":12,
+                    "r1":"to",
+                    "r2":"ptr to read"
+                }
+            },
+            "mov ram reg":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"read_ram_reg",
+                "description":"read adress to register",
+                "example":"mov ram[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"ram",
+                        "name":"ram adress to read"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"ptr to write"
+                    }
+                ],
+                "parent":"read const reg"
+            },
+            "read const reg":{
+                "name":"read",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"read_ram_reg",
+                "description":"read adress to register",
+                "example":"read {}, reg[{}}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":13,
+                    "r1":"to",
+                    "n1":"value"
+                }
+            },
+            "mov reg ptr":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"write_pointer_reg",
+                "description":"Copy register to pointer",
+                "example":"mov reg[{}], ram[reg[{}]]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"from"
+                    },
+                    {
+                        "type":"ptr",
+                        "name":"ptr"
+                    }
+                ],
+                "parent":"write reg reg"
+            },
+            "write reg reg":{
+                "name":"write",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"write_pointer_reg",
+                "description":"Copy register to pointer",
+                "example":"write reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"from"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"ptr"
+                    }
+                ],
+                "bin":{
+                    "CU":14,
+                    "r1":"ptr",
+                    "r2":"from"
+                }
+            },
+            "mov reg ram":{
+                "name":"mov",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"write_reg_ram",
+                "description":"Set ram cell to register",
+                "example":"mov reg[{}], ram[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register to read"
+                    },
+                    {
+                        "type":"ram",
+                        "name":"adress to write"
+                    }
+                ],
+                "parent":"write reg const"
+            },
+            "write reg const":{
+                "name":"write",
+                "type":"mov",
+                "subtype":"mov",
+                "emulator":"write_reg_ram",
+                "description":"Set ram cell to register",
+                "example":"write reg[{}], y",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register to read"
+                    },
+                    {
+                        "type":"const",
+                        "name":"adress to write"
+                    }
+                ],
+                "bin":{
+                    "CU":15,
+                    "r1":"register to read",
+                    "n1":"adress to write"
+                }
+            },
+
+            "shut":{
+                "name":"shut",
+                "type":"OTHER",
+                "subtype":"other",
+                "emulator":"shut",
+
+                "description":"shutdown",
+                "example":"shut",
+
+                "args":[
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":0
+                }
+            },
+
+            "uncond jump":{
+                "name":"jmp",
+                "type":"JUMP",
+                "subtype":"jump_uncond",
+                "emulator":"jump",
+
+                "description":"Jump to adress",
+                "example":"jump {}",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump"
+                    }
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":1,
+                    "n1":"rom adress to jump"
+                }
+            },
+            "uncond call":{
+                "name":"call",
+                "type":"CALL",
+                "subtype":"call_uncond",
+                "emulator":"call",
+
+                "description":"call adress",
+                "example":"call {}",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"rom adress to call"
+                    }
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":2,
+                    "n1":"rom adress to call"
+                }
+            },
+            
+            "ret":{
+                "name":"ret",
+                "type":"JUMP",
+                "subtype":"jump_uncond",
+                "emulator":"ret",
+
+                "description":"return from corutine",
+                "example":"ret",
+
+                "args":[
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":3
+                }
+            }
+
+
+        },
+        "PATTERNS":[
+            {},
+            {}
+        ]
+    }
+}

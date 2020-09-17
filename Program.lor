@@ -1,0 +1,16 @@
+[PROFILE pmmini_profile.json]
+#define HELLO
+#data 0x00 0xcc, 0xcc
+#data 0x10 "Hello World"
+
+#macro SWAP(x, y)
+    xor reg[x], reg[y]
+    xor reg[x], reg[y]
+    xor reg[x], reg[y]
+#endmacro
+
+#macro ADD10(Reg, Reg2)
+
+#endmacro
+
+:CORE0
