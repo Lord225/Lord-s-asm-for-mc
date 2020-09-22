@@ -295,3 +295,22 @@ def load_json_profile(path):
     with open(path, "r") as file:
         profile = json.load(file)
     return profile
+def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
+    CPU_PROFILE = load_json_profile('{}/{}'.format(DEFAULT_PROFILES_PATH, NAME))
+
+    exec("import {}.{} as emulator".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]),globals())
+    
+    try:
+        print("Loaded profile for: '{}' by {}".format(CPU_PROFILE["CPU"]["Name"], CPU_PROFILE["CPU"]["Author"]))
+        CONSTS.extend(CPU_PROFILE["CPU"]["DEFINES"])
+    except KeyError as key:
+        print("Can't find key in profile: {}".format(key))
+        return
+    except:
+        print("Error: module {} doesn't exists.".format(CPU_PROFILE["CPU"]["emulator"]))
+        return
+
+    COMMAND_COUNTER = [0 for _ in range(4)]
+    DEVICE = emulator.CPU()
+
+    return CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS

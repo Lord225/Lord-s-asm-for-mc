@@ -252,17 +252,23 @@ def get_command_hash(cmd, _type, args) -> str:
         raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, args))
 
 def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
+    if rows%subrows != 0:
+        raise error.UndefinedSetting("Row number should be dividable by subrow count.")
     def generate_value(PAD = -1, MODE = "dec"):
         ADRESS = ""
+        try:
+            val = RAM[adress + i]
+        except IndexError:
+            raise "END"
         if MODE == "dec":
             PAD = 4 if PAD == -1 else PAD
-            ADRESS = str(RAM[adress + i])
+            ADRESS = str(val)
         elif MODE == "hex":
             PAD = 3 if PAD == -1 else PAD
-            ADRESS = str(padhex(RAM[adress + i], 2, False))
+            ADRESS = str(padhex(val, 2, False))
         elif MODE == "bin":
             PAD = 9 if PAD == -1 else PAD
-            ADRESS = padbin(RAM[adress + i], 8, False)
+            ADRESS = padbin(val, 8, False)
         return '{}{}'.format(" "*(PAD-len(ADRESS)), ADRESS)
     totalrows = rows
     rows //= subrows
@@ -271,25 +277,29 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
     if RAM_DEBUG_MODE == "simple":
         return '\n'.format(RAM)
     elif RAM_DEBUG_MODE == "row":
-        OUTPUT = "\n"
-        for adress in range(0, 255, rows):
-            if subrow_cunter == 0:
-                LINE_START = adress
-            rows_data = ""
-            for i in range(rows):
-                rows_data += generate_value(-1, VALUE_AS)
-            if ADD_ASCII_VIEW:
-                if subrow_cunter == (subrows-1):
-                    asciirep = ""
-                    for i in range(totalrows):
-                        char_id = RAM[LINE_START+i]
-                        asciirep += chr(char_id) if char_id >= 32 else "."
+        try:
+            OUTPUT = "\n"
+            for adress in range(0, 255, rows):
+                if subrow_cunter == 0:
+                    LINE_START = adress
+                rows_data = ""
+                for i in range(rows):
+                    rows_data += generate_value(-1, VALUE_AS)
+                if ADD_ASCII_VIEW:
+                    if subrow_cunter == (subrows-1):
+                        asciirep = ""
+                        for i in range(totalrows):
+                            char_id = RAM[LINE_START+i]
+                            asciirep += chr(char_id) if char_id >= 32 else "."
 
-                    rows_data += "\t{}".format(asciirep)
-            
-            OUTPUT += " {}:{}{}".format(padhex(adress, 2), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
-            
-            subrow_cunter = (subrow_cunter+1)%subrows
+                        rows_data += "\t{}".format(asciirep)
+                if ADRESS_AS_HEX:
+                    OUTPUT += " {}:{}{}".format(padhex(adress, 2), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
+                else:
+                    OUTPUT += " {}:{}{}".format(adress, rows_data, " " if subrow_cunter != (subrows-1) else "\n")
+                subrow_cunter = (subrow_cunter+1)%subrows
+        except:
+            pass
             
         return OUTPUT
 

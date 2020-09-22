@@ -44,11 +44,7 @@
                 "ram":255,
                 "ptr":3,
                 "adress":255
-            },
-            "SUPPORTED TECHNOLOGIES":[
-                "",
-                ""
-            ]
+            }
         },
         "COMMANDS":{
             "mov const reg":{
