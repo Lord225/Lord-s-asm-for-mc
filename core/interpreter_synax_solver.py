@@ -10,24 +10,14 @@ class TYPE(Enum):
     CALL        = 4 
     OTHER       = 5 
     DEBUG       = 6 
-class ADRESS_MODE(Enum):
-    DIRECTREG = 0 
-    CONST     = 1 
-    POINTER   = 2 
-    CONSTRAM  = 3
-    ADRESS    = 4
-
-ADRESS_MODE_REMAP = {"const":ADRESS_MODE.CONST,
-                     "reg":ADRESS_MODE.DIRECTREG,
-                     "ptr":ADRESS_MODE.POINTER,
-                     "ram":ADRESS_MODE.CONSTRAM,
-                     "adress": ADRESS_MODE.ADRESS}
 
 G_INFO_CONTAINER = {"Warnings": list(), "info": list(), "skip": False, "stop":False}
 G_RISE_ERROR_ON_BAD_RANGES = True
 LOG_COMMAND_MODE = "short" 
 USE_FANCY_SYNAX = True
 FORCE_COMMANDS_IN_SEPERATE_ROWS = False
+RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING = False
+RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR = True
 RAM_DEBUG_MODE = "simple"
 DEBUG_MODE = "simple"
 
@@ -39,6 +29,9 @@ COMMANDS_OREDERD_BY_SUBTYPES = dict() #ordered by subtypes, keeps "COMMANDS":{}
 COMMAND_LANE_PATTERN = dict()
 ROM_SIZES = dict()
 PARAMETERS = dict()
+CUSTOM_ARGUMENTS = dict()
+ADRESS_MODE_REMAP  = {x:i for i, x in enumerate(["const", "reg", "ptr", "ram", "adress"])}
+ADRESS_MODE_REMAP_REVERSED = dict()
 
 def padhex(x, pad, prefix = True):
         return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
@@ -52,16 +45,65 @@ def extract_basic_data(profile):
     global COMMANDS_SUBTYPES
     global ROM_SIZES
     global PARAMETERS
+    global CUSTOM_ARGUMENTS
+    global ADRESS_MODE_REMAP
+    global ADRESS_MODE_REMAP_REVERSED
     
     #TODO CHECK IT BETTER
     #Check ROM_SIZES with "bin"
     #Check COMMANDS with name, type, subtype, emulator, description, example, args, bin
     #Check parametrs with word len, num of regs, ram adress space, rom adress space, cores, arguments sizesSUPPORTED TECHNOLOGIES
     #Check if any of the COMMAND_MAP key is pointing to None
+
     def checkstructure():
-        __NAMESPACE__ = ["Name", "Architecture", "Author", "emulator", "DEFINES","parametrs","COMMANDS"]
-        for name in __NAMESPACE__:
-            profile["CPU"][name]
+        __NAMESPACE__ = ["Name", "Architecture", "ARGUMENTS", "Author", "emulator", "DEFINES", "parametrs", "COMMANDS", "CUSTOM ARGUMENTS"]
+        try:
+            for name in __NAMESPACE__:
+                try:
+                    profile["CPU"][name]
+                except KeyError as err:
+                    raise error.ProfileStructureError("Expected key in master branch: {}".format(name))
+            #DEFINES
+            if type(profile["CPU"]["DEFINES"]) is not list:
+                raise error.ProfileStructureError("Expected 'DEFINES' to be list of definitions: {}".format(name))
+            if any((type(x) is not str for x in profile["CPU"]["DEFINES"])):
+                raise error.ProfileStructureError("Expected 'DEFINES' to be list of strings.".format())
+            
+            #parametrs
+            parametrs__NAMESPACE__ = ["clock_speed", "word len", "num of regs", "ram adress space", "rom adress space", "cores", "arguments sizes"]
+
+            for name in parametrs__NAMESPACE__:
+                try:
+                    profile["CPU"]["parametrs"]
+                except KeyError as err:
+                    raise error.ProfileStructureError("Expected '{}' in 'parametrs'".format(name))
+            #custom arguments
+            cmd__NAMESPACE__ = ["name", "type", "subtype", "args"]
+            cmd__NAMESPACE__WARNING = ["description", "example"]
+
+            if RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING:
+                cmd__NAMESPACE__.append("bin")
+            else:
+                cmd__NAMESPACE__WARNING.append("bin")
+
+            if RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR:
+                cmd__NAMESPACE__.append("emulator")
+            else:
+                cmd__NAMESPACE__WARNING.append("emulator")
+            #COMMANDS
+            for name, cmd in profile["CPU"]["COMMANDS"].items():
+                for cmd_must in cmd__NAMESPACE__:
+                    try:
+                        cmd[cmd_must]
+                    except KeyError as err:
+                        raise error.ProfileStructureError("Expected '{}' in 'COMMANDS'->'{}'".format(cmd_must, name))
+                for cmd_should in cmd__NAMESPACE__WARNING:
+                    try:
+                        cmd[cmd_should]
+                    except KeyError as err:
+                        print("WARNING: Expected '{}' key in 'COMMANDS'->'{}'".format(cmd_should, name)) 
+        except KeyError as err:
+            raise err
             
     def get_full_command_set():
         return {value["HASH"]:value for key, value in profile["CPU"]["COMMANDS"].items()}
@@ -92,14 +134,28 @@ def extract_basic_data(profile):
     def get_command_lane():
         global COMMAND_LANE_PATTERN
         COMMAND_LANE_PATTERN = profile["CPU"]["ARGUMENTS"]
+    def get_custom_arguments():
+        global CUSTOM_ARGUMENTS
+        CUSTOM_ARGUMENTS = profile["CPU"]["CUSTOM ARGUMENTS"]        
     def get_rom_arg_sizes():
         global ROM_SIZES
         ROM_SIZES = profile["CPU"]["ARGUMENTS"]
-        
+    def get_custom_arguments_types():
+        global ADRESS_MODE_REMAP
+        global ADRESS_MODE_REMAP_REVERSED
+        last = max(ADRESS_MODE_REMAP.values())
+        i = 1
+        for key, val in profile["CPU"]["CUSTOM ARGUMENTS"].items():
+            if key in ADRESS_MODE_REMAP:
+                raise error.ProfileStructureError()
+            ADRESS_MODE_REMAP[key] = last+i
+            i += 1
+        ADRESS_MODE_REMAP_REVERSED = {b:a for a,b in ADRESS_MODE_REMAP.items()}
+   
     try:
         checkstructure()
     except Exception as err:
-        raise error.ProfileStructureError("Profile structure is corupted: "+str(err))
+        raise err
 
     try:
         COMMANDS_SUBTYPES = get_unified_commands_types()
@@ -110,17 +166,22 @@ def extract_basic_data(profile):
 
         COMMANDSETFULL = get_full_command_set()
         
+        get_custom_arguments_types()
+        
         remap_adress_mode()
 
         get_command_lane()
 
         get_rom_arg_sizes()
         
+   
         PARAMETERS = profile["CPU"]["parametrs"]
+
         NEW_ARGUMENT_SIZES = dict()
         for key, value in PARAMETERS["arguments sizes"].items():
             NEW_ARGUMENT_SIZES[ADRESS_MODE_REMAP[key]] = value
         PARAMETERS["arguments sizes"] = NEW_ARGUMENT_SIZES
+    
     except Exception as err:
         raise error.ProfileStructureError(err)
     PROFILE_LOADED = True
@@ -147,12 +208,15 @@ def extract_number_from_bracets(unformed):
         raise error.SynaxError("Expected ']' in argument")
     return get_value(unformed[start_bracket+1:end_bracket])
 
-def get_argument_type(raw_argument: str):
+#TODO ADD jumps adress support
+def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     """
     Accepts:
     reg[_value] -> reg    (reg access, fancy)
     _value      -> reg    (reg access, simple)
     $_value     -> _value (const)
+
+    Any selector in ADRESS_MODE_REMAP dict. 
 
     types:
     0xFFFF -> hex
@@ -163,28 +227,36 @@ def get_argument_type(raw_argument: str):
     
     ram[_value] -> ram adress
     ram[reg[_value]] -> ram pointer
+
+    custom:
+
+    NAME[value]
     """
     
-    raw_argument = raw_argument.lower()
+    raw_argument = raw_raw_argument.lower()
     if len(raw_argument)==0:
         raise error.Expected("Argument", raw_argument)
     if raw_argument[0] == "$":
-        return get_value(raw_argument[1:]), ADRESS_MODE.CONST
+        return get_value(raw_argument[1:]), ADRESS_MODE_REMAP["const"]
     elif "ram" in raw_argument:
         _reg_start = raw_argument.find("reg")
-        
         if _reg_start != -1:
             if raw_argument.find("ram") > _reg_start:
                 raise error.SynaxError("reg[ram[...]] is not supported (and doesn't make sense btw)")
             #ptr
-            return extract_number_from_bracets(raw_argument[_reg_start:]), ADRESS_MODE.POINTER
+            return extract_number_from_bracets(raw_argument[_reg_start:]), ADRESS_MODE_REMAP["ptr"]
         else:
             #const
-            return extract_number_from_bracets(raw_argument), ADRESS_MODE.CONSTRAM
+            return extract_number_from_bracets(raw_argument), ADRESS_MODE_REMAP["ram"]
     elif "reg" in raw_argument:
-        return extract_number_from_bracets(raw_argument), ADRESS_MODE.DIRECTREG
+        return extract_number_from_bracets(raw_argument), ADRESS_MODE_REMAP["reg"]
     else:
-        return get_value(raw_argument),ADRESS_MODE.DIRECTREG
+        if raw_raw_argument in JUMP_LIST:
+            return get_jump_adress(raw_raw_argument), ADRESS_MODE_REMAP["adress"]
+        #probably custom arguments
+        for key, val in ADRESS_MODE_REMAP.items():
+            if key in raw_argument:
+                return extract_number_from_bracets(raw_argument), val
 
 def get_jump_adress(raw_argument: str, JUMP_LIST):
     if len(raw_argument)==0:
@@ -249,7 +321,7 @@ def get_command_hash(cmd, _type, args) -> str:
                 #print("mached: {}".format(command_pattern["emulator"]))
                 return command_pattern["HASH"]        
     else:
-        raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, args))
+        raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, ADRESS_MODE_REMAP_REVERSED[args]))
 
 def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
     if rows%subrows != 0:
@@ -338,9 +410,11 @@ def solve_log_command(cmd: str, device, target_core: int):
 
 def replace_fancy_commands(cmd, _type, args):
     cmdhash = get_command_hash(cmd, _type, args)
-
     if "parent" in COMMANDSETFULL[cmdhash]:
-        parent = COMMANDSETFULL[COMMANDSETFULL[cmdhash]["parent"]]
+        try:
+            parent = COMMANDSETFULL[COMMANDSETFULL[cmdhash]["parent"]]
+        except KeyError as err:
+            raise error.ProfileStructureError("command is parented to '{}', but it doesn't exist.".format(COMMANDSETFULL[cmdhash]["parent"]))
         cmd, _type = parent["name"], parent["type"]
         args_new = []
         for arg_patt, arg_old in zip(parent["args"], args):
@@ -358,7 +432,7 @@ def check_custom_argument_pass(cmd, _type, args):
                 new_args = []
                 for arg in command_pattern["arguments pass"]:
                     if "const" in arg:
-                        new_args.append((arg["const"],ADRESS_MODE.CONST))
+                        new_args.append((arg["const"], ADRESS_MODE_REMAP["const"]))
                     elif "arg" in arg:
                         new_args.append(args[arg["arg"]])
                     else:
@@ -366,28 +440,25 @@ def check_custom_argument_pass(cmd, _type, args):
                 return cmd, _type, new_args
     else:
         return cmd, _type, args
+
 def check_argument_ranges(args):
     for arg, Type in args:
-        cliping_beheivior(arg, PARAMETERS["arguments sizes"][Type])
+        try:
+            cliping_beheivior(arg, PARAMETERS["arguments sizes"][Type])
+        except KeyError as err:
+            raise error.ProfileStructureError("Expected custom argument size definiton.",custom=True)
 
 def solve(JUMP_MAP: dict, target_core: str, command:str):
-    jump_adress = None
-
     cmd, _type = get_command_name(command)
     if _type == "debug":
-        return _type, cmd, None, jump_adress
-    if _type in ["jump_cond", "jump_uncond", "call_cond", "call_uncond"]:
-        arguments = command[len(cmd):].strip().split(",")
-        jump_adress = get_jump_adress(arguments[-1].strip(), JUMP_MAP) 
-        args = [get_argument_type(arg.strip()) for arg in arguments[:-1]]
+        return _type, cmd, None, -1
     else:
-        if cmd != "ret":
-            args = [get_argument_type(arg.strip()) for arg in command[len(cmd):].strip().split(",")]
+        if ',' in command[len(cmd):]:
+            args = [get_argument_type(arg.strip(), JUMP_MAP) for arg in command[len(cmd):].strip().split(",")]
         else:
             args = []
-
+            
     check_argument_ranges(args)
-
 
     if USE_FANCY_SYNAX:
         cmd, _type, args = replace_fancy_commands(cmd, _type, args)
@@ -395,22 +466,22 @@ def solve(JUMP_MAP: dict, target_core: str, command:str):
 
     cmd_hash = get_command_hash(cmd, _type, args)
 
-    return _type, cmd_hash, args, jump_adress
+    return _type, cmd_hash, args
 
 def read_and_execute(device, JUMP_MAP: dict, target_core:str, command:str):
     """Will interprate and execute raw command"""
-    _type, cmd_hash, args, jump_adress = solve(JUMP_MAP, target_core, command)
+    _type, cmd_hash, args = solve(JUMP_MAP, target_core, command)
     
     # Comand has been computed: 
     # formed_commad - command accepted by COMMAND_MAP
     # args          - arguments in format [(value, ADRESS_MODE), (value, ADRESS_MODE),...] 
     # _type         - cmd generalized command type _TYPE
 
-    execute(_type, cmd_hash, device, target_core, args, jump_adress, 0)
+    execute(_type, cmd_hash, device, target_core, args, 0)
     
     return G_INFO_CONTAINER
 
-def execute(_type, cmd_hash, device, target_core, args, jump_adress, thread):
+def execute(_type, cmd_hash, device, target_core, args, thread):
     """Will execute builded commad on device"""
     reset_G_INFO_CONTAINER()
     if _type == "debug":
@@ -418,24 +489,18 @@ def execute(_type, cmd_hash, device, target_core, args, jump_adress, thread):
         G_INFO_CONTAINER["skip"] = True
         return G_INFO_CONTAINER
     try:
-        if _type in ["jump_cond", "jump_uncond", "call_cond", "call_uncond"]:
-            if len(args) == 0:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], jump_adress-1, device.CORES[target_core].get_rom_adress())
-            else:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], jump_adress-1, device.CORES[target_core].get_rom_adress())
+        if len(args) == 0:
+            COMMAND_MAP[cmd_hash](device.CORES[target_core])
+        if len(args) == 1:
+            COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0])
+        elif len(args) == 2:
+            COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0])
+        elif len(args) == 3:
+            COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], args[2][0])
+        elif len(args) == 4:
+            COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], args[2][0], args[4][0])
         else:
-            if len(args) == 0:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core])
-            if len(args) == 1:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0])
-            elif len(args) == 2:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0])
-            elif len(args) == 3:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], args[2][0])
-            elif len(args) == 4:
-                COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], args[2][0], args[4][0])
-            else:
-                raise error.Unsupported("Ouch. Ask author if you need more that 4 args...")
+            raise error.Unsupported("Ouch. Ask author if you need more that 4 args...")
     except Exception as err:
         raise error.Unsupported("What just happen? You have to report this!, {}".format(err))   
     if LOG_COMMAND_MODE is not None:
@@ -485,13 +550,13 @@ def form_full_log_command(_type, formed_command, device, target_core, args, jump
     #* TODO FIX ram's moves (now thay are ugly)
     if len(args) != 0:
         for arg in args:
-            if arg[1] == ADRESS_MODE.CONST:
+            if arg[1] == ADRESS_MODE_REMAP["const"]:
                 arg = "{}".format(arg[0])
-            elif arg[1] == ADRESS_MODE.CONSTRAM:
+            elif arg[1] == ADRESS_MODE_REMAP["ram"]:
                 arg = "ram[{}]".format(arg[0])
-            elif arg[1] == ADRESS_MODE.DIRECTREG:
+            elif arg[1] == ADRESS_MODE_REMAP["reg"]:
                 arg = "reg[{}]".format(arg[0])
-            elif arg[1] == ADRESS_MODE.POINTER:
+            elif arg[1] == ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
             else:
                 error.CurrentlyUnsupported("That shouldn't happen.")

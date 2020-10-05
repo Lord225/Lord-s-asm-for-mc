@@ -1,5 +1,5 @@
 #Public domain, free to use, by Lord255 aka M. Złotorowicz
-VERSION = "0.5"
+VERSION = "0.7"
 
 import math as m
 import random as rnd
@@ -111,10 +111,10 @@ PROCESSED_LINE = -1
 # performance profiling tools (with loops times ect)
 # generalize jump statements with new approch
 #*info logging
-# datablocks:
-# #DATA 0x00 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-#       ^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#       start adress      numbers to write
+#*datablocks:
+#*#DATA 0x00 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+#*      ^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#*      start adress      numbers to write
 #*FIX OFFSET (it should be -1 or NOT)
 #*macros
 # better macros (with definition and refining in fly)
@@ -124,6 +124,8 @@ PROCESSED_LINE = -1
 
 if ACTION == "everything":
     raise error.CurrentlyUnsupported("ACTION->everything")
+
+    
 
 def get_profile(NAME):
     global CONSTS
@@ -279,13 +281,13 @@ def main():
                     end_sequence()
                     continue
                 if type(CPU_COMMAND) is list:
-                    for thread, (_type, formed_command, args, jump_adress) in enumerate(CPU_COMMAND):
-                        info = iss.execute(_type, formed_command, DEVICE, core_id, args, jump_adress, thread)
+                    for thread, (_type, formed_command, args) in enumerate(CPU_COMMAND):
+                        info = iss.execute(_type, formed_command, DEVICE, core_id, args, thread)
                     if iss.LOG_COMMAND_MODE is not None and not iss.FORCE_COMMANDS_IN_SEPERATE_ROWS:
                         print()
                 else:
-                    _type, formed_command, args, jump_adress = CPU_COMMAND
-                    info = iss.execute(_type, formed_command, DEVICE, core_id, args, jump_adress, None)
+                    _type, formed_command, args = CPU_COMMAND
+                    info = iss.execute(_type, formed_command, DEVICE, core_id, args, None)
             else:
                 #old, interprete
                 try:

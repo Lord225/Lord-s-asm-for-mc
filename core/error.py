@@ -66,10 +66,14 @@ class LoadError(Exception):
     def __str__(self):
          return "Load Error: {}".format(self.info)
 class ProfileStructureError(Exception):
-    def __init__(self, info = ""):
+    def __init__(self, info = "", custom = True):
         self.info = info 
+        self.custom = custom
     def __str__(self):
-         return "Profile structure is unvalid, Expected key: {}".format(self.info)
+        if not self.custom:
+            return "Profile structure is unvalid, Expected key: {}".format(self.info)
+        else:
+            return "Profile structure is unvalid: {}".format(self.info)
 class DeprecatedFunction(Exception):
     def __init__(self, info = ""):
         self.info = info 

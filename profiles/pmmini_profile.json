@@ -46,6 +46,10 @@
                 "adress":255
             }
         },
+        "CUSTOM ARGUMENTS":{
+            "see":{
+            }
+        },
         "COMMANDS":{
             "mov const reg":{
                 "name":"mov",
@@ -71,6 +75,8 @@
                     "n1":"value"
                 }
             },
+            
+
             "mov reg reg":{
                 "name":"mov",
                 "type":"mov",

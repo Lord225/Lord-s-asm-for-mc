@@ -90,7 +90,6 @@ def load_program(path : str, definitions: list = []):
     
     line_indicator = indices(Programs)
     
-    
     return Programs, line_indicator, JUMPLIST, Settings, data
 
 def load_commands(path: str):
