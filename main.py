@@ -1,5 +1,5 @@
 #Public domain, free to use, by Lord255 aka M. Złotorowicz
-#Small Change
+#Small Change 2
 VERSION = "0.7"
 
 import math as m
