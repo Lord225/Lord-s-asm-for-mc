@@ -208,7 +208,6 @@ def extract_number_from_bracets(unformed):
         raise error.SynaxError("Expected ']' in argument")
     return get_value(unformed[start_bracket+1:end_bracket])
 
-#TODO ADD jumps adress support
 def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     """
     Accepts:
@@ -259,6 +258,7 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
                 return extract_number_from_bracets(raw_argument), val
 
 def get_jump_adress(raw_argument: str, JUMP_LIST):
+    """Returns true adress in ROM of raw_argument table"""
     if len(raw_argument)==0:
         raise error.SynaxError("expected jump identifier")
     if raw_argument not in JUMP_LIST:
@@ -266,6 +266,7 @@ def get_jump_adress(raw_argument: str, JUMP_LIST):
     return JUMP_LIST[raw_argument]
 
 def get_value(strage_format:str):
+    """Returns value of strage_format"""
     if strage_format.isdecimal():
         return int(strage_format)
     elif len(strage_format[2:]) == 0:
@@ -278,6 +279,7 @@ def get_value(strage_format:str):
         raise error.UndefinedValue(strage_format)
 
 def get_command_name(command:str) -> (str,str):
+    "Will return command type and name"
     if command[0] == "#":
         return command, "debug"
     try:
@@ -324,6 +326,9 @@ def get_command_hash(cmd, _type, args) -> str:
         raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, ADRESS_MODE_REMAP_REVERSED[args]))
 
 def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
+    """
+    It just works. Do not ask how.
+    """
     if rows%subrows != 0:
         raise error.UndefinedSetting("Row number should be dividable by subrow count.")
     def generate_value(PAD = -1, MODE = "dec"):
@@ -446,7 +451,7 @@ def check_argument_ranges(args):
         try:
             cliping_beheivior(arg, PARAMETERS["arguments sizes"][Type])
         except KeyError as err:
-            raise error.ProfileStructureError("Expected custom argument size definiton.",custom=True)
+            raise error.ProfileStructureError("Expected custom argument size definiton.", custom=True)
 
 def solve(JUMP_MAP: dict, target_core: str, command:str):
     cmd, _type = get_command_name(command)

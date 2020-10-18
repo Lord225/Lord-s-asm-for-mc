@@ -64,7 +64,7 @@ Default: -1
 parser.add_argument('--const', action='append', 
 help="""Addinationl const expressions added while loading script
  Format:
- --const NAME_OF_CONSTANT VALUE (MAY BY LONG WITH SPACES)
+ --const NAME_OF_CONSTANT VALUE (COULD BY LONG AND WITH SPACES)
  --const JUST_NAME_MEANS_DEFINITION
 """)
 parserargs = parser.parse_args()
@@ -331,7 +331,9 @@ if __name__ == "__main__":
         import cProfile
         cProfile.run("main()", sort="cumtime")
     else:
-        if ACTION_ON_ERROR is not None:
+        if ACTION_ON_ERROR is None:
+            main()
+        else:
             try:
                 main()
             except Exception as err:
@@ -349,5 +351,3 @@ if __name__ == "__main__":
                     input()
                 elif ACTION_ON_ERROR == "abort":
                     pass
-        else:
-            main()
