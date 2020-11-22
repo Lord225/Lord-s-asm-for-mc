@@ -1,4 +1,4 @@
-#Public domain, free to use, by Lord255 aka M. Złotorowicz
+#Public domain, free to use, by M. Złotorowicz aka Lord255
 VERSION = "0.7"
 
 import math as m
