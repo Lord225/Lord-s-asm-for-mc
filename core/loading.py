@@ -82,8 +82,7 @@ def indices(Programs):
         Programs[Device] = [x[1] for x in Programs[Device]]
     return line_indicator
 
-def load_program(path : str, definitions: list = []):
-    
+def load_program(path : str, definitions: list = []):    
     Program, Settings = load_preproces(path)
 
     Program, data = const_evaluation(Program, definitions)
@@ -314,6 +313,7 @@ def load_json_profile(path):
     with open(path, "r") as file:
         profile = json.load(file)
     return profile
+
 def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
     CPU_PROFILE = load_json_profile('{}/{}'.format(DEFAULT_PROFILES_PATH, NAME))
 

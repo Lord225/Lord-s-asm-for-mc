@@ -449,7 +449,7 @@ def check_argument_ranges(args):
 def solve(JUMP_MAP: dict, target_core: str, command:str):
     cmd, _type = get_command_name(command)
     if _type == "debug":
-        return _type, cmd, None, -1
+        return _type, cmd, []
     else:
         if ',' in command[len(cmd):]:
             args = [get_argument_type(arg.strip(), JUMP_MAP) for arg in command[len(cmd):].strip().split(",")]
@@ -468,6 +468,8 @@ def solve(JUMP_MAP: dict, target_core: str, command:str):
 
 def read_and_execute(device, JUMP_MAP: dict, target_core:str, command:str):
     """Will interprate and execute raw command"""
+    raise error.Unsupported("depraced function: read_and_execute")
+
     _type, cmd_hash, args = solve(JUMP_MAP, target_core, command)
     
     # Comand has been computed: 

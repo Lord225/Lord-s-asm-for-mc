@@ -18,7 +18,7 @@ parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX 
 help="""Name of file to proces
 Default: Program.lor
 """)
-parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "refactor", "interprate"], type=str, default="compile-csv",
+parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "refactor"], type=str, default="build",
 help="""What script is supposed to do with file 
 > build         - Build source and execute 
 > compile-dec   - Build source and save in easy-to-read format
@@ -26,20 +26,19 @@ help="""What script is supposed to do with file
 > compile-bin   - Build source and save as binary
 > compile-py    - Build source and save as python dict
 > refactor      - Build source and save as redable commands
-> interprate    - Execute without building (interpretate command in runtime) (deprecated)
 Default: build
 """)
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
-parser.add_argument("-l", "--logmode", choices=["short", "long","None"], type=str, default=None,
+parser.add_argument("-l", "--logmode", choices=["short", "long"], type=str, default=None,
 help="""Choose method of logging CPU's command while executing
 > short - Simple logging
 > long  - Full logging
 > None  - No logging
 Default: None
 """)
-parser.add_argument("-i", "--info", choices=["warnings", "errors", "both", "None"], type=str, default=None,
+parser.add_argument("-i", "--info", choices=["warnings", "errors", "both"], type=str, default=None,
 help="""Choose CPU warning level
 > warnings  - Warnings only
 > errors    - Errors only
@@ -47,12 +46,12 @@ help="""Choose CPU warning level
 > None      - No CPU warnings in console
 Default: None
 """)
-parser.add_argument("-e", "--onerror", choices=["interupt", "abort", "None"], type=str, default=None, 
+parser.add_argument("-e", "--onerror", choices=["interupt", "abort"], type=str, default=None, 
 help="""What is suppouse to happen on error
 > interupt - Waits for user
 > abort    - Close script
 > None     - Throw python's error
-Default: abort
+Default: None
 """)
 parser.add_argument("-of", "--offset", type=int, default=1, 
 help="""Offset of whole binary relative to rom 0 cell
@@ -72,9 +71,7 @@ parser.add_argument('--onefile', action='append',
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-
 PROCESSED_LINE = -1
-
 
 if config.ACTION == "everything":
     raise error.CurrentlyUnsupported("ACTION->everything")
