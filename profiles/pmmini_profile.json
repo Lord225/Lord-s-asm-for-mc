@@ -46,6 +46,10 @@
                 "adress":255
             }
         },
+        "KEYWORDS":[
+            "CORE0",
+            "CORE1"
+        ],
         "CUSTOM ARGUMENTS":{
             "see":{
             }

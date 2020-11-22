@@ -1,5 +1,6 @@
 import core.error as error
 import core.loading as loading
+import config
 from enum import Enum
 
 class TYPE(Enum):
@@ -12,14 +13,6 @@ class TYPE(Enum):
     DEBUG       = 6 
 
 G_INFO_CONTAINER = {"Warnings": list(), "info": list(), "skip": False, "stop":False}
-G_RISE_ERROR_ON_BAD_RANGES = True
-LOG_COMMAND_MODE = "short" 
-USE_FANCY_SYNAX = True
-FORCE_COMMANDS_IN_SEPERATE_ROWS = False
-RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING = False
-RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR = True
-RAM_DEBUG_MODE = "simple"
-DEBUG_MODE = "simple"
 
 PROFILE_LOADED = False
 COMMAND_MAP = dict() #ordered by hash, keeps emulator function pointers
@@ -81,12 +74,12 @@ def extract_basic_data(profile):
             cmd__NAMESPACE__ = ["name", "type", "subtype", "args"]
             cmd__NAMESPACE__WARNING = ["description", "example"]
 
-            if RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING:
+            if config.RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING:
                 cmd__NAMESPACE__.append("bin")
             else:
                 cmd__NAMESPACE__WARNING.append("bin")
 
-            if RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR:
+            if config.RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR:
                 cmd__NAMESPACE__.append("emulator")
             else:
                 cmd__NAMESPACE__WARNING.append("emulator")
@@ -297,7 +290,7 @@ def get_command_name(command:str) -> (str,str):
 #* DOTO replace emulator.WORD_SIZE with profile value
 def cliping_beheivior(arg, Max):
     """Way that solver will treat cliping"""
-    if G_RISE_ERROR_ON_BAD_RANGES:
+    if config.G_RISE_ERROR_ON_BAD_RANGES:
         raise error.ExpectedValue(Max, arg)
     G_INFO_CONTAINER["info"].append("Value has been cliped: {}".format(arg))
 
@@ -351,9 +344,9 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
     rows //= subrows
     LINE_START = 0
     subrow_cunter = 0
-    if RAM_DEBUG_MODE == "simple":
+    if config.RAM_DEBUG_MODE == "simple":
         return '\n'.format(RAM)
-    elif RAM_DEBUG_MODE == "row":
+    elif config.RAM_DEBUG_MODE == "row":
         try:
             OUTPUT = "\n"
             for adress in range(0, 255, rows):
@@ -382,7 +375,7 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
 
 def execute_debug_command(device, target_core:int, debug_cmd:str):
     debug_cmd = debug_cmd.lower()[1:]
-    if DEBUG_MODE == "simple":
+    if config.DEBUG_MODE == "simple":
         if debug_cmd == "regs":
             print("Core{} regs =".format(target_core),device.CORES[target_core].get_regs_status())
         elif debug_cmd == "break":
@@ -465,7 +458,7 @@ def solve(JUMP_MAP: dict, target_core: str, command:str):
             
     check_argument_ranges(args)
 
-    if USE_FANCY_SYNAX:
+    if config.USE_FANCY_SYNAX:
         cmd, _type, args = replace_fancy_commands(cmd, _type, args)
         cmd, _type, args = check_custom_argument_pass(cmd, _type, args)
 
@@ -508,15 +501,15 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
             raise error.Unsupported("Ouch. Ask author if you need more that 4 args...")
     except Exception as err:
         raise error.Unsupported("What just happen? You have to report this!, {}".format(err))   
-    if LOG_COMMAND_MODE is not None:
-        end = "\n" if thread is None or FORCE_COMMANDS_IN_SEPERATE_ROWS else "\t"
+    if config.LOG_COMMAND_MODE is not None:
+        end = "\n" if thread is None or config.FORCE_COMMANDS_IN_SEPERATE_ROWS else "\t"
 
-        if LOG_COMMAND_MODE == "short":
+        if config.LOG_COMMAND_MODE == "short":
             print(target_core, cmd_hash, end=end)
-        elif LOG_COMMAND_MODE == "long":
-            print(form_full_log_command(_type, cmd_hash, device, target_core, args, jump_adress), end=end)
+        elif config.LOG_COMMAND_MODE == "long":
+            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end)
         else:
-            raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long','raw', None] got: {}".format(LOG_COMMAND_MODE))
+            raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long','raw', None] got: {}".format(config.LOG_COMMAND_MODE))
     return G_INFO_CONTAINER
 
 def build_program(Program, line_indicator, JUMPLIST, Settings) -> list:
@@ -591,7 +584,7 @@ def form_full_log_command_batch(batch, BUILD_OFFSET):
 
 def get_compiled_cmd(COMMAND):
     if type(COMMAND) is tuple:
-        _type, formed_command, args, jump_adress = COMMAND
+        _type, formed_command, args = COMMAND
     else:
         raise error.Unsupported("Muli-lined commands")
         #call custom generate func from 'emul'

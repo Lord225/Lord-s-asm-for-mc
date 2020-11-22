@@ -1,11 +1,15 @@
 import core.error as error
 import json
 import re
-
+import config
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
-CORE_ID_MAP = {"CORE0":0, "CORE1":1, "CORE2":2, "CORE3":3, "SHADER":4}
+CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
-DEFINITION_DEBUG = False
+
+def update_keywords(new):
+    global KEYWORDS, CORE_ID_MAP
+    KEYWORDS = new
+    CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
 def smart_replace(line: str, From: str, To: str):
     line = re.sub("(?![^a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
@@ -174,7 +178,7 @@ def definition_solver(program, definition):
     recursion = [True]
     else_watchman = [0]
     new_program = []
-    if DEFINITION_DEBUG:
+    if config.DEFINITION_DEBUG:
         print("line", "app", "depth",sep="\t; ")
     for i in range(len(program)):
         if program[i][1].startswith("#ifdef"):
@@ -196,7 +200,7 @@ def definition_solver(program, definition):
             else:
                 raise error.LoadError("multiple #else expression in same #ifdef/#endif statment")
         else:
-            if DEFINITION_DEBUG:
+            if config.DEFINITION_DEBUG:
                 print(program[i][1][:6],  all(recursion), len(recursion), sep="\t; ")
             if all(recursion):
                 new_program.append(program[i])
@@ -278,18 +282,34 @@ def const_evaluation(program, definitions):
     return new_program, data
 
 def save(filename, binary, with_decorators = True):
-    with open(filename,"w") as file:
+    if config.SAVE_IN_ONE_FILE:
+        with open(filename,"w") as file:
+            for key in KEYWORDS:
+                if with_decorators:
+                    file.write(":{}\n".format(key))
+                    for line in binary[key]:
+                        file.write('\t{}\n'.format(line))
+                else:
+                    for line in binary[key]:
+                        file.write('{}\n'.format(line))
+                file.write("\n")
+            file.close()
+    else:
         for key in KEYWORDS:
-            if with_decorators:
-                file.write(":{}\n".format(key))
-                for line in binary[key]:
-                    file.write('\t{}\n'.format(line))
-            else:
-                for line in binary[key]:
-                    file.write('{}\n'.format(line))
-            file.write("\n")
-        file.close()
-    
+            FILE_NAME = "{}_{}.{}".format(filename.split(".")[0], key, filename.split(".")[1])
+            if config.IGNORE_EMPTY_PROGRAMS and len(binary[key]) == 1:
+                print("INFO: File {} hasn't been saved because is empty".format(FILE_NAME))
+                continue
+            with open(FILE_NAME,"w") as file:
+                if with_decorators:
+                    file.write(":{}\n".format(key))
+                    for line in binary[key]:
+                        file.write('\t{}\n'.format(line))
+                else:
+                    for line in binary[key]:
+                        file.write('{}\n'.format(line))
+                file.close()
+
 def load_json_profile(path):
     with open(path, "r") as file:
         profile = json.load(file)
@@ -311,5 +331,6 @@ def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
 
     COMMAND_COUNTER = [0 for _ in range(4)]
     DEVICE = emulator.CPU()
+    KEYWORDS = CPU_PROFILE["CPU"]["KEYWORDS"]
 
-    return CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS
+    return CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS

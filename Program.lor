@@ -1,13 +1,7 @@
 [PROFILE pmmini_profile.json]
-#depends TIER0
-#depends ADV_ALU
-
 #define HELLO
 #data 0x00 0xcc, 0xcc
 #data 0x10 "Hello World"
 
-
 :CORE0
-    mov $0, reg[1]
-    mov $1, reg[2]
-    add reg[1], reg[2]
+    #debug ram
