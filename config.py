@@ -1,12 +1,13 @@
 import core.error as err
 
 #GLOBAL CONFIGS
+#UNSAFE CODE DO NOT TRY THIS AT HOME
 
 #SETTINGS (argparser > file_settings > config > default)
 def setupsettings(parserargs, config_name, file_settings):
     print("Loading Settings:")
     
-    #default
+    #Default
     FILE_NAME = "Program.lor"
     PROFILE_NAME = None
     ACTION = "build"
@@ -44,19 +45,27 @@ def setupsettings(parserargs, config_name, file_settings):
         print("Loading '{}'".format(config_name))
         with open(config_name, "r") as file:
             for line in file:
+
+                # clean up
                 line = line[:line.find("#")]
                 if len(line) == 0 or line.find("=") == -1:
                     continue
                 NAME, DATA = (txt.strip() for txt in line.split("="))
+
+
                 if NAME in locals():
                     try:
                         if DATA == "False" or DATA == "True":
                             DATA = False if DATA == "False" else True
+                        DATA = None if DATA == "None" else DATA
+                        
                         locals()[NAME] = DATA 
                     except:
                         raise err.LoadError("Canno't use setting {} or value '{}' is not valid".format(NAME, DATA))
+
                 else:
                     raise err.LoadError("Canno't find setting {}".format(NAME))
+
         try:
             SPEED = int(SPEED)
         except:
@@ -81,6 +90,7 @@ def setupsettings(parserargs, config_name, file_settings):
         SAVE_IN_ONE_FILE     = CONSTS           if parserargs.onefile is None else True
         LOG_COMMAND_MODE     = LOG_COMMAND_MODE if parserargs.logmode is None else parserargs.logmode
         RAM_DEBUG_MODE       = RAM_DEBUG_MODE
-
-    globals().update(locals())        
+    #! WARNING
+    globals().update(locals()) 
+    #! WARNING       
 setupsettings(None, None, None)

@@ -256,7 +256,7 @@ def datablocks(program):
 def const_evaluation(program, definitions):
     #find consts and definitions (#define X or #define X value)
     const_values, definition = find_consts(program, definitions)
-
+    
     #remove these definitions
     program = [x for x in program if not x[1].startswith("#define")]
 

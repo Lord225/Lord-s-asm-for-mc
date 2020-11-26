@@ -271,7 +271,7 @@ def get_value(strage_format:str):
     else:
         raise error.UndefinedValue(strage_format)
 
-def get_command_name(command:str) -> (str,str):
+def get_command_name(command:str):
     "Will return command type and name"
     if command[0] == "#":
         return command, "debug"
@@ -302,7 +302,6 @@ def get_command_hash(cmd, _type, args) -> str:
         if command_pattern["name"] == cmd:
             if "arguments pass" in command_pattern:
                 raise error.DeprecatedFunction("arguments pass")
-                return command_pattern["HASH"]
             if len(command_pattern["args"]) != len(args):
                 if _type in ["jump_cond", "jump_uncond", "call_cond", "call_uncond"]:
                     if len(command_pattern["args"]) != len(args)+1:
@@ -340,21 +339,25 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
             PAD = 9 if PAD == -1 else PAD
             ADRESS = padbin(val, 8, False)
         return '{}{}'.format(" "*(PAD-len(ADRESS)), ADRESS)
+
     totalrows = rows
     rows //= subrows
     LINE_START = 0
     subrow_cunter = 0
+    OUTPUT = "\n"
+
     if config.RAM_DEBUG_MODE == "simple":
         return '\n'.format(RAM)
     elif config.RAM_DEBUG_MODE == "row":
         try:
-            OUTPUT = "\n"
             for adress in range(0, 255, rows):
                 if subrow_cunter == 0:
                     LINE_START = adress
                 rows_data = ""
                 for i in range(rows):
                     rows_data += generate_value(-1, VALUE_AS)
+                
+
                 if ADD_ASCII_VIEW:
                     if subrow_cunter == (subrows-1):
                         asciirep = ""
@@ -363,6 +366,8 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
                             asciirep += chr(char_id) if char_id >= 32 else "."
 
                         rows_data += "\t{}".format(asciirep)
+                
+
                 if ADRESS_AS_HEX:
                     OUTPUT += " {}:{}{}".format(padhex(adress, 2), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
                 else:
@@ -390,7 +395,8 @@ def execute_debug_command(device, target_core:int, debug_cmd:str):
             print(solve_log_command(debug_cmd[4:], device, target_core))
 
 def solve_log_command(cmd: str, device, target_core: int):
-    MAP = {
+    MAP = dict()
+    {
         "regs":device.CORES[target_core].Regs,
         "rom_stack":device.CORES[target_core].ROMStack,
         "rom_stack_len":len(device.CORES[target_core].ROMStack),
@@ -402,7 +408,7 @@ def solve_log_command(cmd: str, device, target_core: int):
         "sign":device.CORES[target_core].ALU_FLAGS["sign"],
         "zero":device.CORES[target_core].ALU_FLAGS["zero"],
         "partity":device.CORES[target_core].ALU_FLAGS["partity"]
-        }
+    }
         
     return cmd.format_map(MAP)
 

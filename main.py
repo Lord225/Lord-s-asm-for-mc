@@ -78,6 +78,7 @@ if config.ACTION == "everything":
 
 
 def main():
+    global PROCESSED_LINE
     print("CPU Assembly tools for minecraft by M. Złotorowicz aka Lord225. 2020")
     print("")
 
@@ -102,6 +103,7 @@ def main():
     Program, line_indicator, JUMPLIST, Settings, data = loading.load_program(config.FILE_NAME, config.CONSTS) #first pass
     
     #Find CPU profile
+    PROFILE_NAME = None
     if config.PROFILE_NAME is None and "PROFILE" in Settings:
         PROFILE_NAME = Settings["PROFILE"]
     if PROFILE_NAME is None:
@@ -135,9 +137,12 @@ def main():
 
     print("Total load time: {}ms".format((time_start-load_start_time)/1000000))
 
+    builded = list()
     if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "refactor"]:
         #compile
         builded = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
+        
+        to_save = dict()
         if config.ACTION[:len("compile")] == "compile":
             to_save = iss.get_compiled(builded, config.BUILD_OFFSET)
         elif config.ACTION == "refactor":

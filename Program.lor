@@ -4,5 +4,5 @@
 #data 0x10 "Hello World"
 
 :CORE0
-    #debug ram
+    #ram
     
