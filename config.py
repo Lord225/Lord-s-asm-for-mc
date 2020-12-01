@@ -1,75 +1,77 @@
-import core.error as err
+import core.error as errors
 
-#GLOBAL CONFIGS
-#UNSAFE CODE DO NOT TRY THIS AT HOME
+class CONFIG_LIST:
+    def __init__(self) -> None:
+        self.FILE_NAME = "Program.lor"
+        self.PROFILE_NAME = None
+        self.ACTION = "build"
+        self.OUTPUT_FILE = "compiled.txt"
+        self.LOG_INFOO = None
+        self.ACTION_ON_ERROR = None
+        self.BUILD_OFFSET = 0
+        self.SPEED = -1
+        self.CONSTS = []
+        self.SAVE_IN_ONE_FILE = False
+        self.LOG_COMMAND_MODE = None
+        self.RAM_DEBUG_MODE = "row"
+        self.LOG_COMMAND_MODE = "long" 
+        self.USE_FANCY_SYNAX = True
+        self.RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING = False
+        self.RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR = True
+        self.DEBUG_MODE = "simple"
+
+        self.USE_DATA_BLOCKS = True
+        self.DEFAULT_PROFILES_PATH = "profiles"
+        self.G_RISE_ERROR_ON_BAD_RANGES = False      # [True, False] if bad range appears, the error will be rised. 
+        self.FORCE_COMMANDS_IN_SEPERATE_ROWS = True  # commands will always be in seperate rows
+        self.CHECK_ROM_SIZE = -1                     # int           if not -1 compiler will check if program is bigger that hardwere rom
+        self.IGNORE_DEBUG_COMMANDS = False           # [True, False] if true debug commands will be ignored
+        self.IGNORE_EMPTY_PROGRAMS = True            # [True, False] if sector is empty, will not be saved.
+
+        self.CPYTHON_PROFILING = False               # [True, False] 
+        self.TIME_MILTIPLAYER = 0.5                  # float         
+        self.SHOW_RAW_PROGRAM = False                # [True, False] 
+        self.DEFINITION_DEBUG = False                # [True, False] 
 
 #SETTINGS (argparser > file_settings > config > default)
 def setupsettings(parserargs, config_name, file_settings):
     print("Loading Settings:")
-    
-    #Default
-    FILE_NAME = "Program.lor"
-    PROFILE_NAME = None
-    ACTION = "build"
-    OUTPUT_FILE = "compiled.txt"
-    LOG_INFOO = None
-    ACTION_ON_ERROR = None
-    BUILD_OFFSET = 0
-    SPEED = -1
-    CONSTS = []
-    SAVE_IN_ONE_FILE = False
-    LOG_COMMAND_MODE = None
-    RAM_DEBUG_MODE = "row"
-    LOG_COMMAND_MODE = "short" 
-    USE_FANCY_SYNAX = True
-    RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING = False
-    RAISE_ERROR_ON_NOT_IMPLEMENTED_EMULATOR = True
-    DEBUG_MODE = "simple"
 
-    USE_DATA_BLOCKS = True
-    DEFAULT_PROFILES_PATH = "profiles"
-    G_RISE_ERROR_ON_BAD_RANGES = False      # [True, False] if bad range appears, the error will be rised. 
-    FORCE_COMMANDS_IN_SEPERATE_ROWS = True  # commands will always be in seperate rows
-    CHECK_ROM_SIZE = -1                     # int           if not -1 compiler will check if program is bigger that hardwere rom
-    IGNORE_DEBUG_COMMANDS = False           # [True, False] if true debug commands will be ignored
-    IGNORE_EMPTY_PROGRAMS = True            # [True, False] if sector is empty, will not be saved.
-    
-    CPYTHON_PROFILING = False               # [True, False] 
-    TIME_MILTIPLAYER = 0.5                  # float         
-    SHOW_RAW_PROGRAM = False                # [True, False] 
-    DEFINITION_DEBUG = False                # [True, False] 
-    
+    config = CONFIG_LIST()
+
+    def refine(data, new_data = None):
+        if new_data is not None or new_data == "None":
+            data = new_data
+        if data == "False" or data == "True":
+            data = False if data == "False" else True
+        data = None if data == "None" else data
+        return data
 
     #config
     if config_name is not None:
         print("Loading '{}'".format(config_name))
         with open(config_name, "r") as file:
             for line in file:
-
                 # clean up
                 line = line[:line.find("#")]
                 if len(line) == 0 or line.find("=") == -1:
                     continue
                 NAME, DATA = (txt.strip() for txt in line.split("="))
 
-
-                if NAME in locals():
+                if NAME in vars(config):
+                    DATA = refine(DATA)
                     try:
-                        if DATA == "False" or DATA == "True":
-                            DATA = False if DATA == "False" else True
-                        DATA = None if DATA == "None" else DATA
-                        
-                        locals()[NAME] = DATA 
-                    except:
-                        raise err.LoadError("Canno't use setting {} or value '{}' is not valid".format(NAME, DATA))
+                        vars(config)[NAME] = DATA
+                    except Exception as err:
+                        raise errors.LoadError("Canno't use setting {} or value '{}' is not valid".format(NAME, DATA))
 
                 else:
-                    raise err.LoadError("Canno't find setting {}".format(NAME))
+                    raise errors.LoadError("Canno't find setting {}".format(NAME))
 
         try:
-            SPEED = int(SPEED)
+            globals()["SPEED"] = int(globals()["SPEED"])
         except:
-            raise err.LoadError("Canno't interetate SPEED")
+            raise errors.LoadError("Canno't interetate SPEED")
 
     #file settings
     if file_settings is not None:
@@ -78,19 +80,19 @@ def setupsettings(parserargs, config_name, file_settings):
     #argparser
     if parserargs is not None:
         print("Parsing arguments")
-        FILE_NAME            = FILE_NAME        if parserargs.file is None else parserargs.file
-        PROFILE_NAME         = PROFILE_NAME     if parserargs.profile is None else parserargs.profile
-        ACTION               = ACTION           if parserargs.action is None else parserargs.action
-        OUTPUT_FILE          = OUTPUT_FILE      if parserargs.outfile is None else parserargs.outfile
-        LOG_INFOO            = LOG_INFOO        if parserargs.info is None else parserargs.info
-        ACTION_ON_ERROR      = ACTION_ON_ERROR  if parserargs.onerror is None else parserargs.onerror
-        BUILD_OFFSET         = BUILD_OFFSET     if parserargs.offset is None else parserargs.offset
-        SPEED                = parserargs.speed if -1 <= parserargs.speed < 1000 else SPEED
-        CONSTS               = CONSTS           if parserargs.const is None else parserargs.const
-        SAVE_IN_ONE_FILE     = CONSTS           if parserargs.onefile is None else True
-        LOG_COMMAND_MODE     = LOG_COMMAND_MODE if parserargs.logmode is None else parserargs.logmode
-        RAM_DEBUG_MODE       = RAM_DEBUG_MODE
-    #! WARNING
-    globals().update(locals()) 
-    #! WARNING       
+        config.FILE_NAME            = refine(config.FILE_NAME,        parserargs.file)
+        config.PROFILE_NAME         = refine(config.PROFILE_NAME,     parserargs.profile) 
+        config.ACTION               = refine(config.ACTION,           parserargs.action)      
+        config.OUTPUT_FILE          = refine(config.OUTPUT_FILE,      parserargs.outfile)
+        config.LOG_INFOO            = refine(config.LOG_INFOO,        parserargs.info)       
+        config.ACTION_ON_ERROR      = refine(config.ACTION_ON_ERROR,  parserargs.onerror)
+        config.BUILD_OFFSET         = refine(config.BUILD_OFFSET,     parserargs.offset)
+        config.SPEED                = refine(config.SPEED,            parserargs.speed)
+        config.CONSTS               = refine(config.CONSTS,           parserargs.const)
+        config.SAVE_IN_ONE_FILE     = refine(config.SAVE_IN_ONE_FILE, parserargs.onefile)  
+        config.LOG_COMMAND_MODE     = refine(config.LOG_COMMAND_MODE, parserargs.logmode)
+        config.RAM_DEBUG_MODE       = config.RAM_DEBUG_MODE
+
+    globals().update(vars(config))
+  
 setupsettings(None, None, None)

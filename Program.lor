@@ -4,5 +4,7 @@
 #data 0x10 "Hello World"
 
 :CORE0
-    #ram
-    
+    mov $1, reg[0]
+    mov $1, reg[1]
+    add reg[1], reg[0]
+    #regs

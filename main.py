@@ -18,7 +18,7 @@ parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX 
 help="""Name of file to proces
 Default: Program.lor
 """)
-parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "refactor"], type=str, default="build",
+parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "refactor"], type=str, default = None,
 help="""What script is supposed to do with file 
 > build         - Build source and execute 
 > compile-dec   - Build source and save in easy-to-read format
@@ -31,14 +31,14 @@ Default: build
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
-parser.add_argument("-l", "--logmode", choices=["short", "long"], type=str, default=None,
+parser.add_argument("-l", "--logmode", choices=["short", "long", "None"], type=str, default = None,
 help="""Choose method of logging CPU's command while executing
 > short - Simple logging
 > long  - Full logging
 > None  - No logging
 Default: None
 """)
-parser.add_argument("-i", "--info", choices=["warnings", "errors", "both"], type=str, default=None,
+parser.add_argument("-i", "--info", choices=["warnings", "errors", "both", "None"], type=str, default = None,
 help="""Choose CPU warning level
 > warnings  - Warnings only
 > errors    - Errors only
@@ -46,7 +46,7 @@ help="""Choose CPU warning level
 > None      - No CPU warnings in console
 Default: None
 """)
-parser.add_argument("-e", "--onerror", choices=["interupt", "abort"], type=str, default=None, 
+parser.add_argument("-e", "--onerror", choices=["interupt", "abort", "None"], type=str, default = None, 
 help="""What is suppouse to happen on error
 > interupt - Waits for user
 > abort    - Close script
@@ -72,10 +72,6 @@ help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
 PROCESSED_LINE = -1
-
-if config.ACTION == "everything":
-    raise error.CurrentlyUnsupported("ACTION->everything")
-
 
 def main():
     global PROCESSED_LINE
@@ -112,6 +108,7 @@ def main():
     #GET PROFILE AND DEVICE
     CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS = loading.get_profile(config.DEFAULT_PROFILES_PATH, PROFILE_NAME, config.CONSTS)
     loading.update_keywords(KEYWORDS)
+    iss.load_profie(CPU_PROFILE, emulator)
 
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
     
@@ -186,7 +183,6 @@ def main():
         if config.ACTION != "build":
             print("="*50)
             return
-
 
     #################################################
     #                  EMULATING                    #
