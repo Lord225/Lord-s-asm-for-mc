@@ -7,7 +7,6 @@ import core.loading as loading
 import core.interpreter_synax_solver as iss
 import core.error as error
 import argparse
-import os
 import time
 import config
 
@@ -136,16 +135,17 @@ def main():
 
     builded = list()
     if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "refactor"]:
-        #compile
+        # COMPILE
         builded = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
         
+        # COMPILE VARIANTS
         to_save = dict()
         if config.ACTION[:len("compile")] == "compile":
             to_save = iss.get_compiled(builded, config.BUILD_OFFSET)
         elif config.ACTION == "refactor":
             to_save = iss.form_full_log_command_batch(builded, config.BUILD_OFFSET)
 
-        #info
+        # INFO
         total_command_count = sum([len(x) for x in Program.values()])
         time_end = time.thread_time_ns()
         TOTAL = (time_end-time_start)/1000000.0
@@ -173,13 +173,13 @@ def main():
         elif config. ACTION == "refactor":
             loading.save(config.OUTPUT_FILE, to_save)
         
-        #CHECK INFO AND WARNINGS
+        # CHECK INFO AND WARNINGS
         if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
             print("info:", iss.G_INFO_CONTAINER["info"])
         if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
             print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
-        #end
+        # END
         if config.ACTION != "build":
             print("="*50)
             return
@@ -194,11 +194,14 @@ def main():
                 DEVICE.RAM[adress] = value
             except Exception as err:
                 raise error.LoadError("Error while parsing data to device: {}".format(err))
+
+    # MAIN LOOP
     while True:
         for active in actives:
             core_id = loading.CORE_ID_MAP[active]
-            
-            #GET AND EXECUTE COMMAND            
+            info = dict()
+
+            # GET AND EXECUTE COMMAND            
             if config.ACTION == "build":
                 try:
                     CPU_COMMAND = builded[active][DEVICE.get_rom_adress(core_id)]
@@ -206,6 +209,7 @@ def main():
                 except IndexError:
                     end_sequence()
                     continue
+
                 if type(CPU_COMMAND) is list:
                     for thread, (_type, formed_command, args) in enumerate(CPU_COMMAND):
                         info = iss.execute(_type, formed_command, DEVICE, core_id, args, thread)
@@ -214,39 +218,29 @@ def main():
                 else:
                     _type, formed_command, args = CPU_COMMAND
                     info = iss.execute(_type, formed_command, DEVICE, core_id, args, None)
-            else:
-                #old, interprete
-                try:
-                    command = Program[active][DEVICE.get_rom_adress(core_id)]
-                except IndexError:
-                    end_sequence()
-                    continue
-                
-                info = iss.read_and_execute(DEVICE, JUMPLIST[active], core_id, command)
 
-
-            #CHECK INFO AND WARNINGS
+            # CHECK INFO AND WARNINGS
             if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(info["info"]) > 0:
                 print("info:", info["info"])
             if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(info["warnings"]) > 0:
                 print("warnings:", info["warnings"])
             
             
-            #CHECK PERFORMANCE
+            # CHECK PERFORMANCE
             if not info["skip"]:
                 COMMAND_COUNTER[core_id] += 1
             DEVICE.end_tick(core_id)
             
-            #STOP FLAG
+            # STOP FLAG
             if info["stop"]:
                 end_sequence()
 
-        #END CPU TICK
+        # END CPU TICK
         DEVICE.end_cpu_tick()
         if config.SPEED != -1:
             time.sleep(1/config.SPEED)
 
-        
+        # END LOOP
         if len(actives) == 0:
             print("All cores did their duty.")
             #exit

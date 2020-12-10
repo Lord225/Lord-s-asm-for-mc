@@ -33,7 +33,7 @@ class CONFIG_LIST:
         self.SHOW_RAW_PROGRAM = False                # [True, False] 
         self.DEFINITION_DEBUG = False                # [True, False] 
 
-#SETTINGS (argparser > file_settings > config > default)
+# SETTINGS PRIORITY (argparser > file_settings > config > default)
 def setupsettings(parserargs, config_name, file_settings):
     print("Loading Settings:")
 
@@ -47,12 +47,12 @@ def setupsettings(parserargs, config_name, file_settings):
         data = None if data == "None" else data
         return data
 
-    #config
+    # Config
     if config_name is not None:
         print("Loading '{}'".format(config_name))
         with open(config_name, "r") as file:
             for line in file:
-                # clean up
+                # Clean up
                 line = line[:line.find("#")]
                 if len(line) == 0 or line.find("=") == -1:
                     continue
@@ -73,11 +73,11 @@ def setupsettings(parserargs, config_name, file_settings):
         except:
             raise errors.LoadError("Canno't interetate SPEED")
 
-    #file settings
+    # File Settings
     if file_settings is not None:
         print("Loading file settings")
 
-    #argparser
+    # Argparser
     if parserargs is not None:
         print("Parsing arguments")
         config.FILE_NAME            = refine(config.FILE_NAME,        parserargs.file)

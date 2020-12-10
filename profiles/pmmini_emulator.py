@@ -10,13 +10,12 @@ REG_COUNT = 4
 WORD_SIZE = 8
 WORD_MAX = int(2**WORD_SIZE)
 
-
 class Core:
     def __init__(self, ID, RAM):
         #TODO
         #numpy representation
         self.ID = ID
-        self.Regs = np.zeros(shape=(REG_COUNT), dtype=np.uint8)                                 #rejestry                           #bufor rejestrów                                           #Stos romu
+        self.Regs = np.zeros(shape=(REG_COUNT), dtype=np.uint8)                                 #rejestry
         self.ALU_FLAGS = {"overflow":False,"sign":False,"zero":False,"partity":False}
         self.ROM_COUNTER = 0
         self.ROMStack = []

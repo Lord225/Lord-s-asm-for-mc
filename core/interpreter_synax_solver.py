@@ -19,6 +19,7 @@ PROFILE = None
 def load_profie(profile, emulator):
     global PROFILE
     PROFILE = loading.PROFILE_DATA(profile=profile, emulator=emulator)
+
 def padhex(x, pad, prefix = True):
         return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
 def padbin(x, pad, prefix = True):
@@ -134,7 +135,7 @@ def get_command_name(command:str):
         raise error.UndefinedCommand("Undefined error while searching for command: {}".format(err))
     raise error.UndefinedCommand(command)
 
-#* DOTO replace emulator.WORD_SIZE with profile value
+
 def cliping_beheivior(arg, Max):
     """Way that solver will treat cliping"""
     if config.G_RISE_ERROR_ON_BAD_RANGES:
@@ -166,7 +167,7 @@ def get_command_hash(cmd, _type, args) -> str:
 
 def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
     """
-    It just works. Do not ask how.
+    It just works.
     """
     if rows%subrows != 0:
         raise error.UndefinedSetting("Row number should be dividable by subrow count.")
@@ -273,25 +274,6 @@ def replace_fancy_commands(cmd, _type, args):
         args = args_new
     return cmd, _type, args
 
-def check_custom_argument_pass(cmd, _type, args):
-    return cmd, _type, args
-    raise error.DeprecatedFunction("argument passes")
-
-    for command_pattern in COMMANDS_OREDERD_BY_SUBTYPES[_type]:
-        if command_pattern["name"] == cmd:
-            if "arguments pass" in command_pattern:
-                new_args = []
-                for arg in command_pattern["arguments pass"]:
-                    if "const" in arg:
-                        new_args.append((arg["const"], ADRESS_MODE_REMAP["const"]))
-                    elif "arg" in arg:
-                        new_args.append(args[arg["arg"]])
-                    else:
-                        raise error.ProfileStructureError("Argument pass is fucked up.")
-                return cmd, _type, new_args
-    else:
-        return cmd, _type, args
-
 def check_argument_ranges(args):
     for arg, Type in args:
         try:
@@ -313,26 +295,10 @@ def solve(JUMP_MAP: dict, target_core: str, command:str):
 
     if config.USE_FANCY_SYNAX:
         cmd, _type, args = replace_fancy_commands(cmd, _type, args)
-        cmd, _type, args = check_custom_argument_pass(cmd, _type, args)
 
     cmd_hash = get_command_hash(cmd, _type, args)
 
     return _type, cmd_hash, args
-
-def read_and_execute(device, JUMP_MAP: dict, target_core:str, command:str):
-    """Will interprate and execute raw command"""
-    raise error.Unsupported("depraced function: read_and_execute")
-
-    _type, cmd_hash, args = solve(JUMP_MAP, target_core, command)
-    
-    # Comand has been computed: 
-    # formed_commad - command accepted by COMMAND_MAP
-    # args          - arguments in format [(value, ADRESS_MODE), (value, ADRESS_MODE),...] 
-    # _type         - cmd generalized command type _TYPE
-
-    execute(_type, cmd_hash, device, target_core, args, 0)
-    
-    return G_INFO_CONTAINER
 
 def execute(_type, cmd_hash, device, target_core, args, thread):
     """Will execute builded commad on device"""
