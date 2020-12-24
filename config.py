@@ -45,6 +45,14 @@ def setupsettings(parserargs, config_name, file_settings):
         if data == "False" or data == "True":
             data = False if data == "False" else True
         data = None if data == "None" else data
+        if type(data) is str:
+            try:
+                data = int(data)
+            except:
+                try:
+                    data = float(data)
+                except:
+                    pass
         return data
 
     # Config
@@ -67,11 +75,6 @@ def setupsettings(parserargs, config_name, file_settings):
 
                 else:
                     raise errors.LoadError("Canno't find setting {}".format(NAME))
-
-        try:
-            globals()["SPEED"] = int(globals()["SPEED"])
-        except:
-            raise errors.LoadError("Canno't interetate SPEED")
 
     # File Settings
     if file_settings is not None:

@@ -12,6 +12,8 @@ import config
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
+ACTION_ON_ERROR = "interupt"
+
 # -f -a -o -l -i -e -of -s --const --onefile
 parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX WITH RELATIVE DIR
 help="""Name of file to proces
@@ -45,7 +47,7 @@ help="""Choose CPU warning level
 > None      - No CPU warnings in console
 Default: None
 """)
-parser.add_argument("-e", "--onerror", choices=["interupt", "abort", "None"], type=str, default = None, 
+parser.add_argument("-e", "--onerror", choices=["interupt", "abort"], type=str, default = None, 
 help="""What is suppouse to happen on error
 > interupt - Waits for user
 > abort    - Close script
@@ -70,6 +72,9 @@ parser.add_argument('--onefile', action='append',
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
+ACTION_ON_ERROR = 'abort'
+ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
+
 PROCESSED_LINE = -1
 
 def main():
@@ -85,7 +90,7 @@ def main():
             PER_CMD = (time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000)
         print("="*50)
         print("Core {} finished work ({} ticks, apr. {}s on device)".format(core_id, COMMAND_COUNTER[core_id], COMMAND_COUNTER[core_id]*config.TIME_MILTIPLAYER))
-        print("Total execution time: {:0.4f}s, {:0.3f} ms per command".format(PER_CMD, PER_CMD))
+        print("Total execution time: {:0.3f}s, {:0.3f} ms per command".format(PER_CMD, PER_CMD))
         actives.remove(active)
 
     #################################################
@@ -118,9 +123,7 @@ def main():
     
     #parse arguments
     config.setupsettings(parserargs, "settings.config", None)
-    
-    if config.ACTION == "interprete":
-        print("WARNING: 'interprete' functionality is now deprecated. Do not use it.")
+
 
     #################################################
     #                   COMPILING                   #
@@ -251,7 +254,7 @@ if __name__ == "__main__":
         import cProfile
         cProfile.run("main()", sort="cumtime")
     else:
-        if config.ACTION_ON_ERROR is None:
+        if ACTION_ON_ERROR is None:
             main()
         else:
             try:
@@ -267,7 +270,7 @@ if __name__ == "__main__":
                         print("Error in unknown line:")
                 print("Error:", err)
                 
-                if config.ACTION_ON_ERROR == "interupt":
+                if ACTION_ON_ERROR == "interupt":
                     input()
-                elif config.ACTION_ON_ERROR == "abort":
+                elif ACTION_ON_ERROR == "abort":
                     pass

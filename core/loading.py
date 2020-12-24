@@ -368,6 +368,7 @@ class PROFILE_DATA:
                         self.profile["CPU"][name]
                     except KeyError as err:
                         raise error.ProfileStructureError("Expected key in master branch: {}".format(name))
+
                 #DEFINES
                 if type(self.profile["CPU"]["DEFINES"]) is not list:
                     raise error.ProfileStructureError("Expected 'DEFINES' to be list of definitions: {}".format(name))
@@ -395,6 +396,7 @@ class PROFILE_DATA:
                     cmd__NAMESPACE__.append("emulator")
                 else:
                     cmd__NAMESPACE__WARNING.append("emulator")
+
                 #COMMANDS
                 for name, cmd in self.profile["CPU"]["COMMANDS"].items():
                     for cmd_must in cmd__NAMESPACE__:
@@ -407,6 +409,29 @@ class PROFILE_DATA:
                             cmd[cmd_should]
                         except KeyError as err:
                             print("WARNING: Expected '{}' key in 'COMMANDS'->'{}'".format(cmd_should, name)) 
+                    ARG_NAMES = []
+                    for arg in cmd["args"]:
+                        try:
+                            ARG_NAMES.append(arg["name"])
+                        except KeyError as err:
+                            raise error.ProfileStructureError("Expected '{}' key in CPU->COMMANDS[{}]->args".format("name", name))
+                        try:
+                            arg["type"]
+                        except KeyError as err:
+                            raise error.ProfileStructureError("Expected '{}' key in CPU->COMMANDS[{}]->args".format("type", name))
+                        if not (arg["type"] in self.profile["CPU"]["parametrs"]["arguments sizes"].keys() or arg["type"] in self.profile["CPU"]["CUSTOM ARGUMENTS"].keys()):
+                            raise error.ProfileStructureError("Undefined argument type: '{}'".format(arg["type"]))
+                    try:
+                        cmd["bin"]
+                    except:
+                        pass
+                    else:
+                        for key, val in cmd["bin"].items():
+                            if key not in self.profile["CPU"]["ARGUMENTS"]:
+                                raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
+                            if type(val) is not int and val not in ARG_NAMES:
+                                raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
+                    
             except KeyError as err:
                 raise err
     def get_full_command_set(self,):

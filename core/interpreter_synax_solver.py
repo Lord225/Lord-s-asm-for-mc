@@ -54,7 +54,7 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     Accepts:
     reg[_value] -> reg    (reg access, fancy)
     _value      -> reg    (reg access, simple)
-    $_value     -> _value (const)
+    _value     -> _value  (const)
 
     Any selector in ADRESS_MODE_REMAP dict. 
 
@@ -76,9 +76,13 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     raw_argument = raw_raw_argument.lower()
     if len(raw_argument)==0:
         raise error.Expected("Argument", raw_argument)
-    if raw_argument[0] == "$":
-        return get_value(raw_argument[1:]), PROFILE.ADRESS_MODE_REMAP["const"]
-    elif "ram" in raw_argument:
+    #! NEW VERSION, Update wiki.
+    try:
+        return get_value(raw_argument), PROFILE.ADRESS_MODE_REMAP["const"]
+    except:
+        pass
+
+    if "ram" in raw_argument:
         _reg_start = raw_argument.find("reg")
         if _reg_start != -1:
             if raw_argument.find("ram") > _reg_start:
@@ -92,7 +96,7 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
         return extract_number_from_bracets(raw_argument), PROFILE.ADRESS_MODE_REMAP["reg"]
     else:
         if raw_raw_argument in JUMP_LIST:
-            return get_jump_adress(raw_raw_argument),  PROFILE.ADRESS_MODE_REMAP["adress"]
+            return get_jump_adress(raw_raw_argument, JUMP_LIST),  PROFILE.ADRESS_MODE_REMAP["adress"]
         #probably custom arguments
         for key, val in PROFILE.ADRESS_MODE_REMAP.items():
             if key in raw_argument:
@@ -163,7 +167,7 @@ def get_command_hash(cmd, _type, args) -> str:
                 #print("mached: {}".format(command_pattern["emulator"]))
                 return command_pattern["HASH"]        
     else:
-        raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, PROFILE.ADRESS_MODE_REMAP_REVERSED[args]))
+        raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, [PROFILE.ADRESS_MODE_REMAP_REVERSED[arg[1]] for arg in args]))
 
 def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
     """
@@ -205,7 +209,6 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
                 for i in range(rows):
                     rows_data += generate_value(-1, VALUE_AS)
                 
-
                 if ADD_ASCII_VIEW:
                     if subrow_cunter == (subrows-1):
                         asciirep = ""
@@ -215,7 +218,6 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
 
                         rows_data += "\t{}".format(asciirep)
                 
-
                 if ADRESS_AS_HEX:
                     OUTPUT += " {}:{}{}".format(padhex(adress, 2), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
                 else:
@@ -227,7 +229,7 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
         return OUTPUT
 
 def execute_debug_command(device, target_core:int, debug_cmd:str):
-    debug_cmd = debug_cmd.lower()[1:]
+    debug_cmd = debug_cmd[1:]
     if config.DEBUG_MODE == "simple":
         if debug_cmd == "regs":
             print("Core{} regs =".format(target_core),device.CORES[target_core].get_regs_status())
@@ -243,21 +245,7 @@ def execute_debug_command(device, target_core:int, debug_cmd:str):
             print(solve_log_command(debug_cmd[4:], device, target_core))
 
 def solve_log_command(cmd: str, device, target_core: int):
-    MAP = dict()
-    {
-        "regs":device.CORES[target_core].Regs,
-        "rom_stack":device.CORES[target_core].ROMStack,
-        "rom_stack_len":len(device.CORES[target_core].ROMStack),
-        "stack":device.CORES[target_core].Stack,
-        "stack_len":len(device.CORES[target_core].Stack),
-        "flags":device.CORES[target_core].ALU_FLAGS,
-        "rom":device.CORES[target_core].ROM_COUNTER,
-        "overflow":device.CORES[target_core].ALU_FLAGS["overflow"],
-        "sign":device.CORES[target_core].ALU_FLAGS["sign"],
-        "zero":device.CORES[target_core].ALU_FLAGS["zero"],
-        "partity":device.CORES[target_core].ALU_FLAGS["partity"]
-    }
-        
+    MAP = device.CORES[target_core].__dict__
     return cmd.format_map(MAP)
 
 def replace_fancy_commands(cmd, _type, args):
@@ -322,9 +310,6 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
             raise error.Unsupported("Ouch. Ask author if you need more that 4 args...")
     except Exception as err:
         raise error.Unsupported("What just happen? You have to report this!, {}".format(err))   
-
-
-
 
     if config.LOG_COMMAND_MODE is not None:
         end = "\n" if thread is None or config.FORCE_COMMANDS_IN_SEPERATE_ROWS else "\t"
@@ -391,7 +376,7 @@ def form_full_log_command_batch(batch, BUILD_OFFSET):
     for core in loading.KEYWORDS:
         for COMMAND in batch[core]:
             if type(COMMAND) is tuple:
-                _type, formed_command, args, jump_adress = COMMAND 
+                _type, formed_command, args = COMMAND 
                 if _type != TYPE.DEBUG:
                     builded_program[core].append(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args))
             else:
@@ -484,7 +469,7 @@ def generate_debug_frame():
 def get_csv(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
-        builded_program[core].append(str().join(['{},'.format(key," "*(val["size"]+6-len(key))) for key, val in ROM_SIZES.items()])[:-1])
+        builded_program[core].append(str().join(['{},'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()])[:-1])
         for CMD in compiled[core]:
             line = ""
             for key, value in CMD.items():

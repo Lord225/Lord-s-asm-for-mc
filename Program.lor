@@ -1,35 +1,6 @@
 [PROFILE pmmini_profile.json]
-#macro HELLO_MACRO(x,y)
-    mov $1, reg[0]
-    mov $1, reg[1]
-    add reg[1], reg[0]
-#endmacro
-#macro HELLO_MACRO2(x,y)
-    mov $1, reg[0]
-    mov $1, reg[1]
-    add reg[1], reg[0]
-#endmacro
-
-
-#define HELLO
-#data 0x00 0xcc, 0xcc
-#data 0x10 "Hello World"
 
 
 
 :CORE0
-#ifdef HELLO
-    mov $1, reg[0]
-    mov $1, reg[1]
-    add reg[1], reg[0]
-#else
-    #ifdef HELLO2
-        mov $1, reg[0]
-        mov $1, reg[1]
-        add reg[1], reg[0]
-    #endif
-    mov $1, reg[0]
-    mov $1, reg[1]
-#endif
-    add reg[1], reg[0]
-    #regs
+    mov 0, 0
