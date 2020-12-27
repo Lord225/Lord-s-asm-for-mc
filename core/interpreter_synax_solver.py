@@ -149,7 +149,10 @@ def cliping_beheivior(arg, Max):
 def get_command_hash(cmd, _type, args) -> str:
     """return hash of this command (accepted by) COMMAND_MAP"""
     if len(args) == 0:
-        return cmd
+        #TODO THIS
+        raise error.Unsupported("Fix this.")
+        return PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[cmd]["HASH"]
+
     for command_pattern in PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[_type]:
         if command_pattern["name"] == cmd:
             if "arguments pass" in command_pattern:

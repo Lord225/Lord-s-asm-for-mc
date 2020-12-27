@@ -154,6 +154,8 @@ def find_macros(program, definitions):
                         if end == -1:
                             raise error.LoadError("Expected ')' in macro definition")
                         name = components[1][:components[1].find("(")]
+                        if len(name) == 0:
+                            raise error.LoadError("Expected name for the macro")
                         parametres = conact[start+1:end].split(',')
                         line = next(line_iter)
                         while not line[1].startswith("#endmacro"):
@@ -248,6 +250,8 @@ def datablocks(program):
                     raise error.LoadError("String hasn't been close or open")
             else:
                 data_raw = ''.join(splited[2:])
+                if len(data_raw) == 0:
+                    raise error.LoadError("Datablock doesn't provide data.")
                 data = [int(x, base=0) for x in data_raw.split(',')]
             for index, value in enumerate(data):
                 DATA[index+ADRESS_START] = value
