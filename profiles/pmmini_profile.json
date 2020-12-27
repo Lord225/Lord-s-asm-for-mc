@@ -51,8 +51,6 @@
             "CORE1"
         ],
         "CUSTOM ARGUMENTS":{
-            "see":{
-            }
         },
         "COMMANDS":{
             "mov const reg":{

@@ -1,5 +1,5 @@
 #Public domain, free to use, by M. Złotorowicz aka Lord255
-VERSION = "0.7"
+VERSION = "1.0"
 
 import math as m
 import random as rnd
@@ -12,7 +12,6 @@ import config
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
-ACTION_ON_ERROR = "interupt"
 
 # -f -a -o -l -i -e -of -s --const --onefile
 parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX WITH RELATIVE DIR
@@ -72,7 +71,7 @@ parser.add_argument('--onefile', action='append',
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = 'abort'
+ACTION_ON_ERROR = None
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
@@ -123,7 +122,6 @@ def main():
     
     #parse arguments
     config.setupsettings(parserargs, "settings.config", None)
-
 
     #################################################
     #                   COMPILING                   #
@@ -228,7 +226,6 @@ def main():
             if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(info["warnings"]) > 0:
                 print("warnings:", info["warnings"])
             
-            
             # CHECK PERFORMANCE
             if not info["skip"]:
                 COMMAND_COUNTER[core_id] += 1
@@ -246,7 +243,7 @@ def main():
         # END LOOP
         if len(actives) == 0:
             print("All cores did their duty.")
-            #exit
+            # EXIT
             break
     
 if __name__ == "__main__":

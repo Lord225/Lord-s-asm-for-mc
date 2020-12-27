@@ -44,7 +44,11 @@
         "DEFINES":[
             "__ZCORE__"
         ],
-
+        "KEYWORDS":[
+            "CORE0"
+        ],
+        "CUSTOM ARGUMENTS":{
+        },
         "parametrs":{
             "word len":8,
             "num of regs":7,
@@ -106,11 +110,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"from"
+                        "name":"from"
                     },
                     {
                         "type":"reg",
-                        "description":"to"
+                        "name":"to"
                     }
                 ],
                 "bin":{
@@ -131,11 +135,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"from"
+                        "name":"from"
                     },
                     {
                         "type":"ptr",
-                        "description":"ptr"
+                        "name":"ptr"
                     }
                 ],
                 "parent":"write reg reg"
@@ -151,11 +155,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"from"
+                        "name":"from"
                     },
                     {
                         "type":"reg",
-                        "description":"ptr"
+                        "name":"ptr"
                     }
                 ]
             },
@@ -170,11 +174,11 @@
                 "args":[
                     {
                         "type":"ptr",
-                        "description":"ptr to read"
+                        "name":"ptr to read"
                     },
                     {
                         "type":"reg",
-                        "description":"to"
+                        "name":"to"
                     }
                 ],
                 "parent":"read reg reg"
@@ -190,11 +194,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"ptr to read"
+                        "name":"ptr to read"
                     },
                     {
                         "type":"reg",
-                        "description":"to"
+                        "name":"to"
                     }
                 ]
             },
@@ -209,11 +213,11 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value"
+                        "name":"value"
                     },
                     {
                         "type":"reg",
-                        "description":"ptr to write"
+                        "name":"ptr to write"
                     }
                 ]
             },
@@ -228,11 +232,11 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value"
+                        "name":"value"
                     },
                     {
                         "type":"ptr",
-                        "description":"ptr to write"
+                        "name":"ptr to write"
                     }
                 ],
                 "parent":"write const reg"
@@ -248,11 +252,11 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value"
+                        "name":"value"
                     },
                     {
                         "type":"reg",
-                        "description":"ptr to write"
+                        "name":"ptr to write"
                     }
                 ]
             },
@@ -267,11 +271,11 @@
                 "args":[
                     {
                         "type":"ram",
-                        "description":"ram adress to read"
+                        "name":"ram adress to read"
                     },
                     {
                         "type":"reg",
-                        "description":"ptr to write"
+                        "name":"ptr to write"
                     }
                 ],
                 "parent":"read const reg"
@@ -287,11 +291,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register to read"
+                        "name":"register to read"
                     },
                     {
                         "type":"const",
-                        "description":"adress to write"
+                        "name":"adress to write"
                     }
                 ]
             },
@@ -306,11 +310,11 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register to read"
+                        "name":"register to read"
                     },
                     {
                         "type":"ram",
-                        "description":"adress to write"
+                        "name":"adress to write"
                     }
                 ],
                 "parent":"write reg const"
@@ -326,11 +330,11 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value to write"
+                        "name":"value to write"
                     },
                     {
                         "type":"const",
-                        "description":"adress to write"
+                        "name":"adress to write"
                     }
                 ]
             },
@@ -345,11 +349,11 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value to write"
+                        "name":"value to write"
                     },
                     {
                         "type":"ram",
-                        "description":"adress to write"
+                        "name":"adress to write"
                     }
                 ],
                 "parent":"write const const"
@@ -366,15 +370,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -389,18 +393,111 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"argument a"
+                        "name":"argument a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
+            "and const reg":{
+                "name":"and",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_and",
+                "description":"Set reg[z] to value x | reg[y]",
+                "example":"and {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "and reg reg":{
+                "name":"and",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_and",
+                "description":"Set reg[z] to value reg[x] | reg[y]",
+                "example":"and {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "xor const reg":{
+                "name":"xor",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_xor",
+                "description":"Set reg[z] to value x | reg[y]",
+                "example":"xor {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "xor reg reg":{
+                "name":"xor",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_xor",
+                "description":"Set reg[z] to value reg[x] | reg[y]",
+                "example":"xor {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            
             
             "inc reg":{
                 "name":"inc",
@@ -413,7 +510,7 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register to increment"
+                        "name":"register to increment"
                     }
                 ]
             },
@@ -429,7 +526,7 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register to decrement"
+                        "name":"register to decrement"
                     }
                 ]
             },
@@ -445,15 +542,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -468,15 +565,15 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"argument a"
+                        "name":"argument a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -492,15 +589,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -515,15 +612,61 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"argument a"
+                        "name":"argument a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "rsub const reg":{
+                "name":"rsub",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_rsub",
+                "description":"Set reg[z] to value x - reg[y]",
+                "example":"sub {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "rsub reg reg":{
+                "name":"rsub",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_rsub",
+                "description":"Set reg[z] to value reg[x] + reg[y]",
+                "example":"sub {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -539,15 +682,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -562,15 +705,61 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"argument a"
+                        "name":"argument a"
                     },
                     {
                         "type":"reg",
-                        "description":"argument b"
+                        "name":"argument b"
                     },
                     {
                         "type":"reg",
-                        "description":"register to write output"
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "lsh const reg":{
+                "name":"lsh",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_const_reg_lsh",
+                "description":"Set reg[z] to value x - reg[y]",
+                "example":"lsh {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
+                    }
+                ]
+            },
+            "lsh reg reg":{
+                "name":"lsh",
+                "type":"alu",
+                "subtype":"alu_long",
+                "emulator":"alu_reg_reg_lsh",
+                "description":"Set reg[z] to value reg[x] + reg[y]",
+                "example":"lsh {}, reg[{}], reg[{}]",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"argument a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"argument b"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register to write output"
                     }
                 ]
             },
@@ -586,7 +775,7 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register to negate"
+                        "name":"register to negate"
                     }
                 ]
             },
@@ -603,7 +792,7 @@
                 "args":[
                     {
                         "type":"adress",
-                        "description":"rom adress to jump"
+                        "name":"rom adress to jump"
                     }
                 ]
             },
@@ -619,7 +808,7 @@
                 "args":[
                     {
                         "type":"adress",
-                        "description":"rom adress to call"
+                        "name":"rom adress to call"
                     }
                 ]
             },
@@ -636,15 +825,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
                     }
                 ]
             },
@@ -660,15 +849,15 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register a"
+                        "name":"register a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
                     }
                 ]
             },
@@ -685,15 +874,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
                     }
                 ]
             },
@@ -709,15 +898,161 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register a"
+                        "name":"register a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+
+            "jump greater const":{
+                "name":"jg",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_greater_const_reg",
+
+                "description":"Jump to adress if value is greater to register",
+                "example":"jg {}, reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            "jump greater reg":{
+                "name":"jg",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_greater_reg_reg",
+
+                "description":"Jump to adress if register is greater to other register",
+                "example":"jg reg[{}], reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            "jump less equal const":{
+                "name":"jl",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_less_eq_const_reg",
+
+                "description":"Jump to adress if value is less to register",
+                "example":"jl {}, reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            "jump less equal reg":{
+                "name":"jle",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_less_eq_reg_reg",
+
+                "description":"Jump to adress if register is less to other register",
+                "example":"jle reg[{}], reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            
+            "jump greater equal const":{
+                "name":"jge",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_greater_eq_const_reg",
+
+                "description":"Jump to adress if value is greater to register",
+                "example":"jg {}, reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+            "jump greater equal reg":{
+                "name":"jge",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_greater_eq_reg_reg",
+
+                "description":"Jump to adress if register is greater to other register",
+                "example":"jg reg[{}], reg[{}], {}",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"register a"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"register b"
+                    },
+                    {
+                        "type":"adress",
+                        "name":"rom adress to jump if condition is satisfiet"
                     }
                 ]
             },
@@ -734,15 +1069,15 @@
                 "args":[
                     {
                         "type":"const",
-                        "description":"value a"
+                        "name":"value a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
                     }
                 ]
             },
@@ -758,18 +1093,62 @@
                 "args":[
                     {
                         "type":"reg",
-                        "description":"register a"
+                        "name":"register a"
                     },
                     {
                         "type":"reg",
-                        "description":"register b"
+                        "name":"register b"
                     },
                     {
                         "type":"adress",
-                        "description":"rom adress to jump if condition is satisfiet"
+                        "name":"rom adress to jump if condition is satisfiet"
+                    }
+                ]
+            },
+
+            "jump overflow":{
+                "name":"jo",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"jump_overflow_const_reg",
+
+                "description":"Jump to adress if register is greater to other register",
+                "example":"jg",
+
+                "args":[
+                   
+                ]
+            },
+            "return":{
+                "name":"ret",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"ret",
+
+                "description":"Jump to adress if register is greater to other register",
+                "example":"ret",
+
+                "args":[
+                   
+                ]
+            },
+            "interupt":{
+                "name":"int",
+                "type":"JUMP",
+                "subtype":"jump_cond",
+                "emulator":"interutp",
+
+                "description":"Jump to adress if register is greater to other register",
+                "example":"int {}",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"a"
                     }
                 ]
             }
+
 
         },
         "PATTERNS":[

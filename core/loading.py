@@ -334,8 +334,10 @@ def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
 
     COMMAND_COUNTER = [0 for _ in range(4)]
     DEVICE = emulator.CPU()
-    KEYWORDS = CPU_PROFILE["CPU"]["KEYWORDS"]
-
+    try:
+        KEYWORDS = CPU_PROFILE["CPU"]["KEYWORDS"]
+    except KeyError as error:
+        raise error.ProfileStructureError("Expected key '{}' in 'CPU'".format("KEYWORDS"))
     return CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS
 
 class PROFILE_DATA:
@@ -414,7 +416,7 @@ class PROFILE_DATA:
                         try:
                             ARG_NAMES.append(arg["name"])
                         except KeyError as err:
-                            raise error.ProfileStructureError("Expected '{}' key in CPU->COMMANDS[{}]->args".format("name", name))
+                            raise error.ProfileStructureError("Expected '{}' key in CPU->COMMANDS['{}']->args".format("name", name))
                         try:
                             arg["type"]
                         except KeyError as err:
@@ -427,8 +429,8 @@ class PROFILE_DATA:
                         pass
                     else:
                         for key, val in cmd["bin"].items():
-                            if key not in self.profile["CPU"]["ARGUMENTS"]:
-                                raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
+                            if key.lower() not in [k.lower() for k in self.profile["CPU"]["ARGUMENTS"].keys()]:
+                                raise error.ProfileStructureError("Undeclared bin's key: '{}'. Delcared ones: {}".format(key, list(cmd["bin"].keys())))
                             if type(val) is not int and val not in ARG_NAMES:
                                 raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
                     

@@ -269,7 +269,7 @@ def check_argument_ranges(args):
         except KeyError as err:
             raise error.ProfileStructureError("Expected custom argument size definiton.", custom=True)
 
-def solve(JUMP_MAP: dict, target_core: str, command:str):
+def solve(JUMP_MAP: dict, command:str):
     cmd, _type = get_command_name(command)
     if _type == "debug":
         return _type, cmd, []
@@ -319,17 +319,17 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
         elif config.LOG_COMMAND_MODE == "long":
             print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end)
         else:
-            raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long','raw', None] got: {}".format(config.LOG_COMMAND_MODE))
+            raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long', 'raw', None] got: {}".format(config.LOG_COMMAND_MODE))
     return G_INFO_CONTAINER
 
 def build_program(Program, line_indicator, JUMPLIST, Settings) -> list:
-    """Returns builded instructions by solve function (will change raw command in to solved)"""
+    """Returns builded instructions by solve function (will change raw command in to solved ones)"""
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
         if core != "SHADER":
             for i, line in enumerate(Program[core]):
                 try:
-                    builded_program[core].append(solve(JUMPLIST[core], loading.CORE_ID_MAP[core], line))
+                    builded_program[core].append(solve(JUMPLIST[core], line))
                 except Exception as err:
                     err.line = "{} ('{}')".format(line_indicator[core][i], line)
                     raise err
@@ -355,7 +355,6 @@ def form_full_log_command(_type, formed_command, device, target_core, args):
     fancy_command = "Core[{}]: ".format(target_core)
     fancy_command = PROFILE.COMMANDSETFULL[formed_command]["name"]
     fancy_command += " "
-    #* TODO FIX ram's moves (now thay are ugly)
     if len(args) != 0:
         for arg in args:
             if arg[1] == PROFILE.ADRESS_MODE_REMAP["const"]:

@@ -1,0 +1,48 @@
+{
+	"name": "lordos_asm",
+	"displayName": "LorDOS Assembler",
+	"description": "LorDOS assembly language support for Visual Studio Code",
+	"version": "0.2.2",
+	"publisher": "paul-fox",
+	"author": {
+		"name": "Paul Fox"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"galleryBanner": {
+		"color": "#2C2C32",
+		"theme": "dark"
+	},
+	"contributes": {
+		"languages": [
+			{
+				"id": "lor",
+				"aliases": [
+					"LOR",
+					"lor"
+				],
+				"extensions": [
+					".l",
+					".L"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "lor",
+				"scopeName": "source.iar",
+				"path": "./syntaxes/iar.tmlanguage.json"
+			}
+		],
+		"breakpoints": [
+			{
+				"language": "lor"
+			}
+		]
+	}
+}

@@ -135,17 +135,6 @@ class Core:
         self.set_partiti_zero_flag(_value)
         self.Regs[_arg] = _value
 
-    def alu_const_reg_max(self, _value_a, _from_b, _to):
-        _value_b = self.Regs[_from_b]
-        if _value_a > _value_b:
-            self.set_partiti_zero_flag(_value_a)
-            self.Regs[_to] = _value_a
-        else:
-            self.set_partiti_zero_flag(_value_b)
-            self.Regs[_to] = _value_b
-    def alu_reg_reg_max(self, _from_a, _from_b, _to):
-        _value = self.Regs[_from_a]
-        self.alu_const_reg_max(_value, _from_b, _to)
     #JUMPS
     def jump(self, _target_true, _target_false):
         self.ROM_COUNTER = _target_true
@@ -215,22 +204,6 @@ class Core:
             self.jump(_target_true, 0)
         else:
             self.jump(_target_false, 0) 
-    def jump_sign_const_reg(self, _target_true, _target_false):
-        if self.ALU_FLAGS["sign"]:
-            self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_zero_const_reg(self, _target_true, _target_false):
-        if self.ALU_FLAGS["zero"]:
-            self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_partity_const_reg(self, _target_true, _target_false):
-        if self.ALU_FLAGS["partity"]:
-            self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
