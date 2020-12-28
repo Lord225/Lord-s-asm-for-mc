@@ -145,65 +145,51 @@ class Core:
             raise error.StackOverFlowError("ROM")
         self.jump(_target_true, 0)  
 
-    def jump_equal_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_equal_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a == self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_equal_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_equal_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_equal_const_reg(_value, _from_b, _target_true, _target_false) 
+        self.jump_equal_const_reg(_value, _from_b, _target_true) 
     
-    def jump_not_equal_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_not_equal_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a != self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_not_equal_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_not_equal_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_not_equal_const_reg(_value, _from_b, _target_true, _target_false)
+        self.jump_not_equal_const_reg(_value, _from_b, _target_true)
    
-    def jump_less_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_less_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a < self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_less_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_less_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_less_const_reg(_value, _from_b, _target_true, _target_false)
+        self.jump_less_const_reg(_value, _from_b, _target_true)
     
-    def jump_greater_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_greater_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a > self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_greater_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_greater_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_greater_const_reg(_value, _from_b, _target_true, _target_false)  
+        self.jump_greater_const_reg(_value, _from_b, _target_true)  
     
-    def jump_greater_eq_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_greater_eq_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a >= self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_greater_eq_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_greater_eq_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_greater_eq_const_reg(_value, _from_b, _target_true, _target_false)   
+        self.jump_greater_eq_const_reg(_value, _from_b, _target_true)   
     
-    def jump_less_eq_const_reg(self, _value_a, _from_b, _target_true, _target_false):
+    def jump_less_eq_const_reg(self, _value_a, _from_b, _target_true):
         if _value_a <= self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_less_eq_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_less_eq_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
-        self.jump_less_eq_const_reg(_value, _from_b, _target_true, _target_false) 
+        self.jump_less_eq_const_reg(_value, _from_b, _target_true) 
     
-    def jump_overflow_const_reg(self, _target_true, _target_false):
+    def jump_overflow_const_reg(self, _target_true):
         if self.ALU_FLAGS["overflow"]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0) 
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")

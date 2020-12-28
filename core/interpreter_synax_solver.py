@@ -148,10 +148,6 @@ def cliping_beheivior(arg, Max):
 
 def get_command_hash(cmd, _type, args) -> str:
     """return hash of this command (accepted by) COMMAND_MAP"""
-    if len(args) == 0:
-        #TODO THIS
-        raise error.Unsupported("Fix this.")
-        return PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[cmd]["HASH"]
 
     for command_pattern in PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[_type]:
         if command_pattern["name"] == cmd:
@@ -277,7 +273,7 @@ def solve(JUMP_MAP: dict, command:str):
     if _type == "debug":
         return _type, cmd, []
     else:
-        if ',' in command[len(cmd):]:
+        if len(command[len(cmd):]) != 0:
             args = [get_argument_type(arg.strip(), JUMP_MAP) for arg in command[len(cmd):].strip().split(",")]
         else:
             args = []
@@ -369,7 +365,7 @@ def form_full_log_command(_type, formed_command, device, target_core, args):
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
             else:
-                error.CurrentlyUnsupported("That shouldn't happen.")
+                error.Unsupported("That shouldn't happen.")
             fancy_command += "{}, ".format(arg)
     return fancy_command[:-2]
 
@@ -491,7 +487,6 @@ def get_dec(compiled):
 def get_bin(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
-        #builded_program[core].append(str().join(['{}{}'.format(key," "*(val["size"]+1-len(key))) for key, val in ROM_SIZES.items()]))
         for CMD in compiled[core]:
             line = ""
             for key, value in CMD.items():

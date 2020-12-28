@@ -61,13 +61,13 @@ def jump_preprocesing(Programs):
                 if cmd_i >= len(Programs[Device]):
                     if name[1:] in JUMPLIST[Device]:
                         raise error.LoadError("Jump identifier '{}' has appear multiple times.".format(name[1:]))
-                    JUMPLIST[Device][name[1:]] = rom_id
+                    JUMPLIST[Device][name[1:]] = rom_id-1
                     continue
                 while Programs[Device][cmd_i][1][0] == ":":
                         cmd_i += 1
                 if name[1:] in JUMPLIST[Device]:
                     raise error.LoadError("Jump identifier '{}' has appear multiple times.".format(name[1:]))
-                JUMPLIST[Device][name[1:]] = rom_id
+                JUMPLIST[Device][name[1:]] = rom_id-1
             else:
                 rom_id += 1
         

@@ -262,8 +262,6 @@
             },
             "mov ram reg":{
                 "name":"mov",
-                "type":"mov",
-                "subtype":"mov",
                 "emulator":"read_ram_reg",
                 "description":"read adress to register",
                 "example":"mov ram[{}], reg[{}]",
