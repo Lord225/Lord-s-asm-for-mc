@@ -19,6 +19,7 @@ PROFILE = None
 def load_profie(profile, emulator):
     global PROFILE
     PROFILE = loading.PROFILE_DATA(profile=profile, emulator=emulator)
+    print("Profile Loaded")
 
 def padhex(x, pad, prefix = True):
         return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
@@ -129,8 +130,8 @@ def get_command_name(command:str):
         return command, "debug"
     try:
         cmd_splitted = command.split(" ")
-        for i in PROFILE.COMMANDS_SUBTYPES:
-            for j in PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[i]:
+        for i in PROFILE.COMMANDS_TYPES:
+            for j in PROFILE.COMMANDS_OREDERD_BY_TYPES[i]:
                 if j["name"] == cmd_splitted[0]:
                     return j["name"], i
     except KeyError as err:
@@ -149,7 +150,7 @@ def cliping_beheivior(arg, Max):
 def get_command_hash(cmd, _type, args) -> str:
     """return hash of this command (accepted by) COMMAND_MAP"""
 
-    for command_pattern in PROFILE.COMMANDS_OREDERD_BY_SUBTYPES[_type]:
+    for command_pattern in PROFILE.COMMANDS_OREDERD_BY_TYPES[_type]:
         if command_pattern["name"] == cmd:
             if "arguments pass" in command_pattern:
                 raise error.DeprecatedFunction("arguments pass")

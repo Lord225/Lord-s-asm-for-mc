@@ -2,7 +2,6 @@ import core.error as error
 import json
 import re
 import config
-
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
 CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
@@ -319,16 +318,22 @@ def load_json_profile(path):
         profile = json.load(file)
     return profile
 
+def get_emulator(DEFAULT_PROFILES_PATH, CPU_PROFILE:dict):
+    try:
+        exec("import {}.{} as emulator".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]),globals())
+    except:
+        raise error.LoadError("Cannot import {}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
+    return emulator
 def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
     CPU_PROFILE = load_json_profile('{}/{}'.format(DEFAULT_PROFILES_PATH, NAME))
-    #emulator = None
-    exec("import {}.{} as emulator".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]),globals())
+
+    emulator = get_emulator(DEFAULT_PROFILES_PATH, CPU_PROFILE)
     
     if emulator is None:
         raise error.LoadError("Canno't load emulator {}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
 
     try:
-        print("Loaded profile for: '{}' by {}".format(CPU_PROFILE["CPU"]["Name"], CPU_PROFILE["CPU"]["Author"]))
+        print("Loading profile for: '{}' by {}".format(CPU_PROFILE["CPU"]["Name"], CPU_PROFILE["CPU"]["Author"]))
         CONSTS.extend(CPU_PROFILE["CPU"]["DEFINES"])
     except KeyError as key:
         print("Can't find key in profile: {}".format(key))
@@ -350,8 +355,8 @@ class PROFILE_DATA:
         self.PROFILE_LOADED = False
         self.COMMAND_MAP = dict() #ordered by hash, keeps emulator function pointers
         self.COMMANDSETFULL = dict() #ordered by hash, keeps "COMMANDS":{}
-        self.COMMANDS_SUBTYPES = dict() #all subtypes
-        self.COMMANDS_OREDERD_BY_SUBTYPES = dict() #ordered by subtypes, keeps "COMMANDS":{}
+        self.COMMANDS_TYPES = dict() #all types
+        self.COMMANDS_OREDERD_BY_TYPES = dict() #ordered by type, keeps "COMMANDS":{}
         self.COMMAND_LANE_PATTERN = dict()
         self.ROM_SIZES = dict()
         self.PARAMETERS = dict()
@@ -391,7 +396,7 @@ class PROFILE_DATA:
                     except KeyError as err:
                         raise error.ProfileStructureError("Expected '{}' in 'parametrs'".format(name))
                 #custom arguments
-                cmd__NAMESPACE__ = ["name", "type", "subtype", "args"]
+                cmd__NAMESPACE__ = ["name", "args"]
                 cmd__NAMESPACE__WARNING = ["description", "example"]
 
                 if config.RAISE_ERROR_ON_NOT_IMPLEMENTED_BIN_FORMATING:
@@ -444,7 +449,7 @@ class PROFILE_DATA:
     def get_full_command_set(self,):
             return {value["HASH"]:value for key, value in self.profile["CPU"]["COMMANDS"].items()}
     def get_unified_commands_types(self,):
-        return list({i["subtype"] for i in self.profile["CPU"]["COMMANDS"].values()})
+        return list({i.get("type", "DEF") for i in self.profile["CPU"]["COMMANDS"].values()})
     def build_command_map(self,):
         for i, (key, value) in enumerate(self.profile["CPU"]["COMMANDS"].items()):
             self.profile["CPU"]["COMMANDS"][key]["HASH"] = i
@@ -457,16 +462,16 @@ class PROFILE_DATA:
         for i, (key, value) in enumerate(self.profile["CPU"]["COMMANDS"].items()):
             if "parent" in value:
                 self.profile["CPU"]["COMMANDS"][key]["parent"] = self.profile["CPU"]["COMMANDS"][value["parent"]]["HASH"]
-    def order_commands_by_subtypes(self,):
-        for i in self.COMMANDS_SUBTYPES:
-            self.COMMANDS_OREDERD_BY_SUBTYPES[i] = []
+    def order_commands_by_types(self,):
+        for i in self.COMMANDS_TYPES:
+            self.COMMANDS_OREDERD_BY_TYPES[i] = []
             for j in self.profile["CPU"]["COMMANDS"].values():
-                if j["subtype"] == i:
-                    self.COMMANDS_OREDERD_BY_SUBTYPES[i].append(j)
+                if j.get("type", "DEF") == i:
+                    self.COMMANDS_OREDERD_BY_TYPES[i].append(j)
     def remap_adress_mode(self,):
         for cmd_pattern in self.COMMANDSETFULL.values():
             for arg_id in range(len(cmd_pattern["args"])):
-                cmd_pattern["args"][arg_id]["type"] = self.ADRESS_MODE_REMAP[cmd_pattern["args"][arg_id]["type"]]
+                cmd_pattern["args"][arg_id]["type"] = self.ADRESS_MODE_REMAP[cmd_pattern["args"][arg_id].get("type", "DEF")]
     def get_command_lane(self,):
         self.COMMAND_LANE_PATTERN = self.profile["CPU"]["ARGUMENTS"]
     def get_custom_arguments(self,):
@@ -486,14 +491,14 @@ class PROFILE_DATA:
     def extract_data_from_profile(self):
         #TODO CHECK IT BETTER
         #Check ROM_SIZES with "bin"
-        #Check COMMANDS with name, type, subtype, emulator, description, example, args, bin
+        #Check COMMANDS with name, type, emulator, description, example, args, bin
         #Check parametrs with word len, num of regs, ram adress space, rom adress space, cores, arguments sizesSUPPORTED TECHNOLOGIES
         #Check if any of the COMMAND_MAP key is pointing to None
 
         try:
-            self.COMMANDS_SUBTYPES = self.get_unified_commands_types()
+            self.COMMANDS_TYPES = self.get_unified_commands_types()
 
-            self.order_commands_by_subtypes()
+            self.order_commands_by_types()
 
             self.build_command_map()
 
