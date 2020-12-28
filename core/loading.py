@@ -2,6 +2,7 @@ import core.error as error
 import json
 import re
 import config
+
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
 CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
