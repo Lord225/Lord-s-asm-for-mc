@@ -12,13 +12,12 @@ import config
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
-
 # -f -a -o -l -i -e -of -s --const --onefile
 parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX WITH RELATIVE DIR
 help="""Name of file to proces
 Default: Program.lor
 """)
-parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "refactor"], type=str, default = None,
+parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "compile-refac"], type=str, default = None,
 help="""What script is supposed to do with file 
 > build         - Build source and execute 
 > compile-dec   - Build source and save in easy-to-read format
@@ -50,7 +49,7 @@ parser.add_argument("-e", "--onerror", choices=["interupt", "abort"], type=str, 
 help="""What is suppouse to happen on error
 > interupt - Waits for user
 > abort    - Close script
-> None     - Throw python's error
+> None     - Throw python error
 Default: None
 """)
 parser.add_argument("-of", "--offset", type=int, default=1, 
@@ -71,14 +70,14 @@ parser.add_argument('--onefile', action='append',
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = None
+ACTION_ON_ERROR = None #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
 
 def main():
     global PROCESSED_LINE
-    print("CPU Assembly tools for minecraft by M. Złotorowicz aka Lord225. 2020")
+    print("CPU Assembly tools for minecraft by M. Złotorowicz aka Lord225. 2021")
     print("")
 
     def end_sequence():
@@ -101,26 +100,26 @@ def main():
 
     Program, line_indicator, JUMPLIST, Settings, data = loading.load_program(config.FILE_NAME, config.CONSTS) #first pass
     
-    #Find CPU profile
+    # Find CPU profile
     PROFILE_NAME = None
     if config.PROFILE_NAME is None and "PROFILE" in Settings:
         PROFILE_NAME = Settings["PROFILE"]
     if PROFILE_NAME is None:
         raise error.LoadError("Please parse profile for cpu.")
     
-    #GET PROFILE AND DEVICE
+    # GET PROFILE AND DEVICE
     CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS = loading.get_profile(config.DEFAULT_PROFILES_PATH, PROFILE_NAME, config.CONSTS)
     loading.update_keywords(KEYWORDS)
     iss.load_profie(CPU_PROFILE, emulator)
 
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
     
-    #reload with extended consts.
+    # Reload with extended consts.
     Program, line_indicator, JUMPLIST, Settings, data = loading.load_program(config.FILE_NAME, config.CONSTS) #second pass
 
     actives = loading.find_executable_cores(Program)
     
-    #parse arguments
+    # Parse arguments
     config.setupsettings(parserargs, "settings.config", None)
 
     #################################################
@@ -135,16 +134,13 @@ def main():
     print("Total load time: {}ms".format((time_start-load_start_time)/1000000))
 
     builded = list()
-    if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "refactor"]:
+
+    if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "compile-refac"]:
         # COMPILE
         builded = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
         
         # COMPILE VARIANTS
-        to_save = dict()
-        if config.ACTION[:len("compile")] == "compile":
-            to_save = iss.get_compiled(builded, config.BUILD_OFFSET)
-        elif config.ACTION == "refactor":
-            to_save = iss.form_full_log_command_batch(builded, config.BUILD_OFFSET)
+        compiled = iss.get_compiled(builded, config.BUILD_OFFSET)
 
         # INFO
         total_command_count = sum([len(x) for x in Program.values()])
@@ -163,15 +159,16 @@ def main():
         #################################################
         
         if config.ACTION == "compile-dec": 
-            to_save = iss.get_dec(to_save)
-            loading.save(config.OUTPUT_FILE, to_save)
+            compiled = iss.get_dec(compiled)
+            loading.save(config.OUTPUT_FILE, compiled)
         elif config.ACTION == "compile-csv":
-            to_save = iss.get_csv(to_save)
-            loading.save(config.OUTPUT_FILE, to_save, with_decorators = False)
+            compiled = iss.get_csv(compiled)
+            loading.save(config.OUTPUT_FILE, compiled, with_decorators = False)
         elif config.ACTION == "compile-bin": 
-            to_save = iss.get_bin(to_save)
-            loading.save(config.OUTPUT_FILE, to_save)
-        elif config. ACTION == "refactor":
+            compiled = iss.get_bin(compiled)
+            loading.save(config.OUTPUT_FILE, compiled)
+        elif config.ACTION == "compile-refac":
+            to_save = iss.form_full_log_command_batch(compiled, builded, JUMPLIST)
             loading.save(config.OUTPUT_FILE, to_save)
         
         # CHECK INFO AND WARNINGS

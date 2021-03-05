@@ -2,6 +2,7 @@ import core.error as error
 import json
 import re
 import config
+
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
 CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
@@ -301,7 +302,7 @@ def save(filename, binary, with_decorators = True):
         for key in KEYWORDS:
             FILE_NAME = "{}_{}.{}".format(filename.split(".")[0], key, filename.split(".")[1])
             if config.IGNORE_EMPTY_PROGRAMS and len(binary[key]) == 1:
-                print("INFO: File {} hasn't been saved because is empty".format(FILE_NAME))
+                print("INFO: File '{}' hasn't been saved because is empty".format(FILE_NAME))
                 continue
             with open(FILE_NAME,"w") as file:
                 if with_decorators:
@@ -328,7 +329,6 @@ def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
     CPU_PROFILE = load_json_profile('{}/{}'.format(DEFAULT_PROFILES_PATH, NAME))
 
     emulator = get_emulator(DEFAULT_PROFILES_PATH, CPU_PROFILE)
-    
     if emulator is None:
         raise error.LoadError("Canno't load emulator {}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
 
@@ -412,10 +412,9 @@ class PROFILE_DATA:
                 #COMMANDS
                 for name, cmd in self.profile["CPU"]["COMMANDS"].items():
                     for cmd_must in cmd__NAMESPACE__:
-                        try:
-                            cmd[cmd_must]
-                        except KeyError as err:
-                            raise error.ProfileStructureError("Expected '{}' in 'COMMANDS'->'{}'".format(cmd_must, name))
+                        if cmd_must not in cmd: 
+                            if "parent" not in cmd:
+                                raise error.ProfileStructureError("Expected '{}' in 'COMMANDS'->'{}'".format(cmd_must, name))
                     for cmd_should in cmd__NAMESPACE__WARNING:
                         try:
                             cmd[cmd_should]
@@ -467,11 +466,12 @@ class PROFILE_DATA:
             self.COMMANDS_OREDERD_BY_TYPES[i] = []
             for j in self.profile["CPU"]["COMMANDS"].values():
                 if j.get("type", "DEF") == i:
+                    j["type"] = j.get("type", "DEF")
                     self.COMMANDS_OREDERD_BY_TYPES[i].append(j)
     def remap_adress_mode(self,):
-        for cmd_pattern in self.COMMANDSETFULL.values():
+        for key, cmd_pattern in self.COMMANDSETFULL.items():
             for arg_id in range(len(cmd_pattern["args"])):
-                cmd_pattern["args"][arg_id]["type"] = self.ADRESS_MODE_REMAP[cmd_pattern["args"][arg_id].get("type", "DEF")]
+                self.COMMANDSETFULL[key]["args"][arg_id]["type"] = self.ADRESS_MODE_REMAP[cmd_pattern["args"][arg_id].get("type", "DEF")] #! WFY CO TY KURWA TU ZROBIŁEŚ CHŁOPIE PIJANY KURWA.
     def get_command_lane(self,):
         self.COMMAND_LANE_PATTERN = self.profile["CPU"]["ARGUMENTS"]
     def get_custom_arguments(self,):
@@ -479,10 +479,9 @@ class PROFILE_DATA:
     def get_rom_arg_sizes(self,):
         self.ROM_SIZES = self.profile["CPU"]["ARGUMENTS"]
     def get_custom_arguments_types(self,):
-
         last = max(self.ADRESS_MODE_REMAP.values())
         i = 1
-        for key, val in self.profile["CPU"]["CUSTOM ARGUMENTS"].items():
+        for key, _ in self.profile["CPU"]["CUSTOM ARGUMENTS"].items():
             if key in self.ADRESS_MODE_REMAP:
                 raise error.ProfileStructureError()
             self.ADRESS_MODE_REMAP[key] = last+i

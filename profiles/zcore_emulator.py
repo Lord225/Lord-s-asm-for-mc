@@ -3,6 +3,7 @@ import numpy as np
 import core.loading as error
 import core.interpreter_synax_solver as iss
 import time
+import numba
 
 np.warnings.filterwarnings('ignore')
 

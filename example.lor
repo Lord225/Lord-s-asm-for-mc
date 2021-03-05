@@ -5,28 +5,27 @@
 #data 0xF0 "Hello World"
 
 //macro definition
-#macro WRITE_REG(a,b,c)
-    mov a, reg[0]
-    mov b, reg[1]
-    mov c, reg[2]
+#macro WRITE_REG(a, b, c)
+    mov a, reg[1]
+    mov b, reg[2]
+    mov c, reg[3]
 #endmacro
 
 #define DEBUG
 #define VAR_A 0xF0 //constant adress of varible
+#define MAX 0xFF
 
 :CORE0
     //macro usage
-    WRITE_REG(10,11,12)
+    WRITE_REG(5,6,7)
     mov reg[0], ram[VAR_A]
     
     //loop 
     :JUMPHERE
         add 1, reg[1], reg[1]
-        #regs
-        jne 10, reg[1], JUMPHERE
-    
-
-    
-
-
-
+        mov reg[1], ram[reg[1]]
+        #regs A
+        jne MAX, reg[1], JUMPHERE
+        #ram
+        #break
+        

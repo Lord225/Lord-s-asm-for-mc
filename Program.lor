@@ -1,5 +1,8 @@
 [PROFILE pmmini_profile.json]
 
 :CORE0
-    mov 0, reg[0]
-    mov 1, reg[1]
+    mov 0, reg[1]
+    :HELLO_WORLD
+        mov 1, reg[1]
+        #regs
+        jmp HELLO_WORLD

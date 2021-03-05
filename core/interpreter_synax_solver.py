@@ -214,7 +214,7 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
                         asciirep = ""
                         for i in range(totalrows):
                             char_id = RAM[LINE_START+i]
-                            asciirep += chr(char_id) if char_id >= 32 else "."
+                            asciirep += chr(char_id) if char_id >= 32 and char_id < 127 else "."
 
                         rows_data += "\t{}".format(asciirep)
                 
@@ -348,7 +348,14 @@ def args_equal(args1, args2, TypesOnly = False):
     else:
         return all(arg1[1] == arg2[1] and arg1[0] == arg2[0] for arg1, arg2 in zip(args1, args2))
 
-def form_full_log_command(_type, formed_command, device, target_core, args):
+
+def find_if_line_is_marked(line: int, JUMP_LIST: dict()):
+        for key, val in JUMP_LIST.items():
+            if val+1 == line:
+                return str(key)
+        return None
+
+def form_full_log_command(_type, formed_command, device, target_core, args, JUMP_LIST):
     """Will create standarised, redable command line with fancy synax and only with dec number representation"""
     if _type == "debug":
         return ""
@@ -365,26 +372,33 @@ def form_full_log_command(_type, formed_command, device, target_core, args):
                 arg = "reg[{}]".format(arg[0])
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
+            elif arg[1] == PROFILE.ADRESS_MODE_REMAP["adress"]:
+                arg = find_if_line_is_marked(arg[0]+1, JUMP_LIST)
             else:
                 error.Unsupported("That shouldn't happen.")
             fancy_command += "{}, ".format(arg)
     return fancy_command[:-2]
 
-def form_full_log_command_batch(batch, BUILD_OFFSET):
+def form_full_log_command_batch(compiled: dict(), to_save: dict(), JUMP_LIST: dict()):
+    
+
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
-        for COMMAND in batch[core]:
-            if type(COMMAND) is tuple:
-                _type, formed_command, args = COMMAND 
-                if _type != TYPE.DEBUG:
-                    builded_program[core].append(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args))
-            else:
-                MULTICOMMAND = "["
-                for _type, formed_command, args, jump_adress in COMMAND:
-                    if _type != TYPE.DEBUG:
-                        MULTICOMMAND += "{}; ".format(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args))
-                MULTICOMMAND = MULTICOMMAND.strip()+"]"
-                builded_program[core].append(MULTICOMMAND)
+        builded_program[core].append(str().join(['{}{} \t'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()]))
+        RAW_CMD_ITER = iter(to_save[core])
+        for i, CMD in enumerate(compiled[core]):
+            line = ""
+            for key, value in CMD.items():
+                line += "{} ({}) \t".format(padbin(value, PROFILE.ROM_SIZES[key]["size"],False), paddec(value,3," "))
+            RAW_CMD = next(RAW_CMD_ITER)
+            while RAW_CMD[0] == 'debug':
+                RAW_CMD = next(RAW_CMD_ITER)
+            _type, formed_command, args = RAW_CMD
+            line += "\t#  {}".format(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args, JUMP_LIST[core]))
+            marked_line = find_if_line_is_marked(i, JUMP_LIST[core])
+            if marked_line is not None:
+                line += "\t ({})".format(marked_line)
+            builded_program[core].append(line)
     return builded_program
 
 def get_compiled_cmd(COMMAND):
@@ -410,7 +424,7 @@ def get_compiled_cmd(COMMAND):
             else:
                 ROM[key] = get_value_from_arg(value, CMD_PATTERN, args)
     except KeyError as err:
-        raise error.ProfileStructureError("Can't find binary command profile ({})".format(err))
+        raise error.ProfileStructureError("Can't find command profile ({}) in '{}' command.".format(err, CMD_PATTERN["name"]))
     except Exception as err:
         raise error.ProfileStructureError("Undefined error while compiling: {}".format(err))
     return ROM
@@ -426,44 +440,8 @@ def get_compiled(builded_commands, offset: int):
     return builded_program
 
 def generate_debug_frame():
-    frame = """
-    Core0: =================================================================
-
-    0           | 1           | 2              
-    mov 0, 5, 7 | sub 5, 7, 9 | jmp 12 
-    ========================================================================
-    Regs: [0, 0, 0, 0, 0, 0, 0, 0] S: 0 OF: 1 Z:
-    ROMSTACK: [0, 2, 3]
-    CPUSTACK: [0, 2, 3]
-
-    Core1: =================================================================
-    0           | 1           | 2              
-    mov 0, 1, 3 | add 4, 6, 7 | jmp 10 
-    ========================================================================
-    Regs: [0, 0, 0, 0, 0, 0, 0, 0] S: 0 OF: 1 Z:
-    ROMSTACK: [0, 2, 3]
-    CPUSTACK: [0, 2, 3]
-
-    0x00: cc 80 7f cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x10: cc cc cc cc cc cc cc cc cc cc cc cc cc cc 48 65  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x20: 6c 6c 6f 20 57 6f 72 6c 64 cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌHe
-    0x30: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  llo WorldÌÌÌÌÌÌÌ
-    0x40: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x50: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x60: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x70: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x80: 7e 80 cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0x90: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ~ÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xa0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xb0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xc0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xd0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xe0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-    0xf0: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  ÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌÌ
-
-    Errors, Warinings ect
-    """
-    print(frame)
+    #print(frame)
+    pass
 
 def get_csv(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
@@ -471,7 +449,7 @@ def get_csv(compiled):
         builded_program[core].append(str().join(['{},'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()])[:-1])
         for CMD in compiled[core]:
             line = ""
-            for key, value in CMD.items():
+            for _, value in CMD.items():
                 line += "{},".format(value)
             builded_program[core].append(line[:-2])
     return builded_program
