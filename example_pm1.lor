@@ -1,33 +1,9 @@
 [PROFILE ZCore_profile.json]
 
-//data prasing
-#data 0x00 0x01, 0b1010101, 123, 0x03
-#data 0xF0 "Hello World"
-
-//macro definition
-#macro WRITE_REG(a, b, c)
-    mov a, reg[1]
-    mov b, reg[2]
-    mov c, reg[3]
-#endmacro
-
-#define DEBUG
-#define VAR_A 0xF0 //constant adress of varible
-#define MAX 0xFF
-
 :CORE0
-    //macro usage
-    WRITE_REG(5,6,7)
-    mov reg[0], ram[VAR_A]
-    
-    //loop 
+    mov 0, reg[1]
+    mov 1, reg[2]
     :JUMPHERE
-        mov MAX, reg[2]
-        mov 1, reg[1]
-        add reg[1], reg[1]
-        mov reg[1], ram[reg[1]]
-        #regs A
-        je reg[2], reg[1], JUMPHERE
-        #ram
-        #break
+    add reg[1], reg[2]
+    jmp JUMPHERE 
         

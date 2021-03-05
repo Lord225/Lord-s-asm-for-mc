@@ -172,7 +172,11 @@ def main():
         elif config.ACTION == "compile-refac":
             to_save = iss.form_full_log_command_batch(compiled, builded, JUMPLIST)
             loading.save(config.OUTPUT_FILE, to_save)
-        
+        elif config.ACTION == "compile-py":
+            loading.save(config.OUTPUT_FILE, compiled)
+        else:
+            raise error.UndefinedSetting("Action have invalid value {}".format(config.ACTION))
+
         # CHECK INFO AND WARNINGS
         if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
             print("info:", iss.G_INFO_CONTAINER["info"])
