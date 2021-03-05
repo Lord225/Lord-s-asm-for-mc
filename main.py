@@ -112,6 +112,9 @@ def main():
     loading.update_keywords(KEYWORDS)
     iss.load_profie(CPU_PROFILE, emulator)
 
+    # Parse arguments
+    config.setupsettings(parserargs, "settings.config", None)
+
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
     
     # Reload with extended consts.
@@ -119,8 +122,7 @@ def main():
 
     actives = loading.find_executable_cores(Program)
     
-    # Parse arguments
-    config.setupsettings(parserargs, "settings.config", None)
+   
 
     #################################################
     #                   COMPILING                   #

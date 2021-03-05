@@ -86,7 +86,7 @@ def indices(Programs):
 def load_program(path : str, definitions: list = []):    
     Program, Settings = load_preproces(path)
 
-    Program, data = const_evaluation(Program, definitions)
+    Program, data = const_evaluation(Program, [] if definitions is None else definitions)
 
     Programs = split_sectors(Program)
 
