@@ -82,13 +82,13 @@ def main():
 
     def end_sequence():
         time_end = time.thread_time_ns()
+        
         TOTAL = (time_end-time_start)/1000000000.0
-        PER_CMD = 0.0
-        if COMMAND_COUNTER[core_id] != 0:
-            PER_CMD = (time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000)
+        PER_CMD = (time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000) if COMMAND_COUNTER[core_id] != 0 else 0.0
+
         print("="*50)
         print("Core {} finished work ({} ticks, apr. {}s on device)".format(core_id, COMMAND_COUNTER[core_id], COMMAND_COUNTER[core_id]*config.TIME_MILTIPLAYER))
-        print("Total execution time: {:0.3f}s, {:0.3f} ms per command".format(PER_CMD, PER_CMD))
+        print("Total execution time: {:0.3f}s, {:0.3f} ms per command".format(TOTAL, PER_CMD))
         actives.remove(active)
 
     #################################################
@@ -96,95 +96,62 @@ def main():
     #################################################
 
     load_start_time = time.thread_time_ns()
+
     print("Loading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
 
-    Program, line_indicator, JUMPLIST, Settings, data = loading.load_program(config.FILE_NAME, config.CONSTS) #first pass
+    # First loading Pass
+    program, line_indicator, jump_list, file_settings, data = loading.load_program(config.FILE_NAME, config.CONSTS)
     
     # Find CPU profile
-    PROFILE_NAME = None
-    if config.PROFILE_NAME is None and "PROFILE" in Settings:
-        PROFILE_NAME = Settings["PROFILE"]
-    if PROFILE_NAME is None:
-        raise error.LoadError("Please parse profile for cpu.")
+    PROFILE_NAME = get_profile_name(file_settings)
     
     # GET PROFILE AND DEVICE
     CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS = loading.get_profile(config.DEFAULT_PROFILES_PATH, PROFILE_NAME, config.CONSTS)
     loading.update_keywords(KEYWORDS)
     iss.load_profie(CPU_PROFILE, emulator)
-
-    # Parse arguments
     config.setupsettings(parserargs, "settings.config", None)
-
+    
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
     
-    # Reload with extended consts.
-    Program, line_indicator, JUMPLIST, Settings, data = loading.load_program(config.FILE_NAME, config.CONSTS) #second pass
+    # Second loading Pass
+    program, line_indicator, jump_list, file_settings, data = loading.load_program(config.FILE_NAME, config.CONSTS)
 
-    actives = loading.find_executable_cores(Program)
+    actives = loading.find_executable_cores(program)
     
-   
 
     #################################################
     #                   COMPILING                   #
     #################################################
     
     if config.SHOW_RAW_PROGRAM:
-        print("Program:", Program, "\n\nJUMPLIST:", JUMPLIST, "\n\nSettings:", Settings, "\n\nActives Cores:", actives)
+        print("Program:", program, "\n\nJUMPLIST:", jump_list, "\n\nSettings:", file_settings, "\n\nActives Cores:", actives)
 
     time_start = time.thread_time_ns()
 
     print("Total load time: {}ms".format((time_start-load_start_time)/1000000))
 
-    built = list()
+    built = iss.build_program(program, line_indicator, jump_list, file_settings)
+    compiled = iss.get_compiled(built, config.BUILD_OFFSET)
 
-    if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "compile-refac"]:
-        # COMPILE
-        built = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
-        
-        # COMPILE VARIANTS
-        compiled = iss.get_compiled(built, config.BUILD_OFFSET)
+    # INFO
+    show_build_info(program, time_start)
+    
+    #################################################
+    #                     SAVE                      #
+    #################################################
+    
+    save(jump_list, built, compiled)
 
-        # INFO
-        total_command_count = sum([len(x) for x in Program.values()])
-        time_end = time.thread_time_ns()
-        TOTAL = (time_end-time_start)/1000000.0
-        PER_CMD = 0.0
-        if total_command_count != 0:
-            PER_CMD = (time_end-time_start)/(total_command_count*1000000.0)
+    # CHECK INFO AND WARNINGS
+    if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
+        print("info:", iss.G_INFO_CONTAINER["info"])
+    if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
+        print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
+    # END
+    if config.ACTION != "build":
         print("="*50)
-        print("built {} commands".format(total_command_count))
-        print("Total build time: {:0.4f}ms, {:0.3f} ms per command".format(TOTAL, PER_CMD))
-        
-        #################################################
-        #                     SAVE                      #
-        #################################################
-        
-        if config.ACTION == "compile-dec": 
-            compiled = iss.get_dec(compiled)
-            loading.save(config.OUTPUT_FILE, compiled)
-        elif config.ACTION == "compile-csv":
-            compiled = iss.get_csv(compiled)
-            loading.save(config.OUTPUT_FILE, compiled, with_decorators = False)
-        elif config.ACTION == "compile-bin": 
-            compiled = iss.get_bin(compiled)
-            loading.save(config.OUTPUT_FILE, compiled)
-        elif config.ACTION == "compile-refac":
-            to_save = iss.form_full_log_command_batch(compiled, built, JUMPLIST)
-            loading.save(config.OUTPUT_FILE, to_save)
-        elif config.ACTION == "compile-py":
-            loading.save(config.OUTPUT_FILE, compiled)
-
-        # CHECK INFO AND WARNINGS
-        if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
-            print("info:", iss.G_INFO_CONTAINER["info"])
-        if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
-            print("warnings:", iss.G_INFO_CONTAINER["warnings"])
-
-        # END
-        if config.ACTION != "build":
-            print("="*50)
-            return
+        return
 
     #################################################
     #                  EMULATING                    #
@@ -241,11 +208,42 @@ def main():
         if config.SPEED != -1:
             time.sleep(1/config.SPEED)
 
-        # END LOOP
+        # Break loop
         if len(actives) == 0:
             print("All cores did their duty.")
-            # EXIT
             break
+
+def save(JUMPLIST, built, compiled):
+    if config.ACTION == "compile-dec": 
+        compiled = iss.get_dec(compiled)
+        loading.save(config.OUTPUT_FILE, compiled)
+    elif config.ACTION == "compile-csv":
+        compiled = iss.get_csv(compiled)
+        loading.save(config.OUTPUT_FILE, compiled, with_decorators = False)
+    elif config.ACTION == "compile-bin": 
+        compiled = iss.get_bin(compiled)
+        loading.save(config.OUTPUT_FILE, compiled)
+    elif config.ACTION == "compile-refac":
+        to_save = iss.form_full_log_command_batch(compiled, built, JUMPLIST)
+        loading.save(config.OUTPUT_FILE, to_save)
+    elif config.ACTION == "compile-py":
+        loading.save(config.OUTPUT_FILE, compiled)
+
+def show_build_info(Program, time_start):
+    total_command_count = sum([len(x) for x in Program.values()])
+    time_end = time.thread_time_ns()
+    TOTAL = (time_end-time_start)/1000000.0
+    PER_CMD = 0.0
+    if total_command_count != 0:
+        PER_CMD = (time_end-time_start)/(total_command_count*1000000.0)
+    print("="*50)
+    print("built {} commands".format(total_command_count))
+    print("Total build time: {:0.4f}ms, {:0.3f} ms per command".format(TOTAL, PER_CMD))
+
+def get_profile_name(Settings):
+    if config.PROFILE_NAME is None and "PROFILE" in Settings:
+        return Settings["PROFILE"]
+    raise error.LoadError("Please parse profile for cpu.")
     
 if __name__ == "__main__":
     if config.CPYTHON_PROFILING:
