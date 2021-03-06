@@ -87,7 +87,7 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
         _reg_start = raw_argument.find("reg")
         if _reg_start != -1:
             if raw_argument.find("ram") > _reg_start:
-                raise error.SynaxError("reg[ram[...]] is not supported (and doesn't make sense btw)")
+                raise error.SynaxError("reg[ram[...]] is not supported (and doesn't make sense idiot!)")
             #ptr
             return extract_number_from_bracets(raw_argument[_reg_start:]), PROFILE.ADRESS_MODE_REMAP["ptr"]
         else:

@@ -17,16 +17,17 @@ parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX 
 help="""Name of file to proces
 Default: Program.lor
 """)
-parser.add_argument("-a", "--action", choices=["build", "compile-dec", "compile-csv", "compile-bin", "compile-py" , "compile-refac"], type=str, default = None,
-help="""What script is supposed to do with file 
-> build         - Build source and execute 
-> compile-dec   - Build source and save in easy-to-read format
-> compile-csv   - Build source and save as csv
-> compile-bin   - Build source and save as binary
-> compile-py    - Build source and save as python dict
-> refactor      - Build source and save as redable commands
-Default: build
+parser.add_argument("-s", "--save", choices=["dec", "csv", "bin", "py" , "red"], type=str, default = None,
+help="""
+> dec - Build source and save in easy-to-read format
+> csv - Build source and save as csv
+> bin - Build source and save as binary
+> py  - Build source and save as python dict
+> red - Build source and save as redable commands
+Default: None (will not save)
 """)
+parser.add_argument('--run', action='append', 
+help="""Compiles and emulates program""")
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
@@ -55,10 +56,6 @@ Default: None
 parser.add_argument("-of", "--offset", type=int, default=1, 
 help="""Offset of whole binary relative to rom 0 cell
 Default: 1 (first command on pos 1 second on 2 ect)
-""")
-parser.add_argument("-s", "--speed", type=int, default=-1, 
-help="""Execution speed in hertz (-1 - maximal possible)
-Default: -1
 """)
 parser.add_argument('--const', action='append', 
 help="""Addinationl const expressions added while loading script
