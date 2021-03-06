@@ -70,7 +70,7 @@ parser.add_argument('--onefile', action='append',
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = None #[None, 'interupt', 'abort']
+ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
@@ -135,14 +135,14 @@ def main():
 
     print("Total load time: {}ms".format((time_start-load_start_time)/1000000))
 
-    builded = list()
+    built = list()
 
     if config.ACTION in ["build", "compile-dec", "compile-csv", "compile-bin", "compile-py", "compile-refac"]:
         # COMPILE
-        builded = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
+        built = iss.build_program(Program, line_indicator, JUMPLIST, Settings)
         
         # COMPILE VARIANTS
-        compiled = iss.get_compiled(builded, config.BUILD_OFFSET)
+        compiled = iss.get_compiled(built, config.BUILD_OFFSET)
 
         # INFO
         total_command_count = sum([len(x) for x in Program.values()])
@@ -153,7 +153,7 @@ def main():
             PER_CMD = (time_end-time_start)/(total_command_count*1000000.0)
 
         print("="*50)
-        print("Builded {} commands".format(total_command_count))
+        print("built {} commands".format(total_command_count))
         print("Total build time: {:0.4f}ms, {:0.3f} ms per command".format(TOTAL, PER_CMD))
         
         #################################################
@@ -170,12 +170,10 @@ def main():
             compiled = iss.get_bin(compiled)
             loading.save(config.OUTPUT_FILE, compiled)
         elif config.ACTION == "compile-refac":
-            to_save = iss.form_full_log_command_batch(compiled, builded, JUMPLIST)
+            to_save = iss.form_full_log_command_batch(compiled, built, JUMPLIST)
             loading.save(config.OUTPUT_FILE, to_save)
         elif config.ACTION == "compile-py":
             loading.save(config.OUTPUT_FILE, compiled)
-        else:
-            raise error.UndefinedSetting("Action have invalid value {}".format(config.ACTION))
 
         # CHECK INFO AND WARNINGS
         if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
@@ -208,7 +206,7 @@ def main():
             # GET AND EXECUTE COMMAND            
             if config.ACTION == "build":
                 try:
-                    CPU_COMMAND = builded[active][DEVICE.get_rom_adress(core_id)]
+                    CPU_COMMAND = built[active][DEVICE.get_rom_adress(core_id)]
                     PROCESSED_LINE = line_indicator[active][DEVICE.get_rom_adress(core_id)]
                 except IndexError:
                     end_sequence()

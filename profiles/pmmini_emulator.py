@@ -93,9 +93,9 @@ class Core:
         self.Regs[_from_b] = _value
         
     #JUMPS
-    def jump(self, _target_true, _target_false):
+    def jump(self, _target_true):
         self.ROM_COUNTER = _target_true
-    def call(self, _target_true, _target_false):
+    def call(self, _target_true):
         if len(self.ROMStack) < 15:
             self.ROMStack.append(self.ROM_COUNTER)
         else:
@@ -105,29 +105,21 @@ class Core:
     def shut(self, ):
         pass
 
-    def jump_equal_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_equal_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
         if _value == self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_greater_reg_reg(self, _from_a, _from_b, _target_true, _target_false):
+    def jump_greater_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
         if _value > self.Regs[_from_b]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
     
-    def jump_overflow_const_reg(self, _target_true, _target_false):
+    def jump_overflow_const_reg(self, _target_true):
         if self.ALU_FLAGS["overflow"]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
-    def jump_zero_const_reg(self, _target_true, _target_false):
+    def jump_zero_const_reg(self, _target_true):
         if self.ALU_FLAGS["zero"]:
             self.jump(_target_true, 0)
-        else:
-            self.jump(_target_false, 0)
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
