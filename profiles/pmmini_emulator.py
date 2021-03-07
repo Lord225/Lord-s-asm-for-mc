@@ -100,7 +100,7 @@ class Core:
             self.ROMStack.append(self.ROM_COUNTER)
         else:
             raise error.StackOverFlowError("ROM")
-        self.jump(_target_true, 0)
+        self.jump(_target_true)
     
     def shut(self, ):
         pass
@@ -108,23 +108,23 @@ class Core:
     def jump_equal_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
         if _value == self.Regs[_from_b]:
-            self.jump(_target_true, 0)
+            self.jump(_target_true)
     def jump_greater_reg_reg(self, _from_a, _from_b, _target_true):
         _value = self.Regs[_from_a]
         if _value > self.Regs[_from_b]:
-            self.jump(_target_true, 0)
+            self.jump(_target_true)
     
     def jump_overflow_const_reg(self, _target_true):
         if self.ALU_FLAGS["overflow"]:
-            self.jump(_target_true, 0)
+            self.jump(_target_true)
     def jump_zero_const_reg(self, _target_true):
         if self.ALU_FLAGS["zero"]:
-            self.jump(_target_true, 0)
+            self.jump(_target_true)
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
         addres = self.ROMStack.pop()
-        self.jump(addres, 0)      
+        self.jump(addres)      
     def interutp(self, _value_a, mode):
         pass
     

@@ -4,7 +4,8 @@ class CONFIG_LIST:
     def __init__(self) -> None:
         self.FILE_NAME = "Program.lor"
         self.PROFILE_NAME = None
-        self.ACTION = "build"
+        self.SAVE = "red"
+        self.RUN = False
         self.OUTPUT_FILE = "compiled.txt"
         self.LOG_INFOO = None
         self.ACTION_ON_ERROR = None
@@ -85,12 +86,12 @@ def setupsettings(parserargs, config_name, file_settings):
         print("Parsing arguments")
         config.FILE_NAME            = refine(config.FILE_NAME,        parserargs.file)
         config.PROFILE_NAME         = refine(config.PROFILE_NAME,     parserargs.profile) 
-        config.ACTION               = refine(config.ACTION,           parserargs.action)      
+        config.SAVE                 = refine(config.SAVE,             parserargs.save)      
+        config.RUN                  = refine(config.RUN,              parserargs.run)      
         config.OUTPUT_FILE          = refine(config.OUTPUT_FILE,      parserargs.outfile)
         config.LOG_INFOO            = refine(config.LOG_INFOO,        parserargs.info)       
         config.ACTION_ON_ERROR      = refine(config.ACTION_ON_ERROR,  parserargs.onerror)
         config.BUILD_OFFSET         = refine(config.BUILD_OFFSET,     parserargs.offset)
-        config.SPEED                = refine(config.SPEED,            parserargs.speed)
         config.CONSTS               = refine(config.CONSTS,           parserargs.const)
         config.SAVE_IN_ONE_FILE     = refine(config.SAVE_IN_ONE_FILE, parserargs.onefile)  
         config.LOG_COMMAND_MODE     = refine(config.LOG_COMMAND_MODE, parserargs.logmode)

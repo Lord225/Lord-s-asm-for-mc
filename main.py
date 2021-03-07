@@ -26,8 +26,8 @@ help="""
 > red - Build source and save as redable commands
 Default: None (will not save)
 """)
-parser.add_argument('--run', action='append', 
-help="""Compiles and emulates program""")
+parser.add_argument('--run', dest='run', action='store_true')
+parser.set_defaults(feature=False)
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
@@ -146,7 +146,7 @@ def main():
         print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
     # END
-    if config.ACTION != "build":
+    if not config.RUN:
         print("="*50)
         return
 
@@ -168,7 +168,7 @@ def main():
             info = dict()
 
             # GET AND EXECUTE COMMAND            
-            if config.ACTION == "build":
+            if config.RUN:
                 try:
                     CPU_COMMAND = built[active][DEVICE.get_rom_adress(core_id)]
                     PROCESSED_LINE = line_indicator[active][DEVICE.get_rom_adress(core_id)]
@@ -211,19 +211,19 @@ def main():
             break
 
 def save(JUMPLIST, built, compiled):
-    if config.ACTION == "compile-dec": 
+    if config.SAVE == "dec": 
         compiled = iss.get_dec(compiled)
         loading.save(config.OUTPUT_FILE, compiled)
-    elif config.ACTION == "compile-csv":
+    elif config.SAVE == "csv":
         compiled = iss.get_csv(compiled)
         loading.save(config.OUTPUT_FILE, compiled, with_decorators = False)
-    elif config.ACTION == "compile-bin": 
+    elif config.SAVE == "bin": 
         compiled = iss.get_bin(compiled)
         loading.save(config.OUTPUT_FILE, compiled)
-    elif config.ACTION == "compile-refac":
+    elif config.SAVE == "red":
         to_save = iss.form_full_log_command_batch(compiled, built, JUMPLIST)
         loading.save(config.OUTPUT_FILE, to_save)
-    elif config.ACTION == "compile-py":
+    elif config.SAVE == "py":
         loading.save(config.OUTPUT_FILE, compiled)
 
 def show_build_info(Program, time_start):
