@@ -1,0 +1,473 @@
+  {
+    "CPU":{
+        "Name": "ZMaszyna2137",
+        "Architecture": "2137",
+        "Author": "Asterix-ZBagier",
+        "emulator":"zmaszyna2137_emulator",
+        
+        "ARGUMENTS":{
+            "variants":{
+                "stop layout":{
+                    "NULL":{
+                        "size":11
+                    },
+                    "CMD":{
+                        "size":5
+                    }
+                },
+                "break layout":{
+                    "DST":{
+                        "size":3
+                    },
+                    "NULL":{
+                        "size":8
+                    },
+                    "CMD":{
+                        "size":5
+                    },
+                    "N1":{
+                        "size":16
+                    }
+                },
+                "load store layout":{
+                    "Adress":{
+                        "size":11
+                    },
+                    "CMD":{
+                        "size":5
+                    }
+                },
+                "load store regs layout":{
+                    "arga":{
+                        "size":3
+                    },
+                    "argb":{
+                        "size":3
+                    },
+                    "null":{
+                        "size":4
+                    },
+                    "cmd":{
+                        "size":6
+                    }
+                },
+                "alu layout":{
+                    "dst":{
+                        "size":3
+                    },
+                    "srca":{
+                        "size":3
+                    },
+                    "srcb":{
+                        "size":3
+                    },
+                    "cmd":{
+                        "size":7
+                    }
+                }
+            }
+        },
+
+        "DEFINES":[
+            "__2137__"
+        ],
+
+        "parametrs":{
+            "clock_speed":"2.0",
+            "word len":16,
+            "num of regs":7,
+
+            "ram adress space":{
+                "min":0,
+                "max":2047
+            },
+            "rom adress space":{
+                "min":0,
+                "max":2047
+            },
+            "cores":1,
+            "arguments sizes":{
+                "const":65535,
+                "reg":7,
+                "ram":65535,
+                "ptr":7,
+                "adress":65535
+            }
+        },
+        "KEYWORDS":[
+            "CORE0"
+        ],
+        "CUSTOM ARGUMENTS":{
+        },
+        "COMMANDS":{
+            "stop":{
+                "name":"stop",
+                "emulator":"stop",
+                "description":"Stop the machine",
+                "example":"stop",
+                "command_cost":1,
+
+                "args":[
+                ],
+
+                "command_layout":"stop layout",
+                "bin":{
+                    "NULL":0,
+                    "CMD":0
+                }
+            },
+            "break":{
+                "name":"break",
+                "emulator":"break_cmd",
+                "description":"n1 => reg[DST]",
+                "example":"break n1, reg[DST]",
+                "command_cost":2,
+                
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"dst"
+                    },
+                    {
+                        "type":"const",
+                        "name":"n1"
+                    }
+                ],
+                "command_layout":"break layout",
+                "bin":{
+                    "DST":"dst",
+                    "NULL":0,
+                    "CMD":8,
+                    "N1":"n1"
+                }
+            },
+            "load a":{
+                "name":"lda",
+                "emulator":"load_a",
+                "description":"load value from memory to 'a' reg[0]",
+                "example":"lda {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":4
+                }
+            }, 
+            "store a":{
+                "name":"sta",
+                "emulator":"store_a",
+                "description":"store value from 'a' in ram[adress]",
+                "example":"sta {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":8
+                }
+            }, 
+            "load b":{
+                "name":"ldb",
+                "emulator":"load_b",
+                "description":"load value from memory to 'b' reg[1]",
+                "example":"ldb {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":2
+                }
+            }, 
+            "store b":{
+                "name":"stb",
+                "emulator":"store_b",
+                "description":"store value from 'b' in ram[adress]",
+                "example":"stb {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":10
+                }
+            }, 
+            "load c":{
+                "name":"ldc",
+                "emulator":"load_c",
+                "description":"load value from memory to 'c' reg[0]",
+                "example":"ldc {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":12
+                }
+            }, 
+            "store c":{
+                "name":"stc",
+                "emulator":"store_c",
+                "description":"store value from 'c' in ram[adress]",
+                "example":"stc {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":14
+                }
+            }, 
+            "jump":{
+                "name":"jmp",
+                "emulator":"jump",
+                "description":"jump to specific adress",
+                "example":"stc {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":1
+                }
+            }, 
+            "jump zero":{
+                "name":"jz",
+                "emulator":"jump_zero",
+                "description":"jump when zero flag is true",
+                "example":"jz {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":9
+                }
+            }, 
+            "jump negative":{
+                "name":"jneg",
+                "emulator":"jump_neg",
+                "description":"jump when neg flag is true",
+                "example":"jneg {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":5
+                }
+            }, 
+            "jump overflow":{
+                "name":"jovf",
+                "emulator":"jump_overflow",
+                "description":"jump when overflow flag is true",
+                "example":"jovf {}",
+                "command_cost":1,
+                
+                "command_layout":"load store layout",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"value"
+                    }
+                ],
+
+                "bin":{
+                    "Adress":"value",
+                    "CMD":5
+                }
+            }, 
+            "load indirect":{
+                "name":"ld",
+                "emulator":"load_indirect",
+                "description":"mem[reg[SRC]] => REG DST",
+                "example":"ld reg[{}], reg[{}]",
+                "command_cost":1,
+                
+                "command_layout":"load store regs layout",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"dst"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"src"
+                    }
+                ],
+
+                "bin":{
+                    "arga":"dst",
+                    "argb":"src",
+                    "null":0,
+                    "cmd":7
+                }
+            },
+            "store indirect":{
+                "name":"st",
+                "emulator":"store_indirect",
+                "description":"REG DST => mem[reg[SRC]]",
+                "example":"st reg[{}], reg[{}]",
+                "command_cost":1,
+                
+                "command_layout":"load store regs layout",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"dst"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"src"
+                    }
+                ],
+
+                "bin":{
+                    "arga":"dst",
+                    "argb":"src",
+                    "null":0,
+                    "cmd":39
+                }
+            },
+            "move reg reg":{
+                "name":"mov",
+                "emulator":"mov_reg_reg",
+                "description":"reg[SRC] => reg[DST]",
+                "example":"mov reg[{}], reg[{}]",
+                "command_cost":1,
+                
+                "command_layout":"load store regs layout",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"dst"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"src"
+                    }
+                ],
+
+                "bin":{
+                    "arga":"dst",
+                    "argb":"src",
+                    "null":0,
+                    "cmd":23
+                }
+            },
+            "add":{
+                "name":"add",
+                "emulator":"add_reg_reg",
+                "description":"add reg[dst], reg[srca], reg[srcb]",
+                "example":"add reg[{}], reg[{}], reg[{}]",
+                "command_cost":1,
+                
+                "command_layout":"alu layout",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"dst"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"srca"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"srcb"
+                    }
+                ],
+
+                "bin":{
+                    "dst":"dst",
+                    "srca":"srca",
+                    "srcb":"srcb",
+                    "cmd":15
+                }
+            }
+
+        },
+        "PATTERNS":[
+            {},
+            {}
+        ]
+    }
+}

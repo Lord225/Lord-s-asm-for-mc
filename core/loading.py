@@ -289,15 +289,9 @@ def save(filename, binary, with_decorators = True):
     if config.SAVE_IN_ONE_FILE:
         with open(filename,"w") as file:
             for key in KEYWORDS:
-                if with_decorators:
-                    file.write(":{}\n".format(key))
-                    for line in binary[key]:
-                        file.write('\t{}\n'.format(line))
-                else:
-                    for line in binary[key]:
-                        file.write('{}\n'.format(line))
-                file.write("\n")
-            file.close()
+                file.write(key+":\n")
+                for line in binary[key]:
+                    file.write(line)
     else:
         for key in KEYWORDS:
             FILE_NAME = "{}_{}.{}".format(filename.split(".")[0], key, filename.split(".")[1])
@@ -305,14 +299,8 @@ def save(filename, binary, with_decorators = True):
                 print("INFO: File '{}' hasn't been saved because is empty".format(FILE_NAME))
                 continue
             with open(FILE_NAME,"w") as file:
-                if with_decorators:
-                    file.write(":{}\n".format(key))
-                    for line in binary[key]:
-                        file.write('\t{}\n'.format(line))
-                else:
-                    for line in binary[key]:
-                        file.write('{}\n'.format(line))
-                file.close()
+                file.write(key+":\n")
+                file.write(binary[key])
 
 def load_json_profile(path):
     with open(path, "r") as file:
@@ -322,8 +310,8 @@ def load_json_profile(path):
 def get_emulator(DEFAULT_PROFILES_PATH, CPU_PROFILE:dict):
     try:
         exec("import {}.{} as emulator".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]),globals())
-    except:
-        raise error.LoadError("Cannot import {}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
+    except Exception as err:
+        raise error.LoadError("Cannot import {}.{}: {}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"], err))
     return emulator
 def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
     CPU_PROFILE = load_json_profile('{}/{}'.format(DEFAULT_PROFILES_PATH, NAME))
@@ -437,11 +425,13 @@ class PROFILE_DATA:
                     except:
                         pass
                     else:
-                        for key, val in cmd["bin"].items():
-                            if key.lower() not in [k.lower() for k in self.profile["CPU"]["ARGUMENTS"].keys()]:
-                                raise error.ProfileStructureError("Undeclared bin's key: '{}'. Delcared ones: {}".format(key, list(cmd["bin"].keys())))
-                            if type(val) is not int and val not in ARG_NAMES:
-                                raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
+                        #TODO
+                        # for key, val in cmd["bin"].items():
+                        #     if key.lower() not in [k.lower() for k in self.profile["CPU"]["ARGUMENTS"].keys()]:
+                        #         raise error.ProfileStructureError("Undeclared bin's key: '{}'. Delcared ones: {}".format(key, list(cmd["bin"].keys())))
+                        #     if type(val) is not int and val not in ARG_NAMES:
+                        #         raise error.ProfileStructureError("Undeclared bin's key. '{}', delcared ones: {}".format(key, cmd["bin"]))
+                        pass
                     
             except KeyError as err:
                 raise err

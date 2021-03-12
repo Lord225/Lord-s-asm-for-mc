@@ -6,38 +6,42 @@
         "emulator":"zcore_emulator",
         
         "ARGUMENTS":{
-            "Arg":{
-                "size":8
-            },
-            "Warunek":{
-                "size":5
-            },
-            "NegAlu":{
-                "size":1
-            },
-            "opALU":{
-                "size":4
-            },
-            "readA":{
-                "size":3
-            },
-            "readB":{
-                "size":3
-            },
-            "write":{
-                "size":3
-            },
-            "opCPU":{
-                "size":5
-            },
-            "opFlow":{
-                "size":1
-            },
-            "Interupt":{
-                "size":4
-            },
-            "Adress":{
-                "size":8
+            "variants":{
+                "default":{
+                    "Arg":{
+                        "size":8
+                    },
+                    "Warunek":{
+                        "size":5
+                    },
+                    "NegAlu":{
+                        "size":1
+                    },
+                    "opALU":{
+                        "size":4
+                    },
+                    "readA":{
+                        "size":3
+                    },
+                    "readB":{
+                        "size":3
+                    },
+                    "write":{
+                        "size":3
+                    },
+                    "opCPU":{
+                        "size":5
+                    },
+                    "opFlow":{
+                        "size":1
+                    },
+                    "Interupt":{
+                        "size":4
+                    },
+                    "Adress":{
+                        "size":8
+                    }
+                }
             }
         },
 
@@ -69,6 +73,7 @@
                 "ptr":7,
                 "adress":255
             },
+            "clock_speed":"2.2",
             "SUPPORTED TECHNOLOGIES":[
                 "",
                 ""

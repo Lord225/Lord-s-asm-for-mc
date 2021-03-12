@@ -3,6 +3,7 @@ VERSION = "1.0"
 
 import math as m
 import random as rnd
+from typing import cast
 import core.loading as loading
 import core.interpreter_synax_solver as iss
 import core.error as error
@@ -17,17 +18,20 @@ parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX 
 help="""Name of file to proces
 Default: Program.lor
 """)
-parser.add_argument("-s", "--save", choices=["dec", "csv", "bin", "py" , "red"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["dec", "raw", "bin", "py"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
-> csv - Build source and save as csv
+> raw - Build source and save as binary without padding
 > bin - Build source and save as binary
 > py  - Build source and save as python dict
-> red - Build source and save as redable commands
 Default: None (will not save)
 """)
+parser.add_argument('--comments', dest='comments', action='store_true')
+parser.set_defaults(feature=False)
+
 parser.add_argument('--run', dest='run', action='store_true')
 parser.set_defaults(feature=False)
+
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
@@ -63,11 +67,11 @@ help="""Addinationl const expressions added while loading script
  --const NAME_OF_CONSTANT VALUE (COULD BY LONG AND WITH SPACES)
  --const JUST_NAME_MEANS_DEFINITION
 """)
-parser.add_argument('--onefile', action='append', 
+parser.add_argument('--onefile',  type=bool, default=False, 
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
+ACTION_ON_ERROR = None #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
@@ -84,7 +88,7 @@ def main():
         PER_CMD = (time_end-time_start)/(COMMAND_COUNTER[core_id]*1000000) if COMMAND_COUNTER[core_id] != 0 else 0.0
 
         print("="*50)
-        print("Core {} finished work ({} ticks, apr. {}s on device)".format(core_id, COMMAND_COUNTER[core_id], COMMAND_COUNTER[core_id]*config.TIME_MILTIPLAYER))
+        print("Core {} finished work ({} ticks, apr. {:0.3f}s on device)".format(core_id, COMMAND_COUNTER[core_id], COMMAND_COUNTER[core_id]*config.TIME_MILTIPLAYER))
         print("Total execution time: {:0.3f}s, {:0.3f} ms per command".format(TOTAL, PER_CMD))
         actives.remove(active)
 
@@ -114,7 +118,8 @@ def main():
     program, line_indicator, jump_list, file_settings, data = loading.load_program(config.FILE_NAME, config.CONSTS)
 
     actives = loading.find_executable_cores(program)
-    
+
+    config.TIME_MILTIPLAYER = 1/float(CPU_PROFILE["CPU"]["parametrs"]["clock_speed"])
 
     #################################################
     #                   COMPILING                   #
@@ -193,7 +198,10 @@ def main():
             
             # CHECK PERFORMANCE
             if not info["skip"]:
-                COMMAND_COUNTER[core_id] += 1
+                try:
+                    COMMAND_COUNTER[core_id] += iss.PROFILE.COMMANDSETFULL[CPU_COMMAND[1]]['command_cost']
+                except KeyError:
+                    COMMAND_COUNTER[core_id] += 1
             DEVICE.end_tick(core_id)
             
             # STOP FLAG
@@ -211,21 +219,25 @@ def main():
             break
 
 def save(JUMPLIST, built, compiled):
+    to_save = None
     if config.SAVE == "dec": 
-        compiled = iss.get_dec(compiled)
-        loading.save(config.OUTPUT_FILE, compiled)
-    elif config.SAVE == "csv":
-        compiled = iss.get_csv(compiled)
-        loading.save(config.OUTPUT_FILE, compiled, with_decorators = False)
+        to_save = iss.get_dec(compiled)
+    elif config.SAVE == "raw":
+        to_save = iss.get_raw(compiled)
     elif config.SAVE == "bin": 
-        compiled = iss.get_bin(compiled)
-        loading.save(config.OUTPUT_FILE, compiled)
-    elif config.SAVE == "red":
-        to_save = iss.form_full_log_command_batch(compiled, built, JUMPLIST)
-        loading.save(config.OUTPUT_FILE, to_save)
+        to_save = iss.get_bin(compiled)
     elif config.SAVE == "py":
-        loading.save(config.OUTPUT_FILE, compiled)
-
+        py_to_save = dict()
+        for core in loading.KEYWORDS:
+            py_to_save[core] = '\n'.join([str(line) for line in compiled[core]])
+        loading.save(config.OUTPUT_FILE, py_to_save)
+        return
+    if config.COMMENTS and to_save is not None:
+        to_save = iss.add_comments(to_save, built, JUMPLIST)
+    loading.save(config.OUTPUT_FILE, to_save)
+        
+    
+    
 def show_build_info(Program, time_start):
     total_command_count = sum([len(x) for x in Program.values()])
     time_end = time.thread_time_ns()
