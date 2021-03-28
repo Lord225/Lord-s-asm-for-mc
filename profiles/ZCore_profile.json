@@ -82,7 +82,7 @@
         "COMMANDS":{
             "mov const reg":{
                 "name":"mov",
-                "emulator":"mov_const_reg",
+                "emulator":"movconst_reg",
                 "description":"Write const to register",
                 "example":"mov {}, reg[{}]",
 
@@ -119,7 +119,7 @@
                     }
                 ],
                 "bin":{
-                    "readA":"from",
+                    "readA":"From",
                     "write":"to",
                     "opCPU":2,
                     "opALU":6

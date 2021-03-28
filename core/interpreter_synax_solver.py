@@ -152,7 +152,6 @@ def get_command_name(command:str):
         raise error.UndefinedCommand("Undefined error while searching for command: {}".format(err))
     raise error.UndefinedCommand(command)
 
-
 def cliping_beheivior(arg, Max):
     """Way that solver will treat cliping"""
     if config.G_RISE_ERROR_ON_BAD_RANGES:
@@ -432,9 +431,9 @@ def add_comments(builded_program: dict(), to_save: dict(), JUMP_LIST: dict()):
 
 
 def extract_command_layout_data(CMD):
-    command_layout, CMD = list(CMD.keys())[0], list(CMD.values())[0]
+    command_layout, CMD, meta = list(CMD["command"].keys())[0], list(CMD["command"].values())[0], CMD["meta"]
     command_layout_sizes = PROFILE.ROM_SIZES["variants"][command_layout] if 'variants' in PROFILE.ROM_SIZES else PROFILE.ROM_SIZES
-    return CMD, command_layout_sizes
+    return CMD, command_layout_sizes, meta
 
 def get_compiled_cmd(COMMAND):
     #TODO MUCH WORK HERE
@@ -456,7 +455,7 @@ def get_compiled_cmd(COMMAND):
             except KeyError:
                 bin_type = 'default'
             rom_pattern = PROFILE.COMMAND_LANE_PATTERN["variants"][bin_type]
-            return {bin_type:{key:None for key, val in rom_pattern.items()}}, bin_type
+            return {"command":{bin_type:{key:None for key, val in rom_pattern.items()}},"meta":dict()}, bin_type
         raise error.ProfileStructureError("Sth is wrong")
 
     def get_bin_definition(ROM, CMD_PATTERN):
@@ -471,9 +470,9 @@ def get_compiled_cmd(COMMAND):
         layout = get_bin_definition(ROM, CMD_PATTERN).items()
         for key, value in layout:
             if type(value) is not str:
-                ROM[rom_type][key] = value
+                ROM["command"][rom_type][key] = value
             else:
-                ROM[rom_type][key] = get_value_from_arg(value, CMD_PATTERN, args)
+                ROM["command"][rom_type][key] = get_value_from_arg(value, CMD_PATTERN, args)
     except KeyError as err:
         raise error.ProfileStructureError("Can't find command profile ({}) in '{}' command.".format(err, CMD_PATTERN["name"]))
     except Exception as err:
@@ -498,7 +497,7 @@ def get_raw(compiled):
     builded_program = {x:"" for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
         for CMD in compiled[core]:
-            CMD, command_layout_sizes = extract_command_layout_data(CMD)
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
             line = ""
             for key, value in CMD.items():
                 line += "{}".format(padbin(value,command_layout_sizes[key]["size"],prefix=False))
@@ -512,7 +511,7 @@ def get_dec(compiled):
         #builded_program[core].append(str().join(['{}{}'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()]))
         for CMD in compiled[core]:
             line = list()
-            CMD, command_layout_sizes = extract_command_layout_data(CMD)
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
             for key, value in CMD.items():
                 line.append("{}".format(padbin(value,command_layout_sizes[key]["size"], prefix=False)))
                 line.append("({})".format(paddec(value,3," ")))
@@ -523,7 +522,7 @@ def get_bin(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
         for CMD in compiled[core]:
-            CMD, command_layout_sizes = extract_command_layout_data(CMD)
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
             line = list()
             for key, value in CMD.items():
                 line.append("{}".format(padbin(value,command_layout_sizes[key]["size"],prefix=False)))

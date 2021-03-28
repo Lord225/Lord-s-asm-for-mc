@@ -1,17 +1,29 @@
 CORE0:
-{'stop layout': {'NULL': 0, 'CMD': 0}}
-{'break layout': {'DST': 0, 'NULL': 0, 'CMD': 8, 'N1': 65535}}
-{'load store layout': {'Adress': 0, 'CMD': 4}}
-{'load store layout': {'Adress': 1, 'CMD': 8}}
-{'load store layout': {'Adress': 0, 'CMD': 2}}
-{'load store layout': {'Adress': 1, 'CMD': 10}}
-{'load store layout': {'Adress': 0, 'CMD': 12}}
-{'load store layout': {'Adress': 1, 'CMD': 14}}
-{'load store layout': {'Adress': 9, 'CMD': 1}}
-{'load store layout': {'Adress': 10, 'CMD': 9}}
-{'load store layout': {'Adress': 11, 'CMD': 5}}
-{'load store layout': {'Adress': 12, 'CMD': 5}}
-{'load store regs layout': {'arga': 1, 'argb': 2, 'null': 0, 'cmd': 7}}
-{'load store regs layout': {'arga': 3, 'argb': 5, 'null': 0, 'cmd': 39}}
-{'load store regs layout': {'arga': 6, 'argb': 7, 'null': 0, 'cmd': 23}}
-{'alu layout': {'dst': 1, 'srca': 2, 'srcb': 3, 'cmd': 15}}
+0001  (  1)  00  (  0)  01  (  1)  11111111  (255) |  mov 255, reg[1]
+1111  ( 15)  00  (  0)  01  (  1)  10100000  (160) |  write reg[1], 160
+0001  (  1)  00  (  0)  01  (  1)  11111110  (254) |  mov 254, reg[1]
+1111  ( 15)  00  (  0)  01  (  1)  10100001  (161) |  write reg[1], 161
+0001  (  1)  00  (  0)  01  (  1)  00000000  (  0) |  mov 0, reg[1]
+1111  ( 15)  00  (  0)  01  (  1)  10100010  (162) |  write reg[1], 162
+1101  ( 13)  00  (  0)  01  (  1)  10100010  (162) |  read 162, reg[1]
+1101  ( 13)  00  (  0)  11  (  3)  10100000  (160) |  read 160, reg[3]	(OUTER)
+0100  (  4)  10  (  2)  11  (  3)                  |  sub reg[2], reg[3]
+0001  (  1)  00  (  0)  00  (  0)  11110000  (240) |  mov 240, reg[0]
+1100  ( 12)  00  (  0)  01  (  1)                  |  read reg[0], reg[1]
+0001  (  1)  00  (  0)  10  (  2)  00000001  (  1) |  mov 1, reg[2]	(INNER)
+0011  (  3)  10  (  2)  00  (  0)                  |  add reg[2], reg[0]
+1100  ( 12)  00  (  0)  10  (  2)                  |  read reg[0], reg[2]
+1011  ( 11)  01  (  1)  10  (  2)  00010100  ( 20) |  jg reg[2], reg[1], SKIP_SWAP
+1110  ( 14)  00  (  0)  01  (  1)                  |  write reg[1], reg[0]
+0001  (  1)  00  (  0)  01  (  1)  00000001  (  1) |  mov 1, reg[1]
+0100  (  4)  01  (  1)  00  (  0)                  |  sub reg[1], reg[0]
+1110  ( 14)  00  (  0)  10  (  2)                  |  write reg[2], reg[0]
+0011  (  3)  01  (  1)  00  (  0)                  |  add reg[1], reg[0]
+1101  ( 13)  00  (  0)  10  (  2)  10100000  (160) |  read 160, reg[2]
+1011  ( 11)  00  (  0)  11  (  3)  00001010  ( 10) |  jg reg[3], reg[0], INNER	(SKIP_SWAP)
+0001  (  1)  00  (  0)  01  (  1)  00000001  (  1) |  mov 1, reg[1]
+1101  ( 13)  00  (  0)  10  (  2)  10100010  (162) |  read 162, reg[2]
+0011  (  3)  01  (  1)  10  (  2)                  |  add reg[1], reg[2]
+1111  ( 15)  00  (  0)  10  (  2)  10100010  (162) |  write reg[2], 162
+0001  (  1)  00  (  0)  11  (  3)  00001111  ( 15) |  mov 15, reg[3]
+1011  ( 11)  10  (  2)  11  (  3)  00000110  (  6) |  jg reg[3], reg[2], OUTER
