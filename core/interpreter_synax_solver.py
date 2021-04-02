@@ -380,7 +380,7 @@ def find_if_line_is_marked(line: int, JUMP_LIST: dict()):
                 return str(key)
         return None
 
-def form_full_log_command(_type, formed_command, device, target_core, args, JUMP_LIST):
+def form_full_log_command(_type, formed_command, device, target_core, args):
     """Will create standarised, redable command line with fancy synax and only with dec number representation"""
     if _type == "debug":
         return ""
@@ -398,7 +398,7 @@ def form_full_log_command(_type, formed_command, device, target_core, args, JUMP
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["adress"]:
-                arg = find_if_line_is_marked(arg[0]+1, JUMP_LIST)
+                arg = "JUMP"
             else:
                 error.Unsupported("That shouldn't happen.")
             fancy_command += "{}, ".format(arg)

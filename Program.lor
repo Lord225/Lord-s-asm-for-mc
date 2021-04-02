@@ -1,6 +1,6 @@
 [PROFILE pmmini_profile.json]
 
-#data 0xF0 "BDCEFABCDEFGCAF"
+#data 0xF0 "@?>=<;987654321"
 
 #define DATA_START 0xF0
 #define ARR_END 0xA0
@@ -26,13 +26,15 @@
     mov DATA_START, reg[0] //reset inner
 
     //[inner, -, -, END_OUTER_LOOP_PTR]
+    #log OUTER= {Regs}
     :INNER
     mov ram[reg[0]], reg[1]
     mov 1, reg[2]
     add reg[2], reg[0]
     mov ram[reg[0]], reg[2]
     //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
-
+    #log INNER = {Regs}
+    
     jg reg[2], reg[1], SKIP_SWAP
         mov reg[1], ram[reg[0]]
         mov 1, reg[1]
@@ -40,9 +42,9 @@
         mov reg[2], ram[reg[0]]
         add reg[1], reg[0]
     :SKIP_SWAP
-
+    #ramslce(0xf0,0xff)
     //[i+1, -, -, END_OUTER_LOOP_PTR]
-
+    #log AFTER SWAP = {Regs}
     mov ram[ARR_END], reg[2]
     //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
     jg reg[3], reg[0], INNER
@@ -54,6 +56,7 @@
     mov 15, reg[3]
 
     //[i+1, 1, OUTER_COUNTER, 15]
+    #log ON END = {Regs}
     jg reg[3], reg[2], OUTER
 
     #ram

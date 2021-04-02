@@ -71,10 +71,12 @@ parser.add_argument('--onefile',  type=bool, default=False,
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
+ACTION_ON_ERROR = None #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
+
+
 
 def main():
     global PROCESSED_LINE
@@ -120,6 +122,7 @@ def main():
     if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
         print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
+    config.RUN = True
     # END
     if not config.RUN:
         print("="*50)
