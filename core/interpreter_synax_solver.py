@@ -1,6 +1,7 @@
 import core.error as error
 import core.loading as loading
 import config
+from tabulate import tabulate
 from enum import Enum
 
 class TYPE(Enum):
@@ -22,10 +23,13 @@ def load_profie(profile, emulator):
     print("Profile Loaded")
 
 def padhex(x, pad, prefix = True):
-        return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
+    x = 0 if x is None else x
+    return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
 def padbin(x, pad, prefix = True):
+    x = 0 if x is None else x
     return '{}{}{}'.format('0b' if prefix else '',"0"*(pad-len(bin(x)[2:])),bin(x)[2:])
 def paddec(x, pad, fill = "0"):
+    x = 0 if x is None else x
     return '{}{}'.format(fill*(pad-len(str(x))), str(x))
 
 def reset_G_INFO_CONTAINER():
@@ -39,16 +43,20 @@ def reset_G_INFO_CONTAINER():
     if G_INFO_CONTAINER["stop"] != False:
         G_INFO_CONTAINER["stop"] = False
 
+def extract_from_brackets(raw, bracket_in = '[', bracked_out = ']'):
+    """wqerfewfw[return_this_value, _THIS TOOO]wefwefwe"""
+    start_bracket = raw.find(bracket_in)
+    end_bracket = raw.find(bracked_out)
+    if start_bracket == -1:
+        raise error.SynaxError("Expected '{}' in argument".format(bracket_in))
+    if end_bracket == -1:
+        raise error.SynaxError("Expected '{}' in argument".format(bracked_out))
+    return raw[start_bracket+1:end_bracket]
+
 def extract_number_from_bracets(unformed):
     """wqerfewfw[return_this_value]wefwefwe"""
 
-    start_bracket = unformed.find("[")
-    end_bracket = unformed.find("]")
-    if start_bracket == -1:
-        raise error.SynaxError("Expected '[' in argument")
-    if end_bracket == -1:
-        raise error.SynaxError("Expected ']' in argument")
-    return get_value(unformed[start_bracket+1:end_bracket])
+    return get_value(extract_from_brackets(unformed))
 
 def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     """
@@ -77,11 +85,13 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
     raw_argument = raw_raw_argument.lower()
     if len(raw_argument)==0:
         raise error.Expected("Argument", raw_argument)
-    #! NEW VERSION, Update wiki.
+
     try:
         return get_value(raw_argument), PROFILE.ADRESS_MODE_REMAP["const"]
-    except:
+    except error.UndefinedValue as err:
         pass
+    except:
+        raise error.UndefinedValue("'{}'".format(raw_argument))
 
     if "ram" in raw_argument:
         _reg_start = raw_argument.find("reg")
@@ -102,6 +112,7 @@ def get_argument_type(raw_raw_argument: str, JUMP_LIST):
         for key, val in PROFILE.ADRESS_MODE_REMAP.items():
             if key in raw_argument:
                 return extract_number_from_bracets(raw_argument), val
+        raise error.SynaxError("Cannot interpretate value: {}".format(raw_argument))
 
 def get_jump_adress(raw_argument: str, JUMP_LIST):
     """Returns true adress in ROM of raw_argument table"""
@@ -110,9 +121,16 @@ def get_jump_adress(raw_argument: str, JUMP_LIST):
     if raw_argument not in JUMP_LIST:
         raise error.SynaxError("Jump identifier: '{}' is undefined.".format(raw_argument))
     return JUMP_LIST[raw_argument]
-
+def get_mark_from_jump_adress(raw_argument, JUMP_LIST):
+    if type(raw_argument) is list:
+        raw_argument = raw_argument[0]
+    for key, val in JUMP_LIST.items():
+        if val == raw_argument:
+            return key
+    raise error.SynaxError("Unresolved adress: {}", raw_argument)
 def get_value(strage_format:str):
     """Returns value of strage_format"""
+    strage_format = strage_format.strip()
     if strage_format.isdecimal():
         return int(strage_format)
     elif len(strage_format[2:]) == 0:
@@ -139,7 +157,6 @@ def get_command_name(command:str):
     except Exception as err:
         raise error.UndefinedCommand("Undefined error while searching for command: {}".format(err))
     raise error.UndefinedCommand(command)
-
 
 def cliping_beheivior(arg, Max):
     """Way that solver will treat cliping"""
@@ -169,10 +186,20 @@ def get_command_hash(cmd, _type, args) -> str:
     else:
         raise error.UndefinedCommand("Can't match command: '{}' with arguments: {}".format(cmd, [PROFILE.ADRESS_MODE_REMAP_REVERSED[arg[1]] for arg in args]))
 
-def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True):
+def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "bin", ADD_ASCII_VIEW = True, start = 0, end = None):
     """
     It just works.
     """
+    if start != 0:
+        start = start + (rows - start % rows)-rows
+    else:
+        start = 0
+    if end is not None:
+        end = end + (rows - end % rows)
+    else:
+        end = len(RAM)
+    WORD_SIZE = PROFILE.profile["CPU"]["parametrs"]["word len"]
+
     if rows%subrows != 0:
         raise error.UndefinedSetting("Row number should be dividable by subrow count.")
     def generate_value(PAD = -1, MODE = "dec"):
@@ -182,13 +209,13 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
         except IndexError:
             raise "END"
         if MODE == "dec":
-            PAD = 4 if PAD == -1 else PAD
+            PAD = len(str(int(2**WORD_SIZE)-1))+1
             ADRESS = str(val)
         elif MODE == "hex":
-            PAD = 3 if PAD == -1 else PAD
+            PAD = len(str(hex(2**WORD_SIZE-1)[2:]))+1
             ADRESS = str(padhex(val, 2, False))
         elif MODE == "bin":
-            PAD = 9 if PAD == -1 else PAD
+            PAD = len(str(bin(2**WORD_SIZE-1)[2:]))+1
             ADRESS = padbin(val, 8, False)
         return '{}{}'.format(" "*(PAD-len(ADRESS)), ADRESS)
 
@@ -197,12 +224,15 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
     LINE_START = 0
     subrow_cunter = 0
     OUTPUT = "\n"
-
+    
     if config.RAM_DEBUG_MODE == "simple":
         return '\n'.format(RAM)
     elif config.RAM_DEBUG_MODE == "row":
         try:
-            for adress in range(0, 255, rows):
+            for adress in range(0, len(RAM), rows):
+                if not (adress in range(start, end)):
+                    continue
+
                 if subrow_cunter == 0:
                     LINE_START = adress
                 rows_data = ""
@@ -219,11 +249,11 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
                         rows_data += "\t{}".format(asciirep)
                 
                 if ADRESS_AS_HEX:
-                    OUTPUT += " {}:{}{}".format(padhex(adress, 2), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
+                    OUTPUT += " {}:{}{}".format(padhex(adress, len(hex(len(RAM))[2:])), rows_data, " " if subrow_cunter != (subrows-1) else "\n")
                 else:
                     OUTPUT += " {}:{}{}".format(adress, rows_data, " " if subrow_cunter != (subrows-1) else "\n")
                 subrow_cunter = (subrow_cunter+1)%subrows
-        except:
+        except Exception as err:
             pass
             
         return OUTPUT
@@ -237,10 +267,11 @@ def execute_debug_command(device, target_core:int, debug_cmd:str):
             print("CPU hit breakpoint")
             input()
         elif debug_cmd == "ram":
-            print("Ram =", generate_ram_display(device.RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "dec", ADD_ASCII_VIEW = True))
-        elif debug_cmd == "ramslice":
-            raise error.CurrentlyUnsupported("ramslice")
-            print("Ram =",device.RAM)
+            print(generate_ram_display(device.RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "dec", ADD_ASCII_VIEW = True))
+        elif debug_cmd.startswith("ramslice"):
+            values = extract_from_brackets(debug_cmd,'(',')')
+            start, end = [get_value(val) for val in values.split(',')]
+            print(generate_ram_display(device.RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALUE_AS = "dec", ADD_ASCII_VIEW = True, start = start, end = end))
         elif debug_cmd[:4] == "log ":
             print(solve_log_command(debug_cmd[4:], device, target_core))
 
@@ -298,7 +329,7 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
     try:
         if len(args) == 0:
             PROFILE.COMMAND_MAP[cmd_hash](device.CORES[target_core])
-        if len(args) == 1:
+        elif len(args) == 1:
             PROFILE.COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0])
         elif len(args) == 2:
             PROFILE.COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0])
@@ -307,9 +338,9 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
         elif len(args) == 4:
             PROFILE.COMMAND_MAP[cmd_hash](device.CORES[target_core], args[0][0], args[1][0], args[2][0], args[4][0])
         else:
-            raise error.Unsupported("Ouch. Ask author if you need more that 4 args...")
+            raise error.Unsupported("Ouch. Ask if you need more that 4 args...")
     except Exception as err:
-        raise error.Unsupported("What just happen? You have to report this!, {}".format(err))   
+        raise error.Unsupported("You broke emulator. Congratulations...  '{}'".format(err))   
 
     if config.LOG_COMMAND_MODE is not None:
         end = "\n" if thread is None or config.FORCE_COMMANDS_IN_SEPERATE_ROWS else "\t"
@@ -317,7 +348,7 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
         if config.LOG_COMMAND_MODE == "short":
             print(target_core, cmd_hash, end=end)
         elif config.LOG_COMMAND_MODE == "long":
-            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end)
+            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end) #TODO FIX
         else:
             raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long', 'raw', None] got: {}".format(config.LOG_COMMAND_MODE))
     return G_INFO_CONTAINER
@@ -351,7 +382,7 @@ def args_equal(args1, args2, TypesOnly = False):
 
 def find_if_line_is_marked(line: int, JUMP_LIST: dict()):
         for key, val in JUMP_LIST.items():
-            if val+1 == line:
+            if val == line:
                 return str(key)
         return None
 
@@ -373,35 +404,45 @@ def form_full_log_command(_type, formed_command, device, target_core, args, JUMP
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["adress"]:
-                arg = find_if_line_is_marked(arg[0]+1, JUMP_LIST)
+                arg = get_mark_from_jump_adress(arg[0], JUMP_LIST)
             else:
                 error.Unsupported("That shouldn't happen.")
             fancy_command += "{}, ".format(arg)
     return fancy_command[:-2]
 
-def form_full_log_command_batch(compiled: dict(), to_save: dict(), JUMP_LIST: dict()):
-    
-
-    builded_program = {x:[] for x in loading.KEYWORDS}
+def add_commands_to_end(builded_program: dict(), to_save: dict(), JUMP_LIST: dict()):
     for core in loading.KEYWORDS:
-        builded_program[core].append(str().join(['{}{} \t'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()]))
+        program = builded_program[core].split('\n')
+        longest = max(len(x) for x in program)
+        program = [line+' '*(longest-len(line)) for line in program]
+
         RAW_CMD_ITER = iter(to_save[core])
-        for i, CMD in enumerate(compiled[core]):
-            line = ""
-            for key, value in CMD.items():
-                line += "{} ({}) \t".format(padbin(value, PROFILE.ROM_SIZES[key]["size"],False), paddec(value,3," "))
+        all_lines = ""
+        for i, line in enumerate(program[1:-1]):
             RAW_CMD = next(RAW_CMD_ITER)
             while RAW_CMD[0] == 'debug':
                 RAW_CMD = next(RAW_CMD_ITER)
+
             _type, formed_command, args = RAW_CMD
-            line += "\t#  {}".format(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args, JUMP_LIST[core]))
+            line += " |  {}".format(form_full_log_command(_type, formed_command, None, loading.CORE_ID_MAP[core], args, JUMP_LIST[core]))
             marked_line = find_if_line_is_marked(i, JUMP_LIST[core])
             if marked_line is not None:
-                line += "\t ({})".format(marked_line)
-            builded_program[core].append(line)
+                line += "\t({})".format(marked_line)
+            all_lines += line+'\n'
+        builded_program[core] = all_lines
     return builded_program
 
+def add_comments(builded_program: dict(), to_save: dict(), JUMP_LIST: dict()):
+    return add_commands_to_end(builded_program, to_save, JUMP_LIST)
+
+
+def extract_command_layout_data(CMD):
+    command_layout, CMD, meta = list(CMD["command"].keys())[0], list(CMD["command"].values())[0], CMD["meta"]
+    command_layout_sizes = PROFILE.ROM_SIZES["variants"][command_layout] if 'variants' in PROFILE.ROM_SIZES else PROFILE.ROM_SIZES
+    return CMD, command_layout_sizes, meta
+
 def get_compiled_cmd(COMMAND):
+    #TODO MUCH WORK HERE
     if type(COMMAND) is tuple:
         _type, formed_command, args = COMMAND
     else:
@@ -413,16 +454,31 @@ def get_compiled_cmd(COMMAND):
                 return args[i][0]
         else:
             raise error.ProfileStructureError("Can't find given name in args")
-        
+    def get_rom(PROFILE, CMD_PATTERN):
+        if "variants" in PROFILE.COMMAND_LANE_PATTERN and len(PROFILE.COMMAND_LANE_PATTERN) == 1:
+            try:
+                bin_type = CMD_PATTERN["command_layout"]
+            except KeyError:
+                bin_type = 'default'
+            rom_pattern = PROFILE.COMMAND_LANE_PATTERN["variants"][bin_type]
+            return {"command":{bin_type:{key:None for key, val in rom_pattern.items()}},"meta":dict()}, bin_type
+        raise error.ProfileStructureError("Sth is wrong")
 
+    def get_bin_definition(ROM, CMD_PATTERN):
+        for i in ROM.keys():
+            if i in CMD_PATTERN["bin"]:
+                return CMD_PATTERN["bin"][i]
+        return CMD_PATTERN["bin"]
     CMD_PATTERN = PROFILE.COMMANDSETFULL[formed_command]
-    ROM = {key:0 for key in PROFILE.COMMAND_LANE_PATTERN.keys()}
+    ROM, rom_type = get_rom(PROFILE, CMD_PATTERN)
+
     try:
-        for key, value in CMD_PATTERN["bin"].items():
+        layout = get_bin_definition(ROM, CMD_PATTERN)
+        for key, value in layout.items():
             if type(value) is not str:
-                ROM[key] = value
+                ROM["command"][rom_type][key] = value
             else:
-                ROM[key] = get_value_from_arg(value, CMD_PATTERN, args)
+                ROM["command"][rom_type][key] = get_value_from_arg(value, CMD_PATTERN, args)
     except KeyError as err:
         raise error.ProfileStructureError("Can't find command profile ({}) in '{}' command.".format(err, CMD_PATTERN["name"]))
     except Exception as err:
@@ -443,32 +499,39 @@ def generate_debug_frame():
     #print(frame)
     pass
 
-def get_csv(compiled):
-    builded_program = {x:[] for x in loading.KEYWORDS}
+def get_raw(compiled):
+    builded_program = {x:"" for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
-        builded_program[core].append(str().join(['{},'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()])[:-1])
         for CMD in compiled[core]:
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
             line = ""
-            for _, value in CMD.items():
-                line += "{},".format(value)
-            builded_program[core].append(line[:-2])
+            for key, value in CMD.items():
+                line += "{}".format(padbin(value,command_layout_sizes[key]["size"],prefix=False))
+            SPACEING = 4
+            line = ' '.join([line[i:i+SPACEING] for i in range(0, len(line), SPACEING)])
+            builded_program[core] += line+'\n'
     return builded_program
 def get_dec(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
-        builded_program[core].append(str().join(['{}{} \t'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()]))
+        #builded_program[core].append(str().join(['{}{}'.format(key," "*(val["size"]+6-len(key))) for key, val in PROFILE.ROM_SIZES.items()]))
         for CMD in compiled[core]:
-            line = ""
+            line = list()
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
             for key, value in CMD.items():
-                line += "{} ({}) \t".format(padbin(value,PROFILE.ROM_SIZES[key]["size"],False), paddec(value,3," "))
+                line.append("{}".format(padbin(value,command_layout_sizes[key]["size"], prefix=False)))
+                line.append("({})".format(paddec(value,3," ")))
             builded_program[core].append(line)
+        builded_program[core] = tabulate(builded_program[core])
     return builded_program
 def get_bin(compiled):
     builded_program = {x:[] for x in loading.KEYWORDS}
     for core in loading.KEYWORDS:
         for CMD in compiled[core]:
-            line = ""
+            CMD, command_layout_sizes, meta = extract_command_layout_data(CMD)
+            line = list()
             for key, value in CMD.items():
-                line += "{} ".format(padbin(value,PROFILE.ROM_SIZES[key]["size"],False))
+                line.append("{}".format(padbin(value,command_layout_sizes[key]["size"],prefix=False)))
             builded_program[core].append(line)
+        builded_program[core] = tabulate(builded_program[core])
     return builded_program

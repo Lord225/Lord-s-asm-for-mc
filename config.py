@@ -6,6 +6,7 @@ class CONFIG_LIST:
         self.PROFILE_NAME = None
         self.SAVE = "red"
         self.RUN = False
+        self.COMMENTS = False
         self.OUTPUT_FILE = "compiled.txt"
         self.LOG_INFOO = None
         self.ACTION_ON_ERROR = None
@@ -87,7 +88,8 @@ def setupsettings(parserargs, config_name, file_settings):
         config.FILE_NAME            = refine(config.FILE_NAME,        parserargs.file)
         config.PROFILE_NAME         = refine(config.PROFILE_NAME,     parserargs.profile) 
         config.SAVE                 = refine(config.SAVE,             parserargs.save)      
-        config.RUN                  = refine(config.RUN,              parserargs.run)      
+        config.RUN                  = refine(config.RUN,              parserargs.run)
+        config.COMMENTS             = True if parserargs.comments == False and config.COMMENTS == True else False  
         config.OUTPUT_FILE          = refine(config.OUTPUT_FILE,      parserargs.outfile)
         config.LOG_INFOO            = refine(config.LOG_INFOO,        parserargs.info)       
         config.ACTION_ON_ERROR      = refine(config.ACTION_ON_ERROR,  parserargs.onerror)

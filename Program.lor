@@ -1,13 +1,12 @@
 [PROFILE pmmini_profile.json]
 
-#data 0xF0 "BDCEFABCDEFGCAF"
+#data 0xF0 "@?>=<;987654321"
 
 #define DATA_START 0xF0
 #define ARR_END 0xA0
 #define ARR_DEC_END 0xA1
 #define OUTER_COUNTER 0xA2
 #define COUTER_LIMIT 0xA3
-
 
 :CORE0
     #ram
@@ -27,12 +26,13 @@
 
     //[inner, -, -, END_OUTER_LOOP_PTR]
     :INNER
+
     mov ram[reg[0]], reg[1]
     mov 1, reg[2]
     add reg[2], reg[0]
     mov ram[reg[0]], reg[2]
     //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
-
+    
     jg reg[2], reg[1], SKIP_SWAP
         mov reg[1], ram[reg[0]]
         mov 1, reg[1]
@@ -42,11 +42,10 @@
     :SKIP_SWAP
 
     //[i+1, -, -, END_OUTER_LOOP_PTR]
-
     mov ram[ARR_END], reg[2]
     //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
     jg reg[3], reg[0], INNER
-    
+
     mov 1, reg[1]
     mov ram[OUTER_COUNTER], reg[2]
     add reg[1], reg[2]
@@ -55,15 +54,5 @@
 
     //[i+1, 1, OUTER_COUNTER, 15]
     jg reg[3], reg[2], OUTER
-
     #ram
     #break
-
-    
-
-
-
-
-
-
-
