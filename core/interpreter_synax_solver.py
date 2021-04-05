@@ -121,7 +121,13 @@ def get_jump_adress(raw_argument: str, JUMP_LIST):
     if raw_argument not in JUMP_LIST:
         raise error.SynaxError("Jump identifier: '{}' is undefined.".format(raw_argument))
     return JUMP_LIST[raw_argument]
-
+def get_mark_from_jump_adress(raw_argument, JUMP_LIST):
+    if type(raw_argument) is list:
+        raw_argument = raw_argument[0]
+    for key, val in JUMP_LIST.items():
+        if val == raw_argument:
+            return key
+    raise error.SynaxError("Unresolved adress: {}", raw_argument)
 def get_value(strage_format:str):
     """Returns value of strage_format"""
     strage_format = strage_format.strip()
@@ -342,7 +348,7 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
         if config.LOG_COMMAND_MODE == "short":
             print(target_core, cmd_hash, end=end)
         elif config.LOG_COMMAND_MODE == "long":
-            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end)
+            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end) #TODO FIX
         else:
             raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long', 'raw', None] got: {}".format(config.LOG_COMMAND_MODE))
     return G_INFO_CONTAINER
@@ -376,11 +382,11 @@ def args_equal(args1, args2, TypesOnly = False):
 
 def find_if_line_is_marked(line: int, JUMP_LIST: dict()):
         for key, val in JUMP_LIST.items():
-            if val+1 == line:
+            if val == line:
                 return str(key)
         return None
 
-def form_full_log_command(_type, formed_command, device, target_core, args):
+def form_full_log_command(_type, formed_command, device, target_core, args, JUMP_LIST):
     """Will create standarised, redable command line with fancy synax and only with dec number representation"""
     if _type == "debug":
         return ""
@@ -398,7 +404,7 @@ def form_full_log_command(_type, formed_command, device, target_core, args):
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["ptr"]:
                 arg = "ram[reg[{}]]".format(arg[0])
             elif arg[1] == PROFILE.ADRESS_MODE_REMAP["adress"]:
-                arg = "JUMP"
+                arg = get_mark_from_jump_adress(arg[0], JUMP_LIST)
             else:
                 error.Unsupported("That shouldn't happen.")
             fancy_command += "{}, ".format(arg)
@@ -467,8 +473,8 @@ def get_compiled_cmd(COMMAND):
     ROM, rom_type = get_rom(PROFILE, CMD_PATTERN)
 
     try:
-        layout = get_bin_definition(ROM, CMD_PATTERN).items()
-        for key, value in layout:
+        layout = get_bin_definition(ROM, CMD_PATTERN)
+        for key, value in layout.items():
             if type(value) is not str:
                 ROM["command"][rom_type][key] = value
             else:

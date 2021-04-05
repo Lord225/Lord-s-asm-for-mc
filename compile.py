@@ -122,7 +122,6 @@ def main():
     if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
         print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
-    config.RUN = True
     # END
     if not config.RUN:
         print("="*50)
@@ -148,7 +147,7 @@ def double_pass_program_loading():
 
     loading.update_keywords(KEYWORDS)
     iss.load_profie(CPU_PROFILE, emulator)
-    config.setupsettings(parserargs, "settings.config", None)
+    config.setupsettings(parserargs, "settings.ini", None)
 
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
 
