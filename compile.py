@@ -9,14 +9,14 @@ import core.interpreter_synax_solver as iss
 import core.error as error
 import argparse
 import time
-import config
+import core.config as config
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 # -f -a -o -l -i -e -of -s --const --onefile
-parser.add_argument("-f", "--file", type=str, default="Program.lor",  #TODO FIX WITH RELATIVE DIR
+parser.add_argument("-f", "--file", type=str, default="src/program.lor",  #TODO FIX WITH RELATIVE DIR
 help="""Name of file to proces
-Default: Program.lor
+Default: src/program.lor
 """)
 parser.add_argument("-s", "--save", choices=["dec", "raw", "bin", "py"], type=str, default = None,
 help="""
@@ -34,7 +34,7 @@ parser.set_defaults(feature=False)
 
 parser.add_argument("-p",'--profile', type=str, default=None,
 help="""Parse CPU profile""")
-parser.add_argument("-o", "--outfile", type=str, default="compiled.txt", help="Name of binary to save")
+parser.add_argument("-o", "--outfile", type=str, default="compiled/compiled.txt", help="Name of binary to save")
 parser.add_argument("-l", "--logmode", choices=["short", "long", "None"], type=str, default = None,
 help="""Choose method of logging CPU's command while executing
 > short - Simple logging

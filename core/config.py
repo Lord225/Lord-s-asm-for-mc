@@ -2,7 +2,7 @@ import core.error as errors
 
 class CONFIG_LIST:
     def __init__(self) -> None:
-        self.FILE_NAME = "Program.lor"
+        self.FILE_NAME = "src/program.lor"
         self.PROFILE_NAME = None
         self.SAVE = "red"
         self.RUN = False

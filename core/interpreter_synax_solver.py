@@ -1,6 +1,6 @@
 import core.error as error
 import core.loading as loading
-import config
+import core.config as config
 from tabulate import tabulate
 from enum import Enum
 
