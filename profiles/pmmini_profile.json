@@ -52,7 +52,7 @@
                 "min":0,
                 "max":255
             },
-            "cores":2,
+            "cores":1,
             "arguments sizes":{
                 "const":255,
                 "reg":3,
@@ -167,6 +167,49 @@
                     "r1":"reg to be subed",
                     "r2":"reg to sub"
                 }
+            },
+
+            "inc reg reg":{
+                "name":"inc",
+                "emulator":"alu_reg_inc",
+                "description":"reg[r1]+1",
+                "example":"inc reg[{}]",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to add"
+                    }
+                ],
+                "bin":{
+                    "CU":3,
+                    "r1":0,
+                    "r2":0
+                }
+
+            },
+            "dec reg reg":{
+                "name":"dec",
+                "emulator":"alu_reg_dec",
+                "description":"reg[r1]-1",
+                "example":"dec reg[{}]",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                    {
+                        "type":"reg",
+                        "name":"reg to dec"
+                    }
+                ],
+                "bin":{
+                    "CU":3,
+                    "r1":0,
+                    "r2":0
+                }
+
             },
 
             "rsh reg reg":{

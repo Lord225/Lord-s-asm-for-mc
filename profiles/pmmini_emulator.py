@@ -74,12 +74,24 @@ class Core:
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
     def alu_reg_reg_add(self, _from_a, _from_b):
-        _value = self.Regs[_from_b]
-        _value = _value + self.Regs[_from_a]
+        _value = self.Regs[_from_b] + self.Regs[_from_a]
         if _value > 255:
             self.ALU_FLAGS["overflow"] = True
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    def alu_reg_inc(self, _from_a):
+        _value = self.Regs[_from_a]+1
+        if _value > 255:
+            self.ALU_FLAGS["overflow"] = True
+        self.set_partiti_zero_flag(_value)
+        self.Regs[_from_a] = _value
+    def alu_reg_dec(self, _from_a):
+        _value = self.Regs[_from_a]-1
+        if _value > 255:
+            self.ALU_FLAGS["overflow"] = True
+        self.set_partiti_zero_flag(_value)
+        self.Regs[_from_a] = _value
+        
     def alu_reg_reg_sub(self, _from_a, _from_b):
         _value = self.Regs[_from_b]
         _value_b = self.Regs[_from_a]
