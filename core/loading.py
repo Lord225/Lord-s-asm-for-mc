@@ -1,7 +1,8 @@
 import core.error as error
 import json
 import re
-import core.config as config 
+import core.config as config
+import importlib
 
 KEYWORDS = ["CORE0", "CORE1", "SHADER"]
 CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
@@ -309,7 +310,7 @@ def load_json_profile(path):
 
 def get_emulator(DEFAULT_PROFILES_PATH, CPU_PROFILE:dict):
     try:
-        exec("import {}.{} as emulator".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]),globals())
+        emulator = importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
     except Exception as err:
         raise error.LoadError("Cannot import {}.{}: {}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"], err))
     return emulator

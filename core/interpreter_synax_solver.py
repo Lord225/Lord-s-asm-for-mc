@@ -319,7 +319,7 @@ def solve(JUMP_MAP: dict, command:str):
 
     return _type, cmd_hash, args
 
-def execute(_type, cmd_hash, device, target_core, args, thread):
+def execute(_type, cmd_hash, device, target_core, args, thread, jump_list):
     """Will execute builded commad on device"""
     reset_G_INFO_CONTAINER()
     if _type == "debug":
@@ -348,7 +348,7 @@ def execute(_type, cmd_hash, device, target_core, args, thread):
         if config.LOG_COMMAND_MODE == "short":
             print(target_core, cmd_hash, end=end)
         elif config.LOG_COMMAND_MODE == "long":
-            print(form_full_log_command(_type, cmd_hash, device, target_core, args), end=end) #TODO FIX
+            print(form_full_log_command(_type, cmd_hash, device, target_core, args, jump_list), end=end) #TODO FIX
         else:
             raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long', 'raw', None] got: {}".format(config.LOG_COMMAND_MODE))
     return G_INFO_CONTAINER

@@ -122,6 +122,8 @@ def main():
     if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
         print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
+
+    config.RUN = True
     # END
     if not config.RUN:
         print("="*50)
@@ -131,7 +133,7 @@ def main():
     #                  EMULATING                    #
     #################################################
 
-    emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER)
+    emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER, jump_list)
 
 def double_pass_program_loading():
     print("Loading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
@@ -169,7 +171,7 @@ def get_build_telemetry_times(program, time_start, compile_end_time):
         PER_CMD = (compile_end_time-time_start)/(total_command_count*1000000.0)
     return total_command_count, TOTAL, PER_CMD
 
-def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER):
+def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER, jump_list):
     time_start = time.thread_time_ns()
     def end_sequence():
         time_end = time.thread_time_ns()
@@ -188,7 +190,7 @@ def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER):
                 DEVICE.RAM[adress] = value
             except Exception as err:
                 raise error.LoadError("Error while parsing data to device: {}".format(err))
-
+    
     # MAIN LOOP
     while True:
         for active in actives:
@@ -196,22 +198,21 @@ def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER):
             info = dict()
 
             # GET AND EXECUTE COMMAND            
-            if config.RUN:
-                try:
-                    CPU_COMMAND = built[active][DEVICE.get_rom_adress(core_id)]
-                    PROCESSED_LINE = line_indicator[active][DEVICE.get_rom_adress(core_id)]
-                except IndexError:
-                    end_sequence()
-                    continue
+            try:
+                CPU_COMMAND = built[active][DEVICE.get_rom_adress(core_id)]
+                PROCESSED_LINE = line_indicator[active][DEVICE.get_rom_adress(core_id)]
+            except IndexError:
+                end_sequence()
+                continue
 
-                if type(CPU_COMMAND) is list:
-                    for thread, (_type, formed_command, args) in enumerate(CPU_COMMAND):
-                        info = iss.execute(_type, formed_command, DEVICE, core_id, args, thread)
-                    if iss.LOG_COMMAND_MODE is not None and not iss.FORCE_COMMANDS_IN_SEPERATE_ROWS:
-                        print()
-                else:
-                    _type, formed_command, args = CPU_COMMAND
-                    info = iss.execute(_type, formed_command, DEVICE, core_id, args, None)
+            if type(CPU_COMMAND) is list:
+                for thread, (_type, formed_command, args) in enumerate(CPU_COMMAND):
+                    info = iss.execute(_type, formed_command, DEVICE, core_id, args, thread, jump_list[active])
+                if iss.LOG_COMMAND_MODE is not None and not iss.FORCE_COMMANDS_IN_SEPERATE_ROWS:
+                    print()
+            else:
+                _type, formed_command, args = CPU_COMMAND
+                info = iss.execute(_type, formed_command, DEVICE, core_id, args, None, jump_list[active])
 
             # CHECK INFO AND WARNINGS
             if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(info["info"]) > 0:
