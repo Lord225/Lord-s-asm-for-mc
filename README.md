@@ -56,7 +56,7 @@ Compiled.txt po `python compile.py -file src/program.lor --offset 0
 2.    jmp 1
 3.    KOMENDA
 ```
-Compiled.txt po `python compile.py -file src/program.lor --offset 0
+Compiled.txt po `python compile.py -file src/program.lor --offset 10
 ```
    :CORE0
 10.    KOMENDA
