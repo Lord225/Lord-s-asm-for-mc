@@ -48,7 +48,7 @@ src/program.lor:
 3.    jmp skocz_tu
 4.    KOMENDA
 ```
-Compiled.txt po `python compile.py -file src/program.lor --offset 0`
+compiled.txt po `python compile.py --file src/program.lor --offset 0 --onefile` 
 ```
    :CORE0
 0.    KOMENDA
@@ -56,7 +56,7 @@ Compiled.txt po `python compile.py -file src/program.lor --offset 0`
 2.    jmp 1
 3.    KOMENDA
 ```
-Compiled.txt po `python compile.py -file src/program.lor --offset 10`
+compiled.txt po `python compile.py --file src/program.lor --offset 10 --onefile`
 ```
    :CORE0
 10.    KOMENDA
