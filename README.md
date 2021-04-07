@@ -1,4 +1,5 @@
 # Lord-s-asm-for-mc
+Na wiki opisana jest składnia.
 ## -f --file
 Nazwa pliku z programem, 
 Domyślnie src/program.lor
