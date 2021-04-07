@@ -39,7 +39,7 @@ Domyślnie: abort
 ## --offset
 Ustawienia ważne przy budowaniu, kompilator przesunie adresy programu o daną wartość, dzięki temu program nie musi zaczynać się od linijki 0
 Dla przykładu
-Program.lor:
+src/program.lor:
 ```
    []
    :CORE0
@@ -49,7 +49,7 @@ Program.lor:
 3.    jmp skocz_tu
 4.    KOMENDA
 ```
-Compiled.txt po `main.py -file Program.lor --offset 0
+Compiled.txt po `python compile.py -file src/program.lor --offset 0
 ```
    :CORE0
 0.    KOMENDA
@@ -57,7 +57,7 @@ Compiled.txt po `main.py -file Program.lor --offset 0
 2.    jmp 1
 3.    KOMENDA
 ```
-Compiled.txt po `main.py -file Program.lor --offset 10
+Compiled.txt po `python compile.py -file src/program.lor --offset 0
 ```
    :CORE0
 10.    KOMENDA
