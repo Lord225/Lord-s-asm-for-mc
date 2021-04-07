@@ -41,7 +41,6 @@ Ustawienia ważne przy budowaniu, kompilator przesunie adresy programu o daną w
 Dla przykładu
 src/program.lor:
 ```
-   []
    :CORE0
 0.    KOMENDA
 1.    :skocz_tu
