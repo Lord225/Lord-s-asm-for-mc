@@ -26,7 +26,6 @@
 
         //[inner, -, -, END_OUTER_LOOP_PTR]
         :INNER
-
             mov ram[reg[0]], reg[1]
             inc reg[0]
             mov ram[reg[0]], reg[2]

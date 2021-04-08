@@ -14,34 +14,31 @@ import core.config as config
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 # -f -a -o -l -i -e -of -s --const --onefile
-parser.add_argument("-f", "--file", type=str, default="src/program.lor",  #TODO FIX WITH RELATIVE DIR
-help="""Name of file to proces
+parser.add_argument("-f", "--file", type=str, default="src/program.lor", 
+help="""Name of file to compile
 Default: src/program.lor
 """)
 parser.add_argument("-s", "--save", choices=["dec", "raw", "bin", "py"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
-> raw - Build source and save as binary without padding
-> bin - Build source and save as binary
+> raw - Build source and save as binary with padding to halfbytes
+> bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
 Default: None (will not save)
 """)
-parser.add_argument('--comments', dest='comments', action='store_true')
+parser.add_argument('-c','--comments', dest='comments', action='store_true')
 parser.set_defaults(feature=False)
 
-parser.add_argument('--run', dest='run', action='store_true')
+parser.add_argument('-r', '--run', dest='run', action='store_true')
 parser.set_defaults(feature=False)
 
-parser.add_argument("-p",'--profile', type=str, default=None,
-help="""Parse CPU profile""")
+parser.add_argument('--profile', type=str, default=None,
+help="""Parse CPU profile. If you have to use that, you did something wrong.""")
 parser.add_argument("-o", "--outfile", type=str, default="compiled/compiled.txt", help="Name of binary to save")
-parser.add_argument("-l", "--logmode", choices=["short", "long", "None"], type=str, default = None,
-help="""Choose method of logging CPU's command while executing
-> short - Simple logging
-> long  - Full logging
-> None  - No logging
-Default: None
-""")
+
+parser.add_argument('--logs', dest='logmode', action='store_true', help="Choose method of logging CPU's command while executing")
+parser.set_defaults(feature=False)
+
 parser.add_argument("-i", "--info", choices=["warnings", "errors", "both", "None"], type=str, default = None,
 help="""Choose CPU warning level
 > warnings  - Warnings only
@@ -50,14 +47,14 @@ help="""Choose CPU warning level
 > None      - No CPU warnings in console
 Default: None
 """)
-parser.add_argument("-e", "--onerror", choices=["interupt", "abort"], type=str, default = None, 
+parser.add_argument("--onerror", choices=["interupt", "abort"], type=str, default = None, 
 help="""What is suppouse to happen on error
 > interupt - Waits for user
 > abort    - Close script
 > None     - Throw python error
 Default: None
 """)
-parser.add_argument("-of", "--offset", type=int, default=1, 
+parser.add_argument("--offset", type=int, default=1, 
 help="""Offset of whole binary relative to rom 0 cell
 Default: 1 (first command on pos 1 second on 2 ect)
 """)
@@ -206,7 +203,7 @@ def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER, jump_
             if type(CPU_COMMAND) is list:
                 for thread, (_type, formed_command, args) in enumerate(CPU_COMMAND):
                     info = iss.execute(_type, formed_command, DEVICE, core_id, args, thread, jump_list[active])
-                if iss.LOG_COMMAND_MODE is not None and not iss.FORCE_COMMANDS_IN_SEPERATE_ROWS:
+                if iss.LOG_COMMAND_MODE and not iss.FORCE_COMMANDS_IN_SEPERATE_ROWS:
                     print()
             else: 
                 _type, formed_command, args = CPU_COMMAND

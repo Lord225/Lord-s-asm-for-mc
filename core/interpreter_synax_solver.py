@@ -342,15 +342,11 @@ def execute(_type, cmd_hash, device, target_core, args, thread, jump_list):
     except Exception as err:
         raise error.Unsupported("You broke emulator. Congratulations...  '{}'".format(err))   
 
-    if config.LOG_COMMAND_MODE is not None:
+    if config.LOG_COMMAND_MODE:
         end = "\n" if thread is None or config.FORCE_COMMANDS_IN_SEPERATE_ROWS else "\t"
 
-        if config.LOG_COMMAND_MODE == "short":
-            print(target_core, cmd_hash, end=end)
-        elif config.LOG_COMMAND_MODE == "long":
-            print(form_full_log_command(_type, cmd_hash, device, target_core, args, jump_list), end=end) #TODO FIX
-        else:
-            raise error.UndefinedSetting("Possible settings for LOG_COMMAND_MODE are: ['short', 'long', 'raw', None] got: {}".format(config.LOG_COMMAND_MODE))
+        print(form_full_log_command(_type, cmd_hash, device, target_core, args, jump_list), end=end)
+
     return G_INFO_CONTAINER
 
 def build_program(Program, line_indicator, JUMPLIST, Settings) -> list:

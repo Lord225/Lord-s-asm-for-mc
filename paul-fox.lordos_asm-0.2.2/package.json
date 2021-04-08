@@ -26,8 +26,8 @@
 					"lor"
 				],
 				"extensions": [
-					".l",
-					".L"
+					".lor",
+					".LOR"
 				],
 				"configuration": "./language-configuration.json"
 			}
