@@ -12,7 +12,7 @@ Uruchom ze wszystkimi narzędziami do debugowwania
 ```
 python compile.py --run --const DEBUG --logs
 ```
-Skompiluj inny plik niż domylśny, zapisz z inną nazwą
+Skompiluj inny plik niż domyślny, zapisz z inną nazwą
 ```
 python compile.py --file src/nazwa_pliku.lor --outfile compiled/output.txt --save bin
 ```
