@@ -1,5 +1,6 @@
   {
-    "CPU":{
+    "CPU":
+    {
         "Name": "PM-Mini",
         "Architecture": "PM",
         "Author": "Gwiezdny Kartofel",
@@ -68,6 +69,32 @@
         "CUSTOM ARGUMENTS":{
         },
         "COMMANDS":{
+            "nop":{
+                "name":"nop",
+                "emulator":"nop",
+                "description":"Write const to register",
+                "example":"mov {}, reg[{}]",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                    {
+                        "type":"const",
+                        "name":"value"
+                    },
+                    {
+                        "type":"reg",
+                        "name":"to"
+                    }
+                ],
+
+                "bin":{
+                    "CU":0,
+                    "r2":0,
+                    "r1":0,
+                    "n1":0
+                }
+            }, 
             "mov const reg":{
                 "name":"mov",
                 "emulator":"mov_const_reg",
@@ -89,6 +116,7 @@
 
                 "bin":{
                     "CU":1,
+                    "r2":0,
                     "r1":"to",
                     "n1":"value"
                 }
@@ -180,13 +208,13 @@
                 "args":[
                     {
                         "type":"reg",
-                        "name":"reg to add"
+                        "name":"target"
                     }
                 ],
                 "bin":{
-                    "CU":3,
-                    "r1":0,
-                    "r2":0
+                    "CU":1,
+                    "r1":"target",
+                    "r2":1
                 }
 
             },
@@ -201,13 +229,13 @@
                 "args":[
                     {
                         "type":"reg",
-                        "name":"reg to dec"
+                        "name":"target"
                     }
                 ],
                 "bin":{
-                    "CU":3,
-                    "r1":0,
-                    "r2":0
+                    "CU":1,
+                    "r1":"target",
+                    "r2":2
                 }
 
             },
@@ -333,8 +361,6 @@
                     "r2":"reg to perform or"
                 }
             },
-            
-
             "jump equal reg":{
                 "name":"je",
                 "emulator":"jump_equal_reg_reg",
@@ -392,6 +418,28 @@
                     "CU":11,
                     "r1":"register a",
                     "r2":"register b",
+                    "n1":"to"
+                }
+            },
+            "jump flag reg":{
+                "name":"jf",
+                "emulator":"jump_flag",
+
+                "description":"Jump to adress if flag cell is not zero",
+                "example":"jf reg[{}], reg[{}], {}",
+                "command_cost":2,
+                "command_layout":"long",
+
+                "args":[
+                    {
+                        "type":"adress",
+                        "name":"to"
+                    }
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":3,
+                    "r2":0,
                     "n1":"to"
                 }
             },
@@ -648,7 +696,40 @@
                     "r1":1,
                     "r2":1
                 }
+            },
+            "int":{
+                "name":"int",
+                "emulator":"interutp",
+                "description":"interutp",
+                "example":"int",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":1
+                }
+            },
+            "cls":{
+                "name":"cls",
+                "emulator":"clear",
+                "description":"clears ascii screen",
+                "example":"cls",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                ],
+                "bin":{
+                    "CU":0,
+                    "r1":1,
+                    "r2":1
+                }
             }
+            
         },
         "PATTERNS":[
             {},

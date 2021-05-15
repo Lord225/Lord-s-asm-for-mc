@@ -54,9 +54,9 @@ help="""What is suppouse to happen on error
 > None     - Throw python error
 Default: None
 """)
-parser.add_argument("--offset", type=int, default=1, 
+parser.add_argument("--offset", type=int, default=0, 
 help="""Offset of whole binary relative to rom 0 cell
-Default: 1 (first command on pos 1 second on 2 ect)
+Default: 0 (first command on pos 0 second on 1 ect)
 """)
 parser.add_argument('--const', action='append', 
 help="""Addinationl const expressions added while loading script
@@ -72,7 +72,6 @@ ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
-
 
 
 def main():
@@ -113,6 +112,7 @@ def main():
     
     save(jump_list, built, compiled)
 
+    
     # CHECK INFO AND WARNINGS
     if (config.LOG_INFOO == "warnings" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["info"]) > 0:
         print("info:", iss.G_INFO_CONTAINER["info"])

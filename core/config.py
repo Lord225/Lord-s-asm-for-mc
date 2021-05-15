@@ -89,7 +89,7 @@ def setupsettings(parserargs, config_name, file_settings):
         config.PROFILE_NAME         = refine(config.PROFILE_NAME,     parserargs.profile) 
         config.SAVE                 = refine(config.SAVE,             parserargs.save)      
         config.RUN                  = refine(config.RUN,              parserargs.run)
-        config.COMMENTS             = True if parserargs.comments == False and config.COMMENTS == True else False  
+        config.COMMENTS             = True if parserargs.comments == True else False  
         config.OUTPUT_FILE          = refine(config.OUTPUT_FILE,      parserargs.outfile)
         config.LOG_INFOO            = refine(config.LOG_INFOO,        parserargs.info)       
         config.ACTION_ON_ERROR      = refine(config.ACTION_ON_ERROR,  parserargs.onerror)

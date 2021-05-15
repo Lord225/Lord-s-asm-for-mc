@@ -22,6 +22,9 @@ class Core:
         self.RAM_UPDATE_REQUEST = [-1,-1]
         self.RAM_REFRENCE = RAM
 
+
+    def nop(self):
+        pass
     def set_partiti_zero_flag(self, _value):
         self.ALU_FLAGS["partity"] = _value&1 == 0
         self.ALU_FLAGS["zero"] = _value == 0
@@ -107,6 +110,7 @@ class Core:
     #JUMPS
     def jump(self, _target_true):
         self.ROM_COUNTER = _target_true
+    
     def call(self, _target_true):
         if len(self.ROMStack) < 15:
             self.ROMStack.append(self.ROM_COUNTER)
@@ -115,6 +119,9 @@ class Core:
         self.jump(_target_true)
     
     def shut(self, ):
+        pass
+
+    def jump_rednet(self, _target_true):
         pass
 
     def jump_equal_reg_reg(self, _from_a, _from_b, _target_true):
@@ -132,6 +139,12 @@ class Core:
     def jump_zero_const_reg(self, _target_true):
         if self.ALU_FLAGS["zero"]:
             self.jump(_target_true)
+    def jump_flag(self, _target_true):
+        FLAG = self.RAM[233]
+        if FLAG&128 != 0:
+            self.jump_overflow_const_reg(_target_true)
+        elif FLAG&64 != 0:
+            pass
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
@@ -141,10 +154,11 @@ class Core:
         pass
     
         _value = _value_a
-        self.push_const(_value)        
+        self.push_const(_value)
+    def clear(self):
+        print("CLEARING SCREEN (REMOVE THIS LINE)")
     def rom_stack_size(self, _to):
         self.Regs[_to] = len(self.ROMStack)
-
         self.Regs[_to] = len(self.Stack)
     def get_rom_adress(self)->int:
         return self.ROM_COUNTER
@@ -157,8 +171,8 @@ class Core:
     
 class CPU:
     def __init__(self):
-        self.RAM = np.zeros((256), dtype=np.uint8)
-        self.CORES = [Core(0, self.RAM)]
+        self.RAM    = np.zeros((256), dtype=np.uint8)
+        self.CORES  = [Core(0, self.RAM)]
 
     def end_cpu_tick(self):
         for core in self.CORES:
