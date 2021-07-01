@@ -42,7 +42,8 @@
     :SKIP_SWAP
 
     //[i+1, -, -, END_OUTER_LOOP_PTR]
-
+    #show_ascii()
+    
     mov ram[ARR_END], reg[2]
     //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
     jg reg[3], reg[0], INNER

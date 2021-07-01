@@ -3,12 +3,6 @@ class BadThread(Exception):
         self.info = info  
     def __str__(self):
          return "Invalid Thread: {}".format(self.info)  
-class ExpectedValue(Exception):
-    def __init__(self, Max, info:str):
-        self.info = info    
-        self.MAX = Max
-    def __str__(self):
-         return "Expected value in range <0,{}>, got: {}".format(self.MAX, self.info)
 class UndefinedValue(Exception):
     def __init__(self, info = ""):
         self.info = info 
@@ -50,16 +44,11 @@ class UndefinedSetting(Exception):
         self.info = info 
     def __str__(self):
          return "This setting value is unvalid: {}".format(self.info)
-class StackOverFlowError(Exception):
-    def __init__(self, info = ""):
+class EmulatorError(Exception):
+    def __init__(self, info = "Unspecified"):
         self.info = info 
     def __str__(self):
-         return "Stack overflow: {}".format(self.info)
-class StackUnderFlowError(Exception):
-    def __init__(self, info = ""):
-        self.info = info 
-    def __str__(self):
-         return "Stack underflow: {}".format(self.info)
+         return "EmulationError: {}".format(self.info)
 class LoadError(Exception):
     def __init__(self, info = ""):
         self.info = info 

@@ -68,7 +68,7 @@ parser.add_argument('--onefile',  type=bool, default=False,
 help="""Saves output from diffrent cores in same file""")
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
+ACTION_ON_ERROR = None #[None, 'interupt', 'abort']
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
 
 PROCESSED_LINE = -1
@@ -119,6 +119,7 @@ def main():
     if (config.LOG_INFOO == "errors" or config.LOG_INFOO == "both") and len(iss.G_INFO_CONTAINER["warnings"]) > 0:
         print("warnings:", iss.G_INFO_CONTAINER["warnings"])
 
+    config.RUN = True
     # END
     if not config.RUN:
         print("="*50)
@@ -143,7 +144,7 @@ def double_pass_program_loading():
     CPU_PROFILE, COMMAND_COUNTER, DEVICE, emulator, CONSTS, KEYWORDS = loading.get_profile(config.DEFAULT_PROFILES_PATH, PROFILE_NAME, config.CONSTS)
 
     loading.update_keywords(KEYWORDS)
-    iss.load_profie(CPU_PROFILE, emulator)
+    iss.base.load_profie(CPU_PROFILE, emulator)
     config.setupsettings(parserargs, "settings.ini", None)
 
     print("Reloading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
@@ -218,7 +219,7 @@ def emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER, jump_
             # CHECK PERFORMANCE
             if not info["skip"]:
                 try:
-                    COMMAND_COUNTER[core_id] += iss.PROFILE.COMMANDSETFULL[CPU_COMMAND[1]]['command_cost']
+                    COMMAND_COUNTER[core_id] += iss.base.PROFILE.COMMANDSETFULL[CPU_COMMAND[1]]['command_cost']
                 except KeyError:
                     COMMAND_COUNTER[core_id] += 1
             DEVICE.end_tick(core_id)
