@@ -14,11 +14,11 @@ def update_keywords(new):
     CORE_ID_MAP = {word:i for i, word in enumerate(KEYWORDS)}
 
 def smart_replace(line: str, From: str, To: str):
-    line = re.sub("(?![^a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
+    line = re.sub("(?<![a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
     return line
 
 def smart_find(line: str, From: str):
-    finded = re.search("(?![^a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From),line)
+    finded = re.search("(?<![a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From),line)
     return finded
 
 def load_preproces(path):
