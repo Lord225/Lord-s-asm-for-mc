@@ -33,42 +33,52 @@ class Core:
     def set_partiti_zero_flag(self, _value):
         self.ALU_FLAGS["partity"] = _value&1 == 0
         self.ALU_FLAGS["zero"] = _value == 0
-    def mov_reg_reg(self, _from, _to):
+
+    @check_arguments
+    def mov_reg_reg(self, _from: RANGE_4, _to: RANGE_4):
         self.Regs[_to] = self.Regs[_from]
     
     @check_arguments
     def mov_const_reg(self, _value: RANGE_256, _to: RANGE_4):
         self.Regs[_to] = _value
+    @check_arguments
     def write_pointer_reg(self, _from: RANGE_4, _to_pointer: RANGE_4):
         _value = self.Regs[_from]
         _adress = self.Regs[_to_pointer]
         
         self.RAM_UPDATE_REQUEST = [_adress, _value]
+    @check_arguments
     def read_reg_pointer(self, _from: RANGE_4, _to: RANGE_4):
         _adress = self.Regs[_from]
-        self.Regs[_to] = self.RAM_REFRENCE[_adress]    
+        self.Regs[_to] = self.RAM_REFRENCE[_adress]   
+    @check_arguments 
     def read_ram_reg(self, _adress: RANGE_256, _to: RANGE_4):
         self.Regs[_to] = self.RAM_REFRENCE[_adress]
+    @check_arguments
     def write_reg_ram(self, _from: RANGE_4, _adress: RANGE_256):
         _value = self.Regs[_from]
         self.RAM_UPDATE_REQUEST = [_adress, _value]
 
     #ALU OPERATIONS
+    @check_arguments
     def alu_reg_reg_or(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_b]
         _value = _value | self.Regs[_from_a]
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_reg_and(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_b]
         _value = _value & self.Regs[_from_a]
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_reg_xor(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_b]
         _value = _value ^ self.Regs[_from_a]
         self.set_partiti_zero_flag(_value)
-        self.Regs[_from_b] = _value   
+        self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_reg_rsh(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_a]
         if _value | 1 != 0:
@@ -76,6 +86,7 @@ class Core:
         _value = _value//2
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_reg_lsh(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_a]
         _value = _value + self.Regs[_from_b]
@@ -83,25 +94,28 @@ class Core:
             self.ALU_FLAGS["overflow"] = True
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_reg_add(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_b] + self.Regs[_from_a]
         if _value > 255:
             self.ALU_FLAGS["overflow"] = True
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_b] = _value
+    @check_arguments
     def alu_reg_inc(self, _from_a: RANGE_4):
         _value = self.Regs[_from_a]+1
         if _value > 255:
             self.ALU_FLAGS["overflow"] = True
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_a] = _value
+    @check_arguments
     def alu_reg_dec(self, _from_a: RANGE_4):
         _value = self.Regs[_from_a]-1
         if _value > 255:
             self.ALU_FLAGS["overflow"] = True
         self.set_partiti_zero_flag(_value)
         self.Regs[_from_a] = _value
-        
+    @check_arguments
     def alu_reg_reg_sub(self, _from_a: RANGE_4, _from_b: RANGE_4):
         _value = self.Regs[_from_b]
         _value_b = self.Regs[_from_a]
@@ -115,53 +129,60 @@ class Core:
         self.Regs[_from_b] = _value
         
     #JUMPS
+    @check_arguments
     def jump(self, _target_true):
         self.ROM_COUNTER = _target_true
-    
+    @check_arguments
     def call(self, _target_true):
         if len(self.ROMStack) < 15:
             self.ROMStack.append(self.ROM_COUNTER)
         else:
             raise error.StackOverFlowError("ROM")
         self.jump(_target_true)
-    
+    @check_arguments
     def shut(self, ):
         pass
-
+    @check_arguments    
     def jump_rednet(self, _target_true):
         pass
-
+    @check_arguments 
     def jump_equal_reg_reg(self, _from_a: RANGE_4, _from_b: RANGE_4, _target_true):
         _value = self.Regs[_from_a]
         if _value == self.Regs[_from_b]:
             self.jump(_target_true)
+    @check_arguments 
     def jump_greater_reg_reg(self, _from_a: RANGE_4, _from_b: RANGE_4, _target_true):
         _value = self.Regs[_from_a]
         if _value > self.Regs[_from_b]:
             self.jump(_target_true)
-    
+    @check_arguments 
     def jump_overflow_const_reg(self, _target_true):
         if self.ALU_FLAGS["overflow"]:
             self.jump(_target_true)
+    @check_arguments
     def jump_zero_const_reg(self, _target_true):
         if self.ALU_FLAGS["zero"]:
             self.jump(_target_true)
+    @check_arguments 
     def jump_flag(self, _target_true):
         FLAG = self.RAM[233]
         if FLAG&128 != 0:
             self.jump_overflow_const_reg(_target_true)
         elif FLAG&64 != 0:
             pass
+    @check_arguments 
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
         addres = self.ROMStack.pop()
         self.jump(addres)      
+    @check_arguments 
     def interutp(self, _value_a: RANGE_256, mode):
         pass
     
         _value = _value_a
         self.push_const(_value)
+    
     def clear(self):
         print("CLEARING SCREEN (REMOVE THIS LINE)")
     def rom_stack_size(self, _to):

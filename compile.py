@@ -1,20 +1,23 @@
 #Public domain, free to use, by M. Złotorowicz aka Lord255
 VERSION = "1.0"
 
+DEBUG_MODE = True
+
+import argparse
 import math as m
 import random as rnd
 from typing import cast
 import core.loading as loading
 import core.interpreter_synax_solver as iss
 import core.error as error
-import argparse
+
 import time
 import core.config as config
 
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
 
 # -f -a -o -l -i -e -of -s --const --onefile
-parser.add_argument("-f", "--file", type=str, default="src/program.lor", 
+parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
@@ -66,10 +69,17 @@ help="""Addinationl const expressions added while loading script
 """)
 parser.add_argument('--onefile',  type=bool, default=False, 
 help="""Saves output from diffrent cores in same file""")
+
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = 'abort' #[None, 'interupt', 'abort']
+ACTION_ON_ERROR = None if DEBUG_MODE else 'abort' #'interupt'
 ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
+
+
+if DEBUG_MODE:
+    parserargs.run = False
+    parserargs.save = "bin"
+    parserargs.comments = True
 
 PROCESSED_LINE = -1
 
@@ -133,7 +143,7 @@ def main():
 def double_pass_program_loading():
     print("Loading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
 
-    # First loading Pass
+    # First loading Pass to import settings
     program, line_indicator, jump_list, file_settings, data = loading.load_program(config.FILE_NAME, config.CONSTS)
 
     # Find CPU profile
@@ -153,7 +163,6 @@ def double_pass_program_loading():
 
     actives = loading.find_executable_cores(program)
 
-    
     config.TIME_MILTIPLAYER = 1/float(CPU_PROFILE["CPU"]["parametrs"]["clock_speed"])
 
     return program, jump_list, file_settings, actives, line_indicator, data, DEVICE, COMMAND_COUNTER
