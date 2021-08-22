@@ -7,7 +7,7 @@ import numba
 
 np.warnings.filterwarnings('ignore')
 
-REG_COUNT = 8
+REG_COUNT = 15
 WORD_SIZE = 8
 WORD_MAX = int(2**WORD_SIZE)
 
