@@ -19,7 +19,7 @@ def get_compiled_cmd(COMMAND, offsets):
         _type, formed_command, args = COMMAND
     else:
         raise error.Unsupported("Muli-lined commands")
-        #call custom generate func from 'emul'
+        #call custom generate func from 'emul'    
     def get_value_from_arg(name, CMD_PATTERN, args, adresses):
         for i, arg in enumerate(CMD_PATTERN["args"]):
             if arg["name"] == name:
@@ -54,10 +54,10 @@ def get_compiled_cmd(COMMAND, offsets):
                 ROM["command"][rom_type][key] = value
             else:
                 ROM["command"][rom_type][key] = get_value_from_arg(value, CMD_PATTERN, args, offsets)
-    except KeyError as err:
-        raise error.ProfileStructureError("Can't find command profile ({}) in '{}' command.".format(err, CMD_PATTERN["name"]))
+    except KeyError as key:
+        raise error.ProfileStructureError("Cannot find field {} in command '{}'".format(key, CMD_PATTERN["name"]))
     except Exception as err:
-        raise error.ProfileStructureError("Undefined error while compiling: {}".format(err))
+        raise error.ProfileStructureError("Unknown error while compiling: {}".format(err))
     return ROM
 def get_compiled(builded_commands, offset: int):
     """Converts builded instructions into binary"""

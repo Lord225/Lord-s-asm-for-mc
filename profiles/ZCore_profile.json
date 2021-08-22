@@ -73,18 +73,16 @@
                 "ptr":7,
                 "adress":255
             },
-            "clock_speed":"2.2",
-            "SUPPORTED TECHNOLOGIES":[
-                "",
-                ""
-            ]
+            "clock_speed":"2.2"
         },
         "COMMANDS":{
             "mov const reg":{
                 "name":"mov",
-                "emulator":"movconst_reg",
+                "emulator":"mov_const_reg",
                 "description":"Write const to register",
                 "example":"mov {}, reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -107,6 +105,8 @@
                 "emulator":"mov_reg_reg",
                 "description":"Copy register to register",
                 "example":"mov reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -130,6 +130,8 @@
                 "emulator":"write_pointer_reg",
                 "description":"Copy register to pointer",
                 "example":"mov reg[{}], ram[reg[{}]]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -148,6 +150,8 @@
                 "emulator":"write_pointer_reg",
                 "description":"Copy register to pointer",
                 "example":"write reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -165,6 +169,8 @@
                 "emulator":"read_reg_pointer",
                 "description":"Set register to pointer value",
                 "example":"mov ram[reg[{}]], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -183,6 +189,8 @@
                 "emulator":"read_reg_pointer",
                 "description":"Set register to pointer value",
                 "example":"read reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -200,6 +208,8 @@
                 "emulator":"write_const_pointer",
                 "description":"Set pointer to value",
                 "example":"write {}, reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -217,6 +227,8 @@
                 "emulator":"write_const_pointer",
                 "description":"Set pointer to value",
                 "example":"mov {}, ram[reg[{}]]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -235,6 +247,8 @@
                 "emulator":"read_ram_reg",
                 "description":"read adress to register",
                 "example":"read {}, reg[{}}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -252,6 +266,8 @@
                 "emulator":"read_ram_reg",
                 "description":"read adress to register",
                 "example":"mov ram[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -270,6 +286,8 @@
                 "emulator":"write_reg_ram",
                 "description":"Set ram cell to register",
                 "example":"write reg[{}], y",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -287,6 +305,8 @@
                 "emulator":"write_reg_ram",
                 "description":"Set ram cell to register",
                 "example":"mov reg[{}], ram[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -305,6 +325,8 @@
                 "emulator":"write_const_ram",
                 "description":"Set ram cell to value",
                 "example":"write {}, {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -322,6 +344,8 @@
                 "emulator":"write_const_ram",
                 "description":"Set ram cell to value",
                 "example":"mov {}, ram[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -341,6 +365,8 @@
                 "emulator":"alu_const_reg_or",
                 "description":"Set reg[z] to value x | reg[y]",
                 "example":"or {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -362,6 +388,8 @@
                 "emulator":"alu_reg_reg_or",
                 "description":"Set reg[z] to value reg[x] | reg[y]",
                 "example":"or {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -383,6 +411,8 @@
                 "emulator":"alu_const_reg_and",
                 "description":"Set reg[z] to value x | reg[y]",
                 "example":"and {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -404,6 +434,8 @@
                 "emulator":"alu_reg_reg_and",
                 "description":"Set reg[z] to value reg[x] | reg[y]",
                 "example":"and {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -425,6 +457,8 @@
                 "emulator":"alu_const_reg_xor",
                 "description":"Set reg[z] to value x | reg[y]",
                 "example":"xor {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -446,6 +480,8 @@
                 "emulator":"alu_reg_reg_xor",
                 "description":"Set reg[z] to value reg[x] | reg[y]",
                 "example":"xor {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -469,6 +505,8 @@
                 "emulator":"alu_const_reg_inc",
                 "description":"Add one to register",
                 "example":"inc reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -482,6 +520,8 @@
                 "emulator":"alu_const_reg_dec",
                 "description":"Add one to register",
                 "example":"dec reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "numofargs":1,
                 "args":[
@@ -497,6 +537,8 @@
                 "emulator":"alu_const_reg_add",
                 "description":"Set reg[z] to value x + reg[y]",
                 "example":"add {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -518,6 +560,8 @@
                 "emulator":"alu_reg_reg_add",
                 "description":"Set reg[z] to value reg[x] + reg[y]",
                 "example":"add {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -540,6 +584,8 @@
                 "emulator":"alu_const_reg_sub",
                 "description":"Set reg[z] to value x - reg[y]",
                 "example":"sub {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -561,6 +607,8 @@
                 "emulator":"alu_reg_reg_sub",
                 "description":"Set reg[z] to value reg[x] + reg[y]",
                 "example":"sub {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -582,6 +630,8 @@
                 "emulator":"alu_const_reg_rsub",
                 "description":"Set reg[z] to value x - reg[y]",
                 "example":"sub {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -603,6 +653,8 @@
                 "emulator":"alu_reg_reg_rsub",
                 "description":"Set reg[z] to value reg[x] + reg[y]",
                 "example":"sub {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -625,6 +677,8 @@
                 "emulator":"alu_const_reg_rsh",
                 "description":"Set reg[z] to value x - reg[y]",
                 "example":"rsh {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -646,6 +700,8 @@
                 "emulator":"alu_reg_reg_rsh",
                 "description":"Set reg[z] to value reg[x] + reg[y]",
                 "example":"rsh {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -667,6 +723,8 @@
                 "emulator":"alu_const_reg_lsh",
                 "description":"Set reg[z] to value x - reg[y]",
                 "example":"lsh {}, reg[{}], reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -710,6 +768,8 @@
                 "emulator":"alu_const_reg_not",
                 "description":"Set reg[z] to value !reg[y]",
                 "example":"inc reg[{}]",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -724,6 +784,8 @@
                 "emulator":"jump",
                 "description":"Jump to adress",
                 "example":"jump {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -735,9 +797,10 @@
             "uncond call":{
                 "name":"call",
                 "emulator":"call",
-
                 "description":"call adress",
                 "example":"call {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -750,9 +813,10 @@
             "jump equal const":{
                 "name":"je",
                 "emulator":"jump_equal_const_reg",
-
                 "description":"Jump to adress if value is equal to register",
                 "example":"je {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -772,9 +836,10 @@
             "jump equal reg":{
                 "name":"je",
                 "emulator":"jump_equal_reg_reg",
-
                 "description":"Jump to adress if register is equal to other register",
                 "example":"je reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -795,9 +860,10 @@
             "jump less const":{
                 "name":"jl",
                 "emulator":"jump_less_const_reg",
-
                 "description":"Jump to adress if value is less to register",
                 "example":"jl {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -817,9 +883,10 @@
             "jump less reg":{
                 "name":"jl",
                 "emulator":"jump_less_reg_reg",
-
                 "description":"Jump to adress if register is less to other register",
                 "example":"jl reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -840,9 +907,10 @@
             "jump greater const":{
                 "name":"jg",
                 "emulator":"jump_greater_const_reg",
-
                 "description":"Jump to adress if value is greater to register",
                 "example":"jg {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -862,9 +930,10 @@
             "jump greater reg":{
                 "name":"jg",
                 "emulator":"jump_greater_reg_reg",
-
                 "description":"Jump to adress if register is greater to other register",
                 "example":"jg reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -884,9 +953,10 @@
             "jump less equal const":{
                 "name":"jl",
                 "emulator":"jump_less_eq_const_reg",
-
                 "description":"Jump to adress if value is less to register",
                 "example":"jl {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -906,9 +976,10 @@
             "jump less equal reg":{
                 "name":"jle",
                 "emulator":"jump_less_eq_reg_reg",
-
                 "description":"Jump to adress if register is less to other register",
                 "example":"jle reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -929,9 +1000,10 @@
             "jump greater equal const":{
                 "name":"jge",
                 "emulator":"jump_greater_eq_const_reg",
-
                 "description":"Jump to adress if value is greater to register",
                 "example":"jg {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -951,9 +1023,10 @@
             "jump greater equal reg":{
                 "name":"jge",
                 "emulator":"jump_greater_eq_reg_reg",
-
                 "description":"Jump to adress if register is greater to other register",
                 "example":"jg reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -974,9 +1047,10 @@
             "jump not equal const":{
                 "name":"jne",
                 "emulator":"jump_not_equal_const_reg",
-
                 "description":"Jump to adress if value is not equal to register",
                 "example":"jne {}, reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -996,9 +1070,10 @@
             "jump not equal reg":{
                 "name":"jne",
                 "emulator":"jump_not_equal_reg_reg",
-
                 "description":"Jump to adress if register is not equal to other register",
                 "example":"jne reg[{}], reg[{}], {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {
@@ -1019,9 +1094,11 @@
             "jump overflow":{
                 "name":"jo",
                 "emulator":"jump_overflow_const_reg",
-
                 "description":"Jump to adress if register is greater to other register",
-                "example":"jg",
+                "example":"jo",
+                
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                    
@@ -1030,9 +1107,10 @@
             "return":{
                 "name":"ret",
                 "emulator":"ret",
-
                 "description":"Jump to adress if register is greater to other register",
                 "example":"ret",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                    
@@ -1041,9 +1119,10 @@
             "interupt":{
                 "name":"int",
                 "emulator":"interutp",
-
                 "description":"Jump to adress if register is greater to other register",
                 "example":"int {}",
+                "command_cost":1,
+                "command_layout":"default",
 
                 "args":[
                     {

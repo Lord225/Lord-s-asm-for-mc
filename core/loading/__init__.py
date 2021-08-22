@@ -83,11 +83,13 @@ def get_profile(DEFAULT_PROFILES_PATH, NAME, CONSTS):
 
     try:
         print("Loading profile for: '{}' by {}".format(CPU_PROFILE["CPU"]["Name"], CPU_PROFILE["CPU"]["Author"]))
+        if CONSTS is None:
+            CONSTS = list()
         CONSTS.extend(CPU_PROFILE["CPU"]["DEFINES"])
     except KeyError as key:
         print("Can't find key in profile: {}".format(key))
         return
-    except:
+    except Exception as err:
         print("Error: module {} doesn't exists.".format(CPU_PROFILE["CPU"]["emulator"]))
         return
 

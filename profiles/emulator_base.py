@@ -22,7 +22,6 @@ def check_arguments(func):
     spec = inspect.getfullargspec(func)
     hints = get_type_hints(func, include_extras=True)
 
-
     def wrapper(*args, **kwargs):
         for idx, arg_name in enumerate(spec[0]):
             hint = hints.get(arg_name)

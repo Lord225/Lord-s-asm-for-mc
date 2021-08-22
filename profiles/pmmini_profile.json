@@ -39,6 +39,7 @@
         "DEFINES":[
             "__PMMINI__"
         ],
+        
 
         "parametrs":{
             "clock_speed":"3.33",

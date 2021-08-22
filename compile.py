@@ -1,7 +1,7 @@
 #Public domain, free to use, by M. Złotorowicz aka Lord255
 VERSION = "1.0"
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 import argparse
 import math as m
@@ -17,7 +17,7 @@ import core.config as config
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
 
 # -f -a -o -l -i -e -of -s --const --onefile
-parser.add_argument("-f", "--file", type=str, default="src/program.lor",
+parser.add_argument("-f", "--file", type=str, default="src/example_zcore.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
@@ -141,6 +141,8 @@ def main():
     emulate(data, DEVICE, actives, built, line_indicator, COMMAND_COUNTER, jump_list)
 
 def double_pass_program_loading():
+    config.setupsettings(None, "settings.ini", None)
+
     print("Loading {}, with consts: {}".format(config.FILE_NAME, config.CONSTS))
 
     # First loading Pass to import settings
