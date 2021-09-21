@@ -3,6 +3,7 @@ import core.loading as loading
 import core.interpreter_synax_solver as iss
 import numpy as np
 import time
+import pybytes
 
 from profiles.emulator_base import *
 
@@ -16,6 +17,7 @@ RANGE_256 = Annotated[int, ValueRange(0, 255)]
 RANGE_4 = Annotated[int, ValueRange(0, 3)]
 
 class Core:
+
     def __init__(self, ID, RAM):
         #TODO
         #numpy representation
@@ -26,6 +28,7 @@ class Core:
         self.ROMStack = []
         self.RAM_UPDATE_REQUEST = [-1,-1]
         self.RAM_REFRENCE = RAM
+        self.FPU_CONV = pybytes.floats.CustomFloat(preset='fp16')
 
     def nop(self):
         pass
@@ -182,6 +185,26 @@ class Core:
     
         _value = _value_a
         self.push_const(_value)
+
+    def fpu_load(self):
+        arg_a = np.array([self.RAM_REFRENCE[229], self.RAM_REFRENCE[228]])
+        arg_b = np.array([self.RAM_REFRENCE[231], self.RAM_REFRENCE[230]])
+        
+        a = self.FPU_CONV.get(pybytes.Binary(arg_a, bit_lenght=16))
+        b = self.FPU_CONV.get(pybytes.Binary(arg_b, bit_lenght=16))
+        return a, b
+    def fpu_save(self, val):
+        as_bytes = self.FPU_CONV.get(val)
+        self.RAM_UPDATE_REQUEST = [233, int(as_bytes.low_byte())]
+        self.RAM_UPDATE_REQUEST = [232, int(as_bytes.high_byte())]
+    def fadd(self):
+        a, b = self.fpu_load()
+        out = a+b
+        self.fpu_save(out)
+    def fmul(self):
+        a, b = self.fpu_load()
+        out = a*b
+        self.fpu_save(out)
     
     def clear(self):
         print("CLEARING SCREEN (REMOVE THIS LINE)")
@@ -201,7 +224,10 @@ class Core:
         vals = self.RAM_REFRENCE[0xF0:0xFF]
         vals = [chr(x if x > 32 and x < 127 else 0) for x in vals]
         print('ASCII: ', ''.join(vals))
-    
+    def debug_get_fpu_values(self):
+        a, b = self.fpu_load()
+        out = self.FPU_CONV.get(pybytes.Binary(np.array([self.RAM_REFRENCE[233], self.RAM_REFRENCE[232]]),  bit_lenght=16))
+        print(f'a {a}, b: {b}, out: {out}')
 class CPU:
     def __init__(self):
         self.RAM    = np.zeros((256), dtype=np.uint8)

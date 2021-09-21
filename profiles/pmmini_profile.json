@@ -698,6 +698,32 @@
                     "r2":1
                 }
             },
+            "fadd":{
+                "name":"fadd",
+                "emulator":"fadd",
+                "description":"fp add",
+                "example":"fadd",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                ],
+                "bin":{
+                }
+            },
+            "fmul":{
+                "name":"fmul",
+                "emulator":"fmul",
+                "description":"fp mul",
+                "example":"fmul",
+                "command_cost":1,
+                "command_layout":"short",
+
+                "args":[
+                ],
+                "bin":{
+                }
+            },
             "int":{
                 "name":"int",
                 "emulator":"interutp",

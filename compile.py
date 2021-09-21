@@ -17,7 +17,7 @@ import core.config as config
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
 
 # -f -a -o -l -i -e -of -s --const --onefile
-parser.add_argument("-f", "--file", type=str, default="src/example_zcore.lor",
+parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
@@ -77,7 +77,7 @@ ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.
 
 
 if DEBUG_MODE:
-    parserargs.run = False
+    parserargs.run = True
     parserargs.save = "bin"
     parserargs.comments = True
 
