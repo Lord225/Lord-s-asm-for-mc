@@ -29,4 +29,28 @@ def get_metadata(program, context):
                 raise
     return program, context
 
+KNOWON_PREPROCESOR_TOKENS = \
+[ 
+    "#profile",
+    "#init",
+    "#ifdef",
+    "#else",
+    "#endif",
+    "#macro",
+    "#endmacro",
+    "#entry_point",
+]
 
+DEBUG_TOKEN = "#debug"
+
+def remove_known_preprocesor_instructions(program, context):
+    output_program = list()
+    for program_line in program:
+        line : str = program_line.line
+        if any((line.startswith(token) for token in KNOWON_PREPROCESOR_TOKENS)):
+            continue
+        if line.startswith(DEBUG_TOKEN):
+            program_line.debug_instruction = True
+        output_program.append(program_line)
+    return output_program, context
+    

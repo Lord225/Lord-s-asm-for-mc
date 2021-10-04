@@ -19,7 +19,8 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
             ('apply consts', preprocesor.definitions.apply_consts),
             ('find macros', preprocesor.macros.find_macros),
             ('apply macros', preprocesor.macros.apply_all_macros),
-            ('find meta', preprocesor.meta.get_metadata)
+            ('find meta', preprocesor.meta.get_metadata),
+            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions)
         ]
     return pipeline
 
@@ -49,11 +50,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any):
             print(f'Stage {i+1}/{len(pipeline)}: {stage}')
     
     if config.show_pipeline_output:
-        SPACE = ' '*2
-        print('[')
-        for line in data[:-1]:
-            print(SPACE, line)
-        print(SPACE, data[-1],'\n]')
+        show_output(print, data)
         pprint.pprint(external)
     return data, external
 
@@ -61,3 +58,11 @@ def example_exec_pipeline():
     pipeline = make_preproces_pipeline()
 
     compile(pipeline, "H:\scripts\Lord's asm redux\src\program.lor")
+
+def show_output(print, data):
+    SPACE = ' '*2
+    print('[')
+    for line in data[:-1]:
+        print(SPACE, line)
+    print(SPACE, data[-1],'\n]')
+    
