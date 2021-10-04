@@ -1,8 +1,21 @@
-[PROFILE pmmini_profile.json]
+#profile profiles/pm1.json
+#init settings/show_second_pass.ini
 
-#data 228 0x3c, 0x00, 0x3c, 0x00
+#macro HelloMacro(a)
+add a, reg[1]
+add a, reg[2]
+#endmacro
 
-:CORE0
-    fadd
-    #ram
-    #debug_get_fpu_values() 
+#define HELLO_CONST 1
+
+#entry_point core0 0
+mov 0, reg[1]
+mov 1, reg[HELLO_CONST]
+HelloMacro(10)
+#define HELLO_WORLD
+
+#ifdef HELLO_WORLD
+#define XD
+#else
+#define XD2
+#endif
