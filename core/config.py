@@ -17,6 +17,9 @@ def __getattr__(name):
     except:
         return value
 
+def __setattr__(name, val):
+    override_from_dict({name:val})
+
 def override_from_file(paths):
     config.read(paths)
 

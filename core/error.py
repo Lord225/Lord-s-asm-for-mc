@@ -14,3 +14,7 @@ class PreprocesorError(CompilerError):
 
     def __str__(self):
          return f"Preprocesing error: {self.info}"
+
+class ProfileLoadError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)

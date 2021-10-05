@@ -1,8 +1,10 @@
 import core.config as config
+import core.error as error
 import core
 import argparse
 
-DEBUG_MODE = False
+
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
 
@@ -61,18 +63,18 @@ help="""Saves output from diffrent cores in same file""")
 
 parserargs = parser.parse_args()
 
-ACTION_ON_ERROR = None if DEBUG_MODE else 'abort' #'interupt'
-ACTION_ON_ERROR = ACTION_ON_ERROR if parserargs.onerror is None else parserargs.onerror
-
-
-if DEBUG_MODE:
-    parserargs.run = True
-    parserargs.save = "bin"
-    parserargs.comments = True
 
 config.override_from_dict(vars(parserargs))
 
+
+if DEBUG_MODE:
+    config.run = True
+    config.save = "bin"
+    config.comments = True
+    config.onerror = 'abort'
+
 def main():
+    profile = core.profile.profile_loader.load_profile_from_file('test_profile.jsonc', True)
     pipeline = core.pipeline.make_preproces_pipeline()
 
     start_file = config.file
@@ -92,21 +94,18 @@ if __name__ == "__main__":
         import cProfile
         cProfile.run("main()", sort="cumtime")
     else:
-        if ACTION_ON_ERROR is None:
+        if config.onerror is None:
             main()
         else:
             try:
                 main()
             except Exception as err:
                 print("*"*50)
-                try:
+                if isinstance(err, error.CompilerError):
                     print("Error in line {}:".format(err.line))
-                except:
-                    #TODO HANDLE ERRORS!
-                    print(err)
-
+                print(f"{err}")
                 
-                if ACTION_ON_ERROR == "interupt":
+                if config.onerror == "interupt":
                     input()
-                elif ACTION_ON_ERROR == "abort":
+                elif config.onerror == "abort":
                     pass
