@@ -9,7 +9,7 @@ add a, reg[2]
 #define HELLO_CONST 1
 
 #entry_point core0 0
-mov 0,               reg[1]
+mov 0,               reg        [    1]
 mov 1, reg[HELLO_CONST]
 HelloMacro(10)
 #define HELLO_WORLD

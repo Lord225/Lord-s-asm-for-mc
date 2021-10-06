@@ -20,7 +20,8 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
             ('find macros', preprocesor.macros.find_macros),
             ('apply macros', preprocesor.macros.apply_all_macros),
             ('find meta', preprocesor.meta.get_metadata),
-            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions)
+            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions),
+            ('tokenize lines', parse.tokenize.tokenize)
         ]
     return pipeline
 

@@ -49,7 +49,11 @@
                 "emulator":"mov_imm_reg",
                 "command_cost":2,
                 "command_layout": "long",
-                
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"label"
+                },
                 "bin":
                 {
                     "CU":1,

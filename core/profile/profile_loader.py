@@ -1,9 +1,10 @@
+from enum import Enum, auto
 import json
-from re import L
 import core.config as config
 import core.error as error
 import importlib
 import core.parse.tokenize as tokenize
+import core.profile.generate_pattern as generate_pattern
 
 def load_json_profile(path):
     with open(path, "r") as file:
@@ -13,10 +14,27 @@ def load_json_profile(path):
 def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
     return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
 
+def check_raw_command_integrity(id: str, cmd: dict):
+    REQ_FIELDS = ["pattern", 'command_cost']
+    OPT_FIELDS = ["command_cost", "command_layout", 'bin']
+    required = [required for required in REQ_FIELDS if required not in cmd]
+    if len(required) != 0:
+        raise error.ProfileLoadError(f"Command: {id} does not have one of these fields: {REQ_FIELDS}")
+    optional = [optional for optional in OPT_FIELDS if optional not in cmd]
+    return optional
 
+class ArgumentTypes(Enum):
+    NUM = auto()
+    LABEL = auto()
 def process_commands(commands: dict):
-    for key, val in commands.items():
-        pass
+    warnings = dict()
+    for cmd_id, cmd in commands.items():
+        missing = check_raw_command_integrity(cmd_id, cmd)
+        if len(missing) != 0:
+            warnings[cmd_id] = missing
+        
+        cmd['args'] = {key: ArgumentTypes[val.upper()] for key, val in cmd['args'].items()}
+        cmd['pattern'] = generate_pattern.Pattern(cmd['pattern'], cmd['args'])
     return commands
 
 class ProfileInfo:
@@ -24,6 +42,8 @@ class ProfileInfo:
         self.name = kwargs["Name"]
         self.arch = kwargs["Arch"]
         self.author = kwargs["Author"]
+
+
 
 class Profile:
     def __init__(self, profile, emulator):
@@ -48,6 +68,11 @@ class Profile:
         self.__build_commands()
         self.__build_arguments()
         self.__build_info()
+
+        self.__selfcheck()
+        self.builded = True
+
+    
     def __build_commands(self):
         raw_commandset = self.profile["COMMANDS"]
         self.commands_definitions = process_commands(raw_commandset)
