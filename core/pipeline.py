@@ -1,6 +1,6 @@
 from . import load
 from . import parse
-from . import  preprocesor
+from . import preprocesor
 from typing import *
 import core.config as config
 import core.error as error
@@ -20,17 +20,20 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
             ('find macros', preprocesor.macros.find_macros),
             ('apply macros', preprocesor.macros.apply_all_macros),
             ('find meta', preprocesor.meta.get_metadata),
-            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions),
-            ('tokenize lines', parse.tokenize.tokenize)
+            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions)
         ]
     return pipeline
 
 def make_parser_pipeline() -> List[Tuple[str, Callable]]:
-    pass
+    pipeline = \
+        [
+            ('tokenize lines', parse.tokenize.tokenize),
+            ('find commands', parse.match_commands.find_commands)
+        ]
+    return pipeline
 
-def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any):
+def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {}):
     data = start
-    external = dict()
     
     for i, (stage, func) in enumerate(pipeline):
         try:
@@ -46,6 +49,10 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any):
             external.update(other)
         else:
             data = output
+
+        if config.pipeline_debug_asserts:
+            for line in data:
+                assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
 
         if config.show_pipeline_steges:
             print(f'Stage {i+1}/{len(pipeline)}: {stage}')

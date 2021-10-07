@@ -1,5 +1,7 @@
 import core.error as error
+from enum import Enum, auto
 import re
+
 
 def padhex(x, pad, prefix = True):
     x = 0 if x is None else x

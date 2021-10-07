@@ -1,6 +1,6 @@
 import core.config as config
 import core.error as error
-import core.parse.tokenize as tokenize
+import core.parse as parse
 from enum import Enum, auto
 from typing import List
 
@@ -8,11 +8,9 @@ class TokenTypes(Enum):
     LITERAL_WORD = auto()
     ARGUMENT = auto()
 
-def next_none(iterator):
-    try:
-        return next(iterator)
-    except StopIteration:
-        return None
+class ArgumentTypes(Enum):
+    NUM = auto()
+    LABEL = auto()
 
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'
@@ -20,13 +18,10 @@ class Pattern:
     
     def __init__(self, pattern: str, argument_types: dict):
         self.arguments = dict()
-        self.tokens = tokenize.remove_meaningless_tokens(tokenize.tokienize_line(pattern))
+        self.tokens = parse.tokenize.remove_meaningless_tokens(parse.tokenize.tokienize_line(pattern))
         self.tokens = self.__parse_tokens(argument_types)
-    
-    def match_expression(expr: List):
-        pass
         
-    def __get_token_str(self, id: int) -> str:
+    def __get_token_str(self, id: int):
         try:
             return self.tokens[id]
         except IndexError:
@@ -59,7 +54,7 @@ class Pattern:
                 processed_tokens.append((TokenTypes.ARGUMENT, next_token, argument_types[next_token]))
                 i += 2
             else:
-                processed_tokens.append((TokenTypes.LITERAL_WORD, current_token)) #TODO FIX
+                processed_tokens.append((TokenTypes.LITERAL_WORD, current_token))
                 
             i += 1
         return processed_tokens

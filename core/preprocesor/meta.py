@@ -12,9 +12,9 @@ def get_metadata(program, context):
             _, *args = line.split(' ')
             profile_name = ''.join(args)
             if profile_name:
-                if 'profile' in context:
+                if 'profile_name' in context:
                     raise
-                context["profile"] = profile_name
+                context["profile_name"] = profile_name
             else:
                 raise
         elif line.startswith("#init"):

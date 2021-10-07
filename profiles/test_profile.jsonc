@@ -37,7 +37,7 @@
         },
 
         "DEFINES":[
-            "__PMMINI__"
+            "__TEST__"
         ],
         "KEYWORDS":[
             "CORE0",
@@ -52,7 +52,7 @@
                 "args":
                 {
                     "arg1":"num",
-                    "arg2":"label"
+                    "arg2":"num"
                 },
                 "bin":
                 {

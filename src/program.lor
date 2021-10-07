@@ -1,21 +1,10 @@
-#profile profiles/pm1.json
+#profile pm1.jsonc
 #init settings/show_second_pass.ini
 
-#macro HelloMacro(a)
-add a, reg[1]
-add a, reg[2]
-#endmacro
-
-#define HELLO_CONST 1
 
 #entry_point core0 0
-mov 0,               reg        [    1]
-mov 1, reg[HELLO_CONST]
-HelloMacro(10)
-#define HELLO_WORLD
 
-#ifdef HELLO_WORLD
-#define XD
-#else
-#define XD2
-#endif
+
+mov 0, reg[1]
+mov reg[1], reg[2]
+inc reg[1]

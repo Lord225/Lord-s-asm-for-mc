@@ -1,2 +1,2 @@
-from . import profile_loader
+from . import profile
 

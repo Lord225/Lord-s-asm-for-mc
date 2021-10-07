@@ -3,8 +3,8 @@ import json
 import core.config as config
 import core.error as error
 import importlib
-import core.parse.tokenize as tokenize
-import core.profile.generate_pattern as generate_pattern
+import core.parse as parser
+import core.profile.patterns as patterns
 
 def load_json_profile(path):
     with open(path, "r") as file:
@@ -23,9 +23,7 @@ def check_raw_command_integrity(id: str, cmd: dict):
     optional = [optional for optional in OPT_FIELDS if optional not in cmd]
     return optional
 
-class ArgumentTypes(Enum):
-    NUM = auto()
-    LABEL = auto()
+
 def process_commands(commands: dict):
     warnings = dict()
     for cmd_id, cmd in commands.items():
@@ -33,8 +31,8 @@ def process_commands(commands: dict):
         if len(missing) != 0:
             warnings[cmd_id] = missing
         
-        cmd['args'] = {key: ArgumentTypes[val.upper()] for key, val in cmd['args'].items()}
-        cmd['pattern'] = generate_pattern.Pattern(cmd['pattern'], cmd['args'])
+        cmd['args'] = {key: patterns.ArgumentTypes[val.upper()] for key, val in cmd['args'].items()}
+        cmd['pattern'] = patterns.Pattern(cmd['pattern'], cmd['args'])
     return commands
 
 class ProfileInfo:

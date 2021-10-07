@@ -15,6 +15,13 @@ class PreprocesorError(CompilerError):
     def __str__(self):
          return f"Preprocesing error: {self.info}"
 
+class ParserError(CompilerError):
+    def __init__(self,  line_number: int, info: str, *args: object) -> None:
+        super().__init__(line_number, info, *args)
+
+    def __str__(self):
+         return f"Parsing error: {self.info}"
 class ProfileLoadError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
+
