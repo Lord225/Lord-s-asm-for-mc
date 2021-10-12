@@ -1,5 +1,4 @@
 .vscode
 __pycache__
-compiled_CORE0.txt
-compiled_CORE1.txt
+output/
 *.pyc

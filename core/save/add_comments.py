@@ -9,7 +9,7 @@ def generate_comment(command):
 
 
 def add_comments(program, context):
-    if not config.comments and not config.tabulate:
+    if not config.comments and not context['tabulate']:
         return program, context
     profile: Profile = context['profile']
     layouts = profile.arguments

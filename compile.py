@@ -4,7 +4,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
 
@@ -12,7 +12,7 @@ parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
-parser.add_argument("-s", "--save", choices=["dec", "raw", "bin", "py"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["dec", "bin", "py"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
 > raw - Build source and save as binary with padding to halfbytes
@@ -42,6 +42,8 @@ if DEBUG_MODE:
     config.onerror = 'abort'
 
 def main():
+    print(f"Lord's Compiler Redux is working on '{config.file}'")
+
     load_preproces_pipeline = core.pipeline.make_preproces_pipeline()
     parse_pipeline = core.pipeline.make_parser_pipeline()
     save_pipeline = core.pipeline.make_save_pipeline()
@@ -66,9 +68,9 @@ def main():
     # Process data using ouput from second pass.
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
 
-    # Compile into binary
-
-    output_compiled, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
+    # Compile and save
+    if config.save is not None:
+        output_compiled, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
 
 
 def on_compilation_error(err: error.CompilerError):
