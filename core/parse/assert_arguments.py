@@ -10,8 +10,8 @@ def find_key_by_value(dict: dict, value):
     return output
 
 def within_bounds(bit_size, value):
-    max_val = bit_size**2 - 1
-    return value < max_val
+    max_val = 2**bit_size - 1
+    return value <= max_val
 
 def assert_arguments(program, context):
     if not config.assert_argument_size:

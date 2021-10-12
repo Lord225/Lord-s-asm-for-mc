@@ -4,7 +4,7 @@ import core.profile.patterns as patterns
 import core.parse as parse
 
 
-def match_expr(pattern:profile.patterns.Pattern, expr: List, cmds_profile: profile.Profile):
+def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
     args = dict()
     if len(pattern.tokens) != len(expr):
         return None
@@ -17,7 +17,7 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, cmds_profile: profi
             if pattern_token[2] == patterns.ArgumentTypes.NUM:
                 parsed_token = parse.parse_number(expr_token)
             elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
-                parsed_token = parse.parse_label(expr_token, cmds_profile.labels)
+                parsed_token = parse.parse_label(expr_token, context['labels'])
             elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
                 parsed_token = expr_token
             

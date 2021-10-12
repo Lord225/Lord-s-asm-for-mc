@@ -1,5 +1,4 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "scopeName": "source.iar",
   "name": "IAR",
   "fileTypes": [
@@ -8,87 +7,73 @@
   ],
   "patterns": [
     {
-      "match": "([;@]|//).*$",
-      "name": "comment.iar"
+      "match": "([;@]|\\/\\/).*$",
+      "name": "comment"
     },
     {
-      "match": "\\b(?<=[\\[\\s,]{0,})[0-9]+(?=[\\[\\s,]{0,})\\b",
-      "name": "constant.numeric.dec.iar"
+      "match": "\\b\\d+\\b",
+      "name": "constant.numeric"
     },
     {
-      "match": "#-?[a-zA-Z_][0-9a-zA-Z_]*\\b",
-      "name": "variable.named.iar"
+      "match": "\\b(0x)([0-9a-fA-F_]+\\b)",
+      "name": "constant.numeric"
     },
     {
-      "match": "#?-?(0x)[0-9a-fA-F_]+\\b",
-      "name": "constant.numeric.hex.iar"
+      "match": "\\b(0b)([0-1]+\\b)",
+      "name": "constant.numeric"
+    },
+
+
+    {
+      "match": "\\s*\\w+:",
+      "name": "keyword.control.directive.conditional"
+    },
+
+
+    {
+      "match": "\\s*(#)(define|ifdef|ifndef|data|macro|endmacro|global|init|profile|debug)",
+      "name": "keyword.control"
     },
     {
-      "match": "#?-?(0b)[0-1]+\\b",
-      "name": "constant.numeric.hex.iar"
+      "match": "(?:(?<=#ifdef)|(?<=#ifndef)|(?<=#data)|(?<=#macro)|(?<=#endmacro)|(?<=#global)|(?<=#init)|(?<=#profile)|(?<=#debug)\\s)(.*)",
+      "name": "variable.named"
     },
     {
-      "begin": "^\\s*#(define|ifdef|ifndef|data|macro|endmacro)",
-      "beginCaptures": {
-        "0": {
-          "name": "keyword.control.directive.conditional.iar"
-        }
-      },
-      "end": "(?=(?://|/\\*))|(?<!\\\\)(?=\\n)",
-      "patterns": [
-        {
-          "match": "defined",
-          "name": "keyword.control.directive.conditional.iar"
-        },
-        {
-          "match": "[^\n\\\\/\\*]+",
-          "name": "meta.preprocessor.iar"
-        }
-      ]
+      "match": "([A-Z_]+)",
+      "name": "entity.name.type"
     },
     {
-      "match": "^\\s*#(else|endif)\\b",
-      "name": "keyword.control.directive.conditional.iar"
+      "match": "(?:(?<=#define)\\s)([A-Z_]+)",
+      "name": "entity.name.type"
     },
     {
-      "match": "^\\s*:.*\\b",
-      "name": "keyword.control.directive.conditional.iar"
-    },
-    {
-      "name": "comment.iar",
-      "begin": "\\/\\*",
-      "beginCaptures": {
-        "0": {
-          "name": "comment.begin.iar"
-        }
-      },
-      "endCaptures": {
-        "0": {
-          "name": "comment.end.iar"
-        }
-      },
-      "end": "\\*\\/"
-    },
-    {
-      "match": "^\\s{0,}\\w+",
-      "name": "support.function.mnemonic.arithmetic.iar"
-    },
-    {
-      "match": "(^\\w[\\w0-9]*:?)|(\\w[\\w0-9]*:)",
+      "match": "\\b\\w+\\s*(?=\\[.*\\])",
       "name": "entity.name.tag"
     },
     {
-      "name": "invalid.illegal.string.iar",
-      "match": "\"[^\"]+$"
+      "match": "\\b\\w+\\b",
+      "name": "entity.name.function"
     },
     {
-      "name": "string.quoted.iar",
+      "match": "\\s*#\\w+\\s+.*",
+      "name": "variable.named"
+    },
+
+
+
+    
+    {
+      "match": "\"[^\"]+$",
+      "name": "invalid.illegal"
+    },
+    {
+      "name": "string.quoted",
       "begin": "\"",
       "end": "\""
     },
     {
       "match": "\\'\\S\\'",
-      "name": "string.char.iar"
+      "name": "string.char"
     }
   ]
 }

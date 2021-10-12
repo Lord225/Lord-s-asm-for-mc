@@ -4,9 +4,9 @@ import core
 import argparse
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Universal Assembly compiler/debugger for minecraft. Help on wiki: https://github.com/Lord225/Lord-s-asm-for-mc')
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Assebly language Compiler. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n Example: \n\t python compile.py --save bin --comments \n Compiles program.lor\n\n add --run to emulate compiler program')
 
 parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
@@ -69,9 +69,12 @@ def main():
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
 
     # Compile and save
-    if config.save is not None:
+    if config.save in ['bin', 'py', 'dec']:
         output_compiled, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
 
+    # Emulation
+    if config.run:
+        print('Emulation is not avalible')
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)

@@ -67,8 +67,8 @@
                 {
                     "CU":1,
                     "r2":0,
-                    "n1":"arg1",
-                    "r1":"arg2"
+                    "r1":"arg2",
+                    "n1":"arg1"
                 }
             },
             "mov reg reg":{
@@ -135,6 +135,294 @@
                 {
                     "CU":1,
                     "r1":"arg1",
+                    "r2":1
+                }
+            },
+            "dec reg reg":{
+                "pattern":"dec reg[{arg1}]",
+                "emulator":"alu_reg_dec",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num"
+                },
+                "bin":
+                {
+                    "CU":1,
+                    "r1":"arg1",
+                    "r2":2
+                }
+            },
+            "rsh reg reg":{
+                "pattern":"rsh reg[{arg1}], reg[{arg2}]",
+                "emulator":"alu_reg_reg_rsh",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":5,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "lsh reg reg":{
+                "pattern":"lsh reg[{arg1}], reg[{arg2}]",
+                "emulator":"alu_reg_reg_lsh",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":6,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "and reg reg":{
+                "pattern":"and reg[{arg1}], reg[{arg2}]",
+                "emulator":"alu_reg_reg_and",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":7,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "or reg reg":{
+                "pattern":"or reg[{arg1}], reg[{arg2}]",
+                "emulator":"alu_reg_reg_or",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":8,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "xor reg reg":{
+                "pattern":"xor reg[{arg1}], reg[{arg2}]",
+                "emulator":"alu_reg_reg_xor",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":9,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "jump equal reg":{
+                "pattern":"je reg[{arg1}], reg[{arg2}], {arg3}",
+                "emulator":"je_reg_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num",
+                    "arg3":"label"
+                },
+                "bin":
+                {
+                    "CU":10,
+                    "r1":"arg1",
+                    "r2":"arg2",
+                    "n1":"arg3"
+                }
+            },
+            "jump greater reg":{
+                "pattern":"jg reg[{arg1}], reg[{arg2}], {arg3}",
+                "emulator":"jg_reg_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num",
+                    "arg3":"label"
+                },
+                "bin":
+                {
+                    "CU":11,
+                    "r1":"arg1",
+                    "r2":"arg2",
+                    "n1":"arg3"
+                }
+            },
+            "jump flag reg":{
+                "pattern":"jf {arg3}",
+                "emulator":"jf_reg_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "arg3":"label"
+                },
+                "bin":
+                {
+                    "CU":0,
+                    "r1":3,
+                    "r2":0,
+                    "n1":"arg3"
+                }
+            },
+            "mov ptr reg":{
+                "pattern":"mov ram[reg[{arg1}]], reg[{arg2}]",
+                "emulator":"read_reg_pointer",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":12,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "mov ram reg":{
+                "pattern":"mov ram[{arg1}], reg[{arg2}]",
+                "emulator":"read_ram_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":13,
+                    "r1":"arg2",
+                    "n1":"arg1"
+                }
+            },
+            "mov reg ptr":{
+                "pattern":"mov reg[{arg1}], ram[reg[{arg2}]]",
+                "emulator":"read_ram_reg",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":14,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "mov reg ram":{
+                "pattern":"mov reg[{arg1}], ram[{arg2}]",
+                "emulator":"read_ram_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "arg1":"num",
+                    "arg2":"num"
+                },
+                "bin":
+                {
+                    "CU":15,
+                    "r1":"arg1",
+                    "n1":"arg2"
+                }
+            },
+            "shut":{
+                "pattern":"shut",
+                "emulator":"shut",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                },
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
+                    "r2":0
+                }
+            },
+            "jump":{
+                "pattern":"jmp {adress}",
+                "emulator":"read_ram_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "adress":"label"
+                },
+                "bin":
+                {
+                    "CU":0,
+                    "r1":2,
+                    "r2":0,
+                    "n1":"adress"
+                }
+            },
+            "call":{
+                "pattern":"call {adress}",
+                "emulator":"read_ram_reg",
+                "command_cost":2,
+                "command_layout": "long",
+                "args":
+                {
+                    "adress":"label"
+                },
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":1,
+                    "n1":"adress"
+                }
+            },
+            "return":{
+                "pattern":"ret",
+                "emulator":"ret",
+                "command_cost":1,
+                "command_layout": "short",
+                "args":
+                {
+                },
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
                     "r2":1
                 }
             }
