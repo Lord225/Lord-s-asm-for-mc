@@ -10,9 +10,9 @@ def load_raw(path: str, context: Dict):
 
 def strip(program: List[Line], context: Dict):
     for data in program:
-        data.line = data.line.replace("\t",' ').replace("\n",'')
+        data.line = data.line.replace("\t",' ').replace("\n",'').strip()
     return program
 
 def remove_empty_lines(program: List[Line], context: Dict):
-    return [line for line in program if line.line != ""]
+    return [line for line in program if line.line.strip() != ""]
             

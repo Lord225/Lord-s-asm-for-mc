@@ -11,6 +11,7 @@ class TokenTypes(Enum):
 class ArgumentTypes(Enum):
     NUM = auto()
     LABEL = auto()
+    ANY_STR = auto()
 
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'

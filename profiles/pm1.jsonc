@@ -1,10 +1,10 @@
 {
     "CPU":
     {
-        "Name": "PM-Mini",
+        "Name": "PM-1",
         "Arch": "PM",
         "Author": "Gwiezdny Kartofel",
-        "emulator":"pmmini_emulator",
+        "emulator":"pm1_emulator",
         
         "ARGUMENTS":{
             "variants":{

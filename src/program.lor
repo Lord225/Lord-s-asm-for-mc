@@ -1,10 +1,27 @@
 #profile pm1.jsonc
 #init settings/show_second_pass.ini
 
+#global core0 my_label 0
+#global gpu draw_line 0
 
-#entry_point core0 0
+my_label:
+    mov reg[1], reg[2]
+    inc reg[1]
+    mov reg[1], reg[2]
+    inc reg[1]
+my_label_2:
+my_label_3:
+    #debug Hello World
+    inc reg[1]
+my_label_4:
 
 
-mov 0, reg[1]
-mov reg[1], reg[2]
-inc reg[1]
+
+
+draw_line:
+    mov 1, reg[1]
+    mov reg[1], reg[2]
+    inc reg[1]
+    mov 0, reg[1]
+    mov reg[1], reg[2]
+    inc reg[1]

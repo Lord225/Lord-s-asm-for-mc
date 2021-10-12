@@ -4,7 +4,7 @@ import core.profile.patterns as patterns
 import core.parse as parse
 
 
-def match_expr(pattern, expr, cmds_profile: profile.Profile):
+def match_expr(pattern:profile.patterns.Pattern, expr: List, cmds_profile: profile.Profile):
     args = dict()
     if len(pattern.tokens) != len(expr):
         return None
@@ -18,8 +18,13 @@ def match_expr(pattern, expr, cmds_profile: profile.Profile):
                 parsed_token = parse.parse_number(expr_token)
             elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
                 parsed_token = parse.parse_label(expr_token, cmds_profile.labels)
+            elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
+                parsed_token = expr_token
             
             if parsed_token == None:
                 return None
             args[pattern_token[1]] = parsed_token
     return args
+
+def format_expr(pattern: profile.patterns.Pattern, args: dict):
+    pass

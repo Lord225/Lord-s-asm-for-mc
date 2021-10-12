@@ -1,4 +1,3 @@
-
 import core.config as config
 import core.error as error
 import core
@@ -27,22 +26,10 @@ parser.set_defaults(feature=False)
 parser.add_argument('-r', '--run', dest='run', action='store_true')
 parser.set_defaults(feature=False)
 
-parser.add_argument("-o", "--outfile", type=str, default="compiled/compiled.txt", help="Name of binary to save")
+parser.add_argument("-o", "--outfile", type=str, default="output/compiled.txt", help="Name of binary to save")
 
 parser.add_argument('--logs', dest='logmode', action='store_true', help="Choose method of logging CPU's command while executing")
 parser.set_defaults(feature=False)
-
-parser.add_argument("--onerror", choices=["interupt", "abort"], type=str, default = None, 
-help="""What is suppouse to happen on error
-> interupt - Waits for user
-> abort    - Close script
-> None     - Throw python error
-Default: None
-""")
-parser.add_argument("--offset", type=int, default=0, 
-help="""Offset of whole binary relative to rom 0 cell
-Default: 0 (first command on pos 0 second on 1 ect)
-""")
 
 parserargs = parser.parse_args()
 
@@ -57,40 +44,48 @@ if DEBUG_MODE:
 def main():
     load_preproces_pipeline = core.pipeline.make_preproces_pipeline()
     parse_pipeline = core.pipeline.make_parser_pipeline()
+    save_pipeline = core.pipeline.make_save_pipeline()
     
     start_file = config.file
 
-    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file)
+    # First pass, loads settings and profiles into context
+    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, progress_bar_name='Loading')
 
     if 'profile_name' in context:
         config.override_from_dict(profile=context['profile_name'])
     if 'init' in context:
         config.override_from_file(context['init'])
-    
-    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {})
 
+    # Second pass reloads file with new settings
+    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
+
+    # Load profile and pass it to context
     profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
     context['profile'] = profile
 
-    output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context)
+    # Process data using ouput from second pass.
+    output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
+
+    # Compile into binary
+
+    output_compiled, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
+
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)
     print("Error in line {}:".format(err.line))
     print(f"{err}")
-    
-    if config.onerror == "interupt":
-        input()
-    elif config.onerror == "abort":
-        return
+
 def on_profile_error(err):
     print("*"*50)
     print('Error loading profile:')
     print(f'{err}')
+
 def other_error(err):
     print("*"*50)
     print('Unhandeled compilig error:')
     print(f'{err}')
+
 if __name__ == "__main__":
     if config.CPYTHON_PROFILING:
         import cProfile
@@ -107,3 +102,9 @@ if __name__ == "__main__":
                 on_profile_error(err)
             except Exception as err:
                 other_error(err)
+            finally:
+                if config.onerror == "interupt":
+                    input()
+                elif config.onerror == "abort":
+                    pass
+

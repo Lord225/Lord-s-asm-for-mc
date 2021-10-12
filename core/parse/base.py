@@ -3,31 +3,6 @@ from enum import Enum, auto
 import re
 
 
-def padhex(x, pad, prefix = True):
-    x = 0 if x is None else x
-    return '{}{}{}'.format('0x' if prefix else '',"0"*(pad-len(hex(x)[2:])),hex(x)[2:])
-def padbin(x, pad, prefix = True):
-    x = 0 if x is None else x
-    return '{}{}{}'.format('0b' if prefix else '',"0"*(pad-len(bin(x)[2:])),bin(x)[2:])
-def paddec(x, pad, fill = "0"):
-    x = 0 if x is None else x
-    return '{}{}'.format(fill*(pad-len(str(x))), str(x))
-
-def extract_from_brackets(raw, bracket_in = '[', bracked_out = ']'):
-    """wqerfewfw[return_this_value, _THIS TOOO]wefwefwe"""
-    start_bracket = raw.find(bracket_in)
-    end_bracket = raw.find(bracked_out)
-    if start_bracket == -1:
-        raise error.SynaxError("Expected '{}' in argument".format(bracket_in))
-    if end_bracket == -1:
-        raise error.SynaxError("Expected '{}' in argument".format(bracked_out))
-    return raw[start_bracket+1:end_bracket]
-
-def extract_number_from_bracets(unformed):
-    """wqerfewfw[return_this_value]wefwefwe"""
-
-    return get_value(extract_from_brackets(unformed))
-
 def get_value(strage_format:str):
     """Returns value of strage_format"""
     strage_format = strage_format.strip()

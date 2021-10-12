@@ -6,6 +6,7 @@ import core.parse.base as parser_base
 
 
 def get_metadata(program, context):
+    context['entry'] = {}
     for program_line in program:
         line: str = program_line.line
         if line.startswith("#profile"):
@@ -27,6 +28,9 @@ def get_metadata(program, context):
                     context["init"].append(settings)
             else:
                 raise
+        elif line.startswith("#global"):
+            _, chunk_name, label_name, offset = line.split()
+            context['entry'][chunk_name] = (label_name, offset)
     return program, context
 
 KNOWON_PREPROCESOR_TOKENS = \
@@ -38,19 +42,23 @@ KNOWON_PREPROCESOR_TOKENS = \
     "#endif",
     "#macro",
     "#endmacro",
-    "#entry_point",
+    "#global",
 ]
 
 DEBUG_TOKEN = "#debug"
 
 def remove_known_preprocesor_instructions(program, context):
     output_program = list()
+    context['debug'] = []
     for program_line in program:
         line : str = program_line.line
         if any((line.startswith(token) for token in KNOWON_PREPROCESOR_TOKENS)):
             continue
+        
         if line.startswith(DEBUG_TOKEN):
-            program_line.debug_instruction = True
+            context['debug'].append(program_line)
+            continue
+        
         output_program.append(program_line)
     return output_program, context
     

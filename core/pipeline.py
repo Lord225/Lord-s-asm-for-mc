@@ -1,9 +1,11 @@
 from . import load
 from . import parse
 from . import preprocesor
+from . import save
 from typing import *
 import core.config as config
 import core.error as error
+from click import progressbar
 
 import pprint
 
@@ -28,49 +30,87 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     pipeline = \
         [
             ('tokenize lines', parse.tokenize.tokenize),
-            ('find commands', parse.match_commands.find_commands)
+            ('find labels', parse.jumps.find_labels),
+            ('find commands', parse.match_commands.find_commands),
+            ('add debug data', parse.debug_heades.add_debug_metadata),
+            ('generate values', parse.generate.generate),
+            ('assert argument sizes', parse.assert_arguments.assert_arguments)
         ]
     return pipeline
 
-def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {}):
+def make_save_pipeline()  -> List[Tuple[str, Callable]]:
+    pipeline = \
+        [
+            ('split into chunks', parse.split_into_chunks.split_into_chunks),
+            ('format', save.formatter.format_output),
+            ('add comments', save.add_comments.add_comments),
+            ('save', save.saver.save),
+        ]
+    return pipeline
+def check_types(lines, stage):
+    for line in lines:
+        assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
+def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {}, progress_bar_name = None):
     data = start
+    def format_function(x):
+        return str(x[1][0]) if x is not None else ''
+
+    if config.show_pipeline_steges != 'bar':
+        class PlaceHolder:
+            def __init__(self, iter, **kwrgs):
+                self.iter = iter
+            def __enter__(self):
+                return self.iter
+            def __exit__(self, *args):
+                pass
+        bar = PlaceHolder
+    else:
+        bar = progressbar
     
-    for i, (stage, func) in enumerate(pipeline):
-        try:
-            output = func(data, external)
-        except error.CompilerError as err:
-            raise err
-        except Exception as other_error:
-            print(f"Unhealty error: {other_error}")
-            raise other_error
+    with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
+        for i, (stage, func) in pipeline_iterator:
+            try:
+                output = func(data, external)
+            except error.CompilerError as err:
+                err.stage == stage
+                raise err
+            except Exception as other_error:
+                raise other_error
 
-        if isinstance(output, tuple):
-            data, other = output
-            external.update(other)
-        else:
-            data = output
+            if isinstance(output, tuple):
+                data, other = output
+                external.update(other)
+            else:
+                data = output
 
-        if config.pipeline_debug_asserts:
-            for line in data:
-                assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
+            if config.pipeline_debug_asserts:
+                if isinstance(data, list):
+                    check_types(data, stage)
+                elif isinstance(data, dict):
+                    for _, lines in data.items():
+                        check_types(lines, stage)
+                else:
+                    raise Exception(f"Stage {stage} returned wrong datatype.")
+            if config.show_pipeline_steges == "simple":
+                print(f'Stage {i+1}/{len(pipeline)}: {stage}')
+        
+        if config.show_pipeline_output:
+            show_output(print, data)
+            pprint.pprint(external)
+        return data, external
 
-        if config.show_pipeline_steges:
-            print(f'Stage {i+1}/{len(pipeline)}: {stage}')
-    
-    if config.show_pipeline_output:
-        show_output(print, data)
-        pprint.pprint(external)
-    return data, external
+def show_output(print, data, SPACE = ''):
+    if isinstance(data, list):
+        SPACEHERE = SPACE + ' '*2
+        print(SPACE, '[')
+        for line in data[:-1]:
+            print(SPACEHERE, line)
+        print(SPACEHERE, data[-1],f'\n{SPACE}]')
+    else:
+        SPACEHERE = SPACE + ' '*2
+        print(SPACE, "{")
+        for key, val in data.items():
+            print(SPACEHERE, key, ":")
+            show_output(print, val, SPACEHERE)
+        print(SPACE, "}")
 
-def example_exec_pipeline():
-    pipeline = make_preproces_pipeline()
-
-    compile(pipeline, "H:\scripts\Lord's asm redux\src\program.lor")
-
-def show_output(print, data):
-    SPACE = ' '*2
-    print('[')
-    for line in data[:-1]:
-        print(SPACE, line)
-    print(SPACE, data[-1],'\n]')
-    
