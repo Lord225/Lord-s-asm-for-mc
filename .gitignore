@@ -1,4 +1,5 @@
 .vscode
 __pycache__
 output/
+!outpit/README
 *.pyc
