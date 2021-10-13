@@ -34,7 +34,7 @@ def assert_arguments(program, context):
                 continue
             
             if not within_bounds(layout[x]['size'], value):
-                raise error.ParserError(line_obj.line_index_in_file, f"Value '{value}' is not within bounds for argument: '{x}' in command: '{name}'")
+                raise error.ParserError(line_obj.line_index_in_file, f"Value '{value}' is not within bounds for argument: '{x}' in command: '{name}' (argument is {layout[x]['size']} bit long)")
     return program, context
 
 

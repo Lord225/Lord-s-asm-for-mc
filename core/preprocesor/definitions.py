@@ -51,6 +51,8 @@ def add_definition(line: str, i) -> Tuple[List[str], Dict[str, str]]:
     if len(components) > 2:
         return list(), {str(components[1]): ''.join([x+" " for x in components[2:]]).strip()}
     elif len(components) == 2:
+        if not components[1].isupper():
+            raise error.PreprocesorError(f"Definitions should have UPPER CASE NAMES. got: {components[1]}")
         return [components[1]], {}
     else:
         raise error.PreprocesorError(i, "Can't inteprete #define expression: '{}'".format(line))

@@ -21,9 +21,10 @@ def split_into_chunks(program, context):
     labels: dict = context['labels']
     new_labels = dict()
     namespace = dict()
-
-    entry = {chunk_name:(label_name, offset, labels[label_name]) for chunk_name, (label_name, offset) in entry.items()}
-
+    try:
+        entry = {chunk_name:(label_name, offset, labels[label_name]) for chunk_name, (label_name, offset) in entry.items()}
+    except KeyError as err:
+        raise error.ParserError(None, f"Label marked as global: {err} cannot be founded in skope")
     chunks = {chunk_name: list() for chunk_name in entry.keys()}
 
     chunk_name, current_chunk = get_next_chunk(entry, 0)

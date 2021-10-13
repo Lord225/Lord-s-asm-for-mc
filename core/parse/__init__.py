@@ -15,4 +15,6 @@ def parse_number(token):
         return None
 
 def parse_label(token, labels):
+    if token not in labels:
+        return None
     return labels[token]

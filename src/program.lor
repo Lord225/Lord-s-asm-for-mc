@@ -9,7 +9,6 @@
 #define OUTER_COUNTER 0xA2
 #define COUTER_LIMIT 0xA3
 
-
 CORE0:
     mov 0xFF, reg[1]       //end
     mov 0xFE, reg[1]       //end-1

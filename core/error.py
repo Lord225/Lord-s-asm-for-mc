@@ -23,6 +23,14 @@ class ParserError(CompilerError):
 
     def __str__(self):
          return f"Parsing error: {self.info}"
+class UnparsableTokenError(CompilerError):
+    def __init__(self, info: str, expected_type: str, *args: object) -> None:
+        super().__init__(None, info, *args)
+        self.expected_type = expected_type
+
+    def __str__(self):
+         return f"Token: '{self.info}' cannot be parsed as '{self.expected_type}'"
+
 class ProfileLoadError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)

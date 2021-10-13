@@ -29,7 +29,10 @@ def get_metadata(program, context):
             else:
                 raise
         elif line.startswith("#global"):
-            _, chunk_name, label_name, offset = line.split()
+            try:
+                _, chunk_name, label_name, offset = line.split()
+            except:
+                raise error.PreprocesorError(program_line.line_index_in_file, f"Expected structure '#global <NAME> <LABEL NAME> <OFFSET>' got: '{line}'")
             context['entry'][chunk_name] = (label_name, offset)
     return program, context
 

@@ -10,7 +10,7 @@ def serach_for_command(line_obj, profile: profile.Profile, context):
 
     for name, pattern in profile.commands_definitions.items():
         pattern: patterns.Pattern = pattern
-
+        
         matched = match_expr.match_expr(pattern['pattern'], tokens, context)
         if matched is not None:
             return name, matched
@@ -23,7 +23,7 @@ def find_commands(program, context):
     for line_obj in program:
         founded = serach_for_command(line_obj, cpu_profile, context)
         if founded is None and config.rise_on_unknown_command:
-            raise error.ParserError(line_obj.line_index_in_file, f"Unknown command: '{line_obj.line}'")
+            raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}'")
         
         line_obj.mached_command = founded
 

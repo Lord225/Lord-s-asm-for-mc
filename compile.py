@@ -4,7 +4,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Assebly language Compiler. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n Example: \n\t python compile.py --save bin --comments \n Compiles program.lor\n\n add --run to emulate compiler program')
 
@@ -39,7 +39,7 @@ if DEBUG_MODE:
     config.run = True
     config.save = "bin"
     config.comments = True
-    config.onerror = 'abort'
+    config.onerror = None
 
 def main():
     print(f"Lord's Compiler Redux is working on '{config.file}'")
@@ -78,7 +78,7 @@ def main():
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)
-    print("Error in line {}:".format(err.line))
+    print(f"Error in line {err.line}:" if err.line is not None else f"Error in unknown line:")
     print(f"{err}")
 
 def on_profile_error(err):

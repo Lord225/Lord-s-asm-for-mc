@@ -9,13 +9,13 @@ def get_value(strage_format:str):
     if strage_format.isdecimal():
         return int(strage_format)
     elif len(strage_format[2:]) == 0:
-        raise error.UndefinedValue(strage_format)
+        raise error.ParserError(f"Value: '{strage_format}' cannot be parsed.")
     elif strage_format[:2] == "0x":
         return int(strage_format[2:],base=16)
     elif strage_format[:2] == "0b":
         return int(strage_format[2:],base=2)
     else:
-        raise error.UndefinedValue(strage_format)
+        raise error.ParserError(f"Value: '{strage_format}' cannot be parsed.")
 
 def smart_replace(line: str, From: str, To: str):
     line = re.sub("(?<![a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
