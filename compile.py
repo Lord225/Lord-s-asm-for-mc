@@ -4,7 +4,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Assebly language Compiler. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n Example: \n\t python compile.py --save bin --comments \n Compiles program.lor\n\n add --run to emulate compiler program')
 
@@ -12,7 +12,7 @@ parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
-parser.add_argument("-s", "--save", choices=["dec", "bin", "py"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
 > raw - Build source and save as binary with padding to halfbytes
@@ -34,13 +34,20 @@ parser.set_defaults(feature=False)
 parserargs = parser.parse_args()
 
 config.override_from_dict(vars(parserargs))
+if config.init is not None:
+    config.override_from_file(config.init)
 
 if DEBUG_MODE:
     config.run = True
     config.save = "bin"
     config.comments = True
     config.onerror = None
+    config.debug = True
 
+def show_warnings(context):
+    for warning in context['warnings']:
+        print(f"Warning: {warning}")
+        
 def main():
     print(f"Lord's Compiler Redux is working on '{config.file}'")
 
@@ -52,7 +59,10 @@ def main():
 
     # First pass, loads settings and profiles into context
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, progress_bar_name='Loading')
+    if config.show_warnings:
+        show_warnings(context)
 
+    # Update configs
     if 'profile_name' in context:
         config.override_from_dict(profile=context['profile_name'])
     if 'init' in context:
@@ -60,6 +70,8 @@ def main():
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
+    if config.show_warnings:
+        show_warnings(context)
 
     # Load profile and pass it to context
     profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
@@ -67,11 +79,15 @@ def main():
 
     # Process data using ouput from second pass.
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
+    if config.show_warnings:
+        show_warnings(context)
 
     # Compile and save
-    if config.save in ['bin', 'py', 'dec']:
-        output_compiled, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
-
+    if config.save in ['bin', 'py', 'dec', 'raw']:
+        compiled_output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
+        if config.show_warnings:
+            show_warnings(context)
+  
     # Emulation
     if config.run:
         print('Emulation is not avalible')
@@ -88,7 +104,7 @@ def on_profile_error(err):
 
 def other_error(err):
     print("*"*50)
-    print('Unhandeled compilig error:')
+    print('Other compilig error:')
     print(f'{err}')
 
 if __name__ == "__main__":

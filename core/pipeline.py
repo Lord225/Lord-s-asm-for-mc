@@ -52,6 +52,10 @@ def check_types(lines, stage):
         assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
 def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {}, progress_bar_name = None):
     data = start
+
+    if 'warnings' not in external:
+        external['warnings'] = list()
+
     def format_function(x):
         return str(x[1][0]) if x is not None else ''
 
@@ -105,7 +109,10 @@ def show_output(print, data, SPACE = ''):
         print(SPACE, '[')
         for line in data[:-1]:
             print(SPACEHERE, line)
-        print(SPACEHERE, data[-1],f'\n{SPACE}]')
+        if len(data) != 0:
+            print(SPACEHERE, data[-1],f'\n{SPACE}]')
+        else:
+            print(SPACEHERE,']')
     else:
         SPACEHERE = SPACE + ' '*2
         print(SPACE, "{")

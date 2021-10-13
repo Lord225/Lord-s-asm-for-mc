@@ -20,8 +20,10 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
                 parsed_token = parse.parse_label(expr_token, context['labels'])
             elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
                 parsed_token = expr_token
-            
-            if parsed_token == None:
+            else:
+                raise
+
+            if parsed_token is None:
                 return None
             args[pattern_token[1]] = parsed_token
     return args

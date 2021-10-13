@@ -2,6 +2,8 @@ import core.config as config
 import core.error as error
 import math
 
+from core.profile.profile import Profile
+
 def get_next_chunk(entry, minimal_offset):
     minimal = (None, ('None', -1, math.inf))
     for key, val in entry.items():
@@ -16,11 +18,35 @@ def find_key_by_value(dict: dict, value):
             output.append(key)
     return output
 
+def check_keywords_exists(entry, context):
+    profile: Profile = context['profile']
+    profilekeywords = set(profile.keywords)
+    entrykeywords = set(entry.keys())
+    
+    missing_entrypoints = profilekeywords-entrykeywords
+    missing_keywords = entrykeywords-profilekeywords
+
+    if len(missing_keywords) != 0:
+        msg = f"Keywords: {missing_keywords} are not defined in profile" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_keywords} is not defined in profile"
+        if config.rise_on_missing_keyword:
+            raise error.ParserError(msg) # bad one
+        else:
+            context['warnings'].append(msg)
+    if len(missing_entrypoints) != 0:
+        msg = f"Keywords: {missing_entrypoints} are defined in profile but not used" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_entrypoints} is defined in profile but never used"
+        if config.rise_on_missing_entrypoint:
+            raise error.ParserError(msg)
+        else:
+            context['warnings'].append(msg)
+
 def split_into_chunks(program, context):
     entry: dict = context['entry']
     labels: dict = context['labels']
     new_labels = dict()
     namespace = dict()
+    
+    check_keywords_exists(entry, context)
+
     try:
         entry = {chunk_name:(label_name, offset, labels[label_name]) for chunk_name, (label_name, offset) in entry.items()}
     except KeyError as err:
