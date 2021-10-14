@@ -13,6 +13,11 @@ def within_bounds(bit_size, value):
     max_val = 2**bit_size - 1
     return value <= max_val
 
+def assert_arguments_chunked(program, context):
+    for _, program_chunk in program.items():
+        program_chunk, _ = assert_arguments(program_chunk, context)
+    return program, context
+
 def assert_arguments(program, context):
     if not config.assert_argument_size:
         return program, context

@@ -35,6 +35,12 @@
                 }
             }
         },
+        "ADRESSING":
+        {
+            "mode":"packed",
+            "bin_len":8,
+            "offset":0
+        },
 
         "DEFINES":[
             "__PM1__"

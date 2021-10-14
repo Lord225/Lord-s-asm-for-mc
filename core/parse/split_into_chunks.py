@@ -39,10 +39,18 @@ def check_keywords_exists(entry, context):
         else:
             context['warnings'].append(msg)
 
+def get_adress_offset(current_line_obj, profile: Profile):
+    if profile.adressing.mode == 'align':
+        return max(profile.arguments_len.values())
+    elif profile.adressing.mode == 'packed':
+        return profile.arguments_len[list(current_line_obj.parsed_command.keys())[0]]
+
 def split_into_chunks(program, context):
     entry: dict = context['entry']
     labels: dict = context['labels']
-    new_labels = dict()
+    profile: Profile = context['profile']
+    physical_adresses = dict()
+    chunk_labels = dict()
     namespace = dict()
     
     check_keywords_exists(entry, context)
@@ -56,27 +64,35 @@ def split_into_chunks(program, context):
     chunk_name, current_chunk = get_next_chunk(entry, 0)
     chunk_name_next, current_chunk_next = get_next_chunk(entry, current_chunk[2])
 
-    current_chunk_index = 0
-
+    current_chunk_physical_adress = current_chunk[1]
+    current_chunk_adress = 1
+    
     for i, program_line in enumerate(program):
         i += 1
-        current_chunk_index += 1
 
         if i >= current_chunk_next[2]:
             if chunk_name_next is None:
                 break
             chunk_name, current_chunk = get_next_chunk(entry, current_chunk[2])
             chunk_name_next, current_chunk_next = get_next_chunk(entry, current_chunk[2])
-            current_chunk_index = 1
+            current_chunk_physical_adress = current_chunk[1]
+            current_chunk_adress = 1
 
         label = find_key_by_value(labels, i)
         if len(label) != 0:
             for lab in label:
-                new_labels[lab] = current_chunk_index
-            
+                physical_adresses[lab] = current_chunk_physical_adress
+                chunk_labels[lab] = current_chunk_adress
+        
+        program_line.physical_adress = current_chunk_physical_adress//profile.adressing.bin_len+profile.adressing.offset
         chunks[chunk_name].append(program_line)
-
-    context['chunked_labels'] = new_labels
+        
+        current_chunk_physical_adress += get_adress_offset(program_line, profile)
+        current_chunk_adress += 1
+    
+    context['physical_adresses'] = {key:val//profile.adressing.bin_len+profile.adressing.offset for key, val in physical_adresses.items()}
+    context['chunk_adreses'] = chunk_labels
     context['namespace'] = namespace
+    context['use_phisical_adresses'] = True
 
     return chunks, context

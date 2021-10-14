@@ -14,7 +14,8 @@ def parse_number(token):
     except:
         return None
 
-def parse_label(token, labels):
+def parse_label(token, context):
+    labels = context['physical_adresses'] if 'use_phisical_adresses' in context else context['labels']
     if token not in labels:
         return None
     return labels[token]

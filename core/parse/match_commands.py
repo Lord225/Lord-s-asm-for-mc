@@ -28,3 +28,8 @@ def find_commands(program, context):
         line_obj.mached_command = founded
 
     return program, context
+
+def find_comands_chunked(program, context):
+    for _, program_chunk in program.items():
+        program_chunk, _ = find_commands(program_chunk, context)
+    return program, context

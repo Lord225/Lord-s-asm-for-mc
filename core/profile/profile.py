@@ -1,5 +1,6 @@
 from enum import Enum, auto
 import json
+from jsmin import jsmin
 import core.config as config
 import core.error as error
 import importlib
@@ -8,7 +9,11 @@ import core.profile.patterns as patterns
 
 def load_json_profile(path):
     with open(path, "r") as file:
-        profile = json.load(file)
+        try:
+            file = jsmin(file.read())
+            profile = json.loads(file)
+        except Exception as err:
+            raise error.ProfileLoadError(f"Cannot Load json: {err}")
     return profile
 
 def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
@@ -40,8 +45,11 @@ class ProfileInfo:
         self.name = kwargs["Name"]
         self.arch = kwargs["Arch"]
         self.author = kwargs["Author"]
-
-
+class AdressingMode:
+    def __init__(self, kwargs: dict, profile):
+        self.mode = kwargs["ADRESSING"]["mode"] if "mode" in kwargs["ADRESSING"] else "align"
+        self.bin_len = kwargs["ADRESSING"]["bin_len"] if "bin_len" in kwargs["ADRESSING"] else 1 if self.mode == "packed" else max(profile.arguments_len.values())
+        self.offset = kwargs["ADRESSING"]["offset"] if "offset" in kwargs["ADRESSING"] else 0
 
 class Profile:
     def __init__(self, profile, emulator):
@@ -53,8 +61,10 @@ class Profile:
         self.info = None
         self.commands_definitions = None
         self.arguments = None
+        self.arguments_len = None
         self.defs = None
         self.keywords = None
+        self.adressing = None
 
         
         self.build_profile()
@@ -76,10 +86,12 @@ class Profile:
         self.commands_definitions = process_commands(raw_commandset)
     def __build_info(self):
         self.info = ProfileInfo(self.profile)
+        self.adressing = AdressingMode(self.profile, self)
     def __build_arguments(self):
         self.arguments = self.profile["ARGUMENTS"]["variants"]
         self.defs = self.profile["DEFINES"]
         self.keywords = self.profile["KEYWORDS"]
+        self.arguments_len = {name:sum((arg['size'] for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
 
     def __selfcheck(self):
         pass

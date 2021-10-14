@@ -27,10 +27,10 @@ def generate(program, context):
                         output_line[arg_name] = eval(process_request['eval'])
                     else:
                         raise error.ProfileLoadError(f"Binary map in '{name}'' cannot be resolved becouse of token: '{process_request}' with name '{arg_name}'") 
-
-
-
         line_obj.parsed_command = {cmd['command_layout']: output_line}
     return program, context
 
-
+def generate_chunked(program, context):
+    for _, program_chunk in program.items():
+        program_chunk, _ = generate(program_chunk, context)
+    return program, context

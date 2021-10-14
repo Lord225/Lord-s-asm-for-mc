@@ -34,14 +34,17 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
             ('find commands', parse.match_commands.find_commands),
             ('add debug data', parse.debug_heades.add_debug_metadata),
             ('generate values', parse.generate.generate),
-            ('assert argument sizes', parse.assert_arguments.assert_arguments)
+            ('assert argument sizes', parse.assert_arguments.assert_arguments),
+            ('split into chunks', parse.split_into_chunks.split_into_chunks),
+            ('find commands with physical addresses', parse.match_commands.find_comands_chunked),
+            ('generate values', parse.generate.generate_chunked),
+            ('assert argument sizes', parse.assert_arguments.assert_arguments_chunked),
         ]
     return pipeline
 
 def make_save_pipeline()  -> List[Tuple[str, Callable]]:
     pipeline = \
         [
-            ('split into chunks', parse.split_into_chunks.split_into_chunks),
             ('format', save.formatter.format_output),
             ('add comments', save.add_comments.add_comments),
             ('save', save.saver.save),

@@ -26,7 +26,7 @@ def add_comments(program, context):
         return program, context
     profile: Profile = context['profile']
     layouts = profile.arguments
-    labels = context['chunked_labels']
+    labels = context['chunk_adreses']
 
     for _, program_lines in program.items():
         if len(program_lines)==0:
@@ -36,5 +36,7 @@ def add_comments(program, context):
             line.formatted.extend(['']*(longest_layout-len(line.formatted)))
             line.formatted.append(generate_comment(line))
             line.formatted.append(get_line_labels(labels, i+1))
+            if config.show_adresses:
+                line.formatted.append(line.physical_adress if 'physical_adress' in line else "None")
 
     return program, context

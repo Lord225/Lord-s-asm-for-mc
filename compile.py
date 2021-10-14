@@ -4,7 +4,9 @@ import core
 import argparse
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
+
+#TODO const adress space vs packed vs
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Assebly language Compiler. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n Example: \n\t python compile.py --save bin --comments \n Compiles program.lor\n\n add --run to emulate compiler program')
 
@@ -33,9 +35,9 @@ parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
 
-config.override_from_dict(vars(parserargs))
 if config.init is not None:
     config.override_from_file(config.init)
+config.override_from_dict(vars(parserargs))
 
 if DEBUG_MODE:
     config.run = True
@@ -62,11 +64,16 @@ def main():
     if config.show_warnings:
         show_warnings(context)
 
+    
     # Update configs
     if 'profile_name' in context:
         config.override_from_dict(profile=context['profile_name'])
+    if config.init is not None:
+        config.override_from_file(config.init)
     if 'init' in context:
         config.override_from_file(context['init'])
+    config.override_from_dict(vars(parserargs))
+    
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
@@ -81,6 +88,7 @@ def main():
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
     if config.show_warnings:
         show_warnings(context)
+
 
     # Compile and save
     if config.save in ['bin', 'py', 'dec', 'raw']:
