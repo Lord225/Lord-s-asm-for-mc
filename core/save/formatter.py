@@ -50,7 +50,7 @@ def get_dec(program, context):
             line.append("{}".format(padbin(val, layout[name]["size"],prefix=False)))
             line.append("({})".format(paddec(val, 3," ")))
         return line
-def get_raw(program, context):
+def get_pad(program, context):
     profile: Profile = context['profile']
     layouts = profile.arguments
     parsed = program['parsed_command']
@@ -60,6 +60,19 @@ def get_raw(program, context):
         for name, val in args.items():
             line.append("{}".format(padbin(val, layout[name]["size"],prefix=False)))
         return wrap(''.join(line), 8)
+
+def get_raw(program, context):
+    profile: Profile = context['profile']
+    layouts = profile.arguments
+    parsed = program['parsed_command']
+    line = list()
+    for layout, args in parsed.items():
+        layout = layouts[layout]
+        for name, val in args.items():
+            line.append("{}".format(padbin(val, layout[name]["size"],prefix=False)))
+        values = wrap(''.join(line), 8)
+        return [int(val, base=2) for val in values]
+
 def format_output(program, context):
     if config.save == 'py':
         formatter_function, req_tabulate = get_py, False
@@ -67,10 +80,10 @@ def format_output(program, context):
         formatter_function, req_tabulate = get_bin, True
     elif config.save == 'dec':
         formatter_function, req_tabulate = get_dec, True
+    elif config.save == 'pad':
+        formatter_function, req_tabulate = get_pad, True
     elif config.save == 'raw':
         formatter_function, req_tabulate = get_raw, True
-    else:
-        raise
 
     for _, program_lines in program.items():
         for line in program_lines:

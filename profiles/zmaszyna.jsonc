@@ -11,7 +11,7 @@
                 // Commands 4-9
                 "static":
                 {
-                    "imm":{"size":10},
+                    "imm":{"size":11},
                     "r1":{"size":4},
                     "cmd":{"size":4}
                 },
@@ -53,7 +53,7 @@
                 // Commands 23-24
                 "StackStatic":
                 {
-                    "MEM":{"size":10},
+                    "MEM":{"size":11},
                     "padding":{"size":1},
                     "subcmd":{"size":3},
                     "cmd":{"size":4}
@@ -88,7 +88,7 @@
                     "Op":{"size":5}                    
                 }       
             }
-        },
+            },
         "ADRESSING":
         {
             "mode":"align",
@@ -120,7 +120,7 @@
                 }
             },
             "ld static":{
-                "pattern":"ld static {src} -> {dst}",
+                "pattern":"ld static({src},{dst})",
                 "emulator":"ld_static",  
                 "command_cost":1,
                 "command_layout": "static",

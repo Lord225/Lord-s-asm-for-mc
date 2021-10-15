@@ -1,10 +1,11 @@
+from core import emulate
 import core.config as config
 import core.error as error
 import core
 import argparse
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 #TODO const adress space vs packed vs
 
@@ -14,12 +15,13 @@ parser.add_argument("-f", "--file", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
-parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
-> raw - Build source and save as binary with padding to halfbytes
+> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
+> raw - Build source and save as decimal representation of bytes
 Default: None (will not save)
 """)
 parser.add_argument('-c','--comments', dest='comments', action='store_true')
@@ -39,12 +41,16 @@ if config.init is not None:
     config.override_from_file(config.init)
 config.override_from_dict(vars(parserargs))
 
-if DEBUG_MODE:
-    config.run = True
-    config.save = "bin"
-    config.comments = True
-    config.onerror = None
-    config.debug = True
+def override_debug():
+    if DEBUG_MODE:
+        config.override_from_dict(
+            run = True,
+            save = "pad",
+            comments = True,
+            onerror = None,
+            debug = True,
+            logmode = True)
+override_debug()
 
 def show_warnings(context):
     for warning in context['warnings']:
@@ -56,6 +62,7 @@ def main():
     load_preproces_pipeline = core.pipeline.make_preproces_pipeline()
     parse_pipeline = core.pipeline.make_parser_pipeline()
     save_pipeline = core.pipeline.make_save_pipeline()
+    format_pipeline = core.pipeline.make_format_pipeline()
     
     start_file = config.file
 
@@ -64,7 +71,6 @@ def main():
     if config.show_warnings:
         show_warnings(context)
 
-    
     # Update configs
     if 'profile_name' in context:
         config.override_from_dict(profile=context['profile_name'])
@@ -73,7 +79,7 @@ def main():
     if 'init' in context:
         config.override_from_file(context['init'])
     config.override_from_dict(vars(parserargs))
-    
+    override_debug()
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
@@ -91,14 +97,16 @@ def main():
 
 
     # Compile and save
-    if config.save in ['bin', 'py', 'dec', 'raw']:
-        compiled_output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
+    if config.save in ['bin', 'py', 'dec', 'raw', 'pad']:
+        output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
         if config.show_warnings:
             show_warnings(context)
   
     # Emulation
     if config.run:
-        print('Emulation is not avalible')
+        config.override_from_dict(save = 'raw', comments = 'False')
+        output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
+        emulate.emulator.emulate(output, context)
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)

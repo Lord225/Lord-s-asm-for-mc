@@ -24,6 +24,4 @@ def override_from_file(paths):
     config.read(paths)
 
 def override_from_dict(args={}, **kwargs):
-    for key, new_val in {**args, **kwargs}.items():
-        if key in config[DEFAULT_SECTION]:
-            config.set(DEFAULT_SECTION, key, str(new_val))
+    config.read_dict({DEFAULT_SECTION:{key: str(val) for key, val in {**args, **kwargs}.items() if val is not None}})
