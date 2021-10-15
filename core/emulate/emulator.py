@@ -84,7 +84,7 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
             regs = machine.exec_command(None, 'get_regs_ref', [])
             print(regs)
     elif command[0] == 'log':
-        debug.log(' '.join(command[1:]))
+        debug.log(f"{machine.get_current_pos()}  {' '.join(command[1:])}")
     elif '(' in command and ')' in command:
         cmd = command[0]
         start = command.index('(')
@@ -121,14 +121,11 @@ def emulate(program, context):
             for instruction in (i for i in debug_instructions[pos] if 'pre' in i): 
                 execute_debug_command(instruction['pre'], machine, profile)
 
-        output = machine.next_tick()
+        machine.next_tick()
         
         if pos in debug_instructions:
             for instruction in (i for i in debug_instructions[pos] if 'post' in i): 
                 execute_debug_command(instruction['post'], machine, profile)
-
-        if output is not None and config.logmode:
-            print(output)
 
     print("Emulation finished")
 

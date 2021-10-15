@@ -173,8 +173,8 @@
                 "bin":
                 {
                     "CU":5,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "lsh reg reg":{
@@ -190,8 +190,8 @@
                 "bin":
                 {
                     "CU":6,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "and reg reg":{
@@ -207,8 +207,8 @@
                 "bin":
                 {
                     "CU":7,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "or reg reg":{
@@ -224,8 +224,8 @@
                 "bin":
                 {
                     "CU":8,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "xor reg reg":{
@@ -241,8 +241,8 @@
                 "bin":
                 {
                     "CU":9,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "jump equal reg":{
@@ -278,8 +278,8 @@
                 "bin":
                 {
                     "CU":11,
-                    "r1":"arg1",
-                    "r2":"arg2",
+                    "r1":"arg2",
+                    "r2":"arg1",
                     "n1":"arg3"
                 }
             },
@@ -313,8 +313,8 @@
                 "bin":
                 {
                     "CU":12,
-                    "r1":"arg1",
-                    "r2":"arg2"
+                    "r1":"arg2",
+                    "r2":"arg1"
                 }
             },
             "mov ram reg":{

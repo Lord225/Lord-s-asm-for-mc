@@ -22,7 +22,6 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         
     def next_tick(self,) -> Optional[str]:
         self.parse_command()
-        return None
 
     def write_memory(self, chunk_name: str, type: emulate.DataTypes, data: dict):
         for adress, value in data.items():
@@ -41,6 +40,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         cu = int(low[4:])
         r1 = int(low[:2])
         r2 = int(low[2:4])
+
         if cu == 0:
             r1r2 = int(low[:4])
             if r1r2 == 0:
@@ -71,9 +71,9 @@ class PM1_EMULATOR(emulate.EmulatorBase):
                 n1 = int(self.RAM[self.ROM_COUNTER])
                 self.mov_const_reg(n1, r1)
             elif r2 == 1:
-                raise
+                self.alu_reg_inc(r1)
             elif r2 == 2:
-                raise
+                self.alu_reg_dec(r1)
             elif r2 == 3:
                 raise
         elif cu == 2:
@@ -92,7 +92,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
             self.alu_reg_reg_or(r2, r1)
         elif cu == 9:
             self.alu_reg_reg_xor(r2, r1)
-        elif cu == 10:
+        elif cu == 10:                 #JUMP EQUAL
             zf, _ = self.alu_reg_reg_cmp(r2, r1)
             if zf == True:
                 self.inc_counter()
@@ -100,8 +100,8 @@ class PM1_EMULATOR(emulate.EmulatorBase):
                 self.jump(n1)
                 return
             else:
-                self.inc_counter(2)
-        elif cu == 11:
+                self.inc_counter()
+        elif cu == 11:                #JUMP GREATER
             zf, of = self.alu_reg_reg_cmp(r2, r1)
             if zf == False and of == True:
                 self.inc_counter()
@@ -109,7 +109,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
                 self.jump(n1)
                 return
             else:
-                self.inc_counter(2)
+                self.inc_counter()
         elif cu == 12:
             self.read_reg_pointer(r2, r1)
         elif cu == 13:
@@ -119,7 +119,9 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         elif cu == 14:
             self.write_pointer_reg(r1, r2)
         elif cu == 15:
-            self.write_const_reg(r1, r2)
+            self.inc_counter()
+            n1 = self.RAM[self.ROM_COUNTER]
+            self.write_const_reg(r1, n1)
         else:
             raise error.EmulationError("Unreachable")
         
@@ -217,7 +219,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     def alu_reg_reg_cmp(self, _from_a, _from_b):
         _value_a = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned')
         _value_b = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned')
-        _value, of = ops.overflowing_sub(_value_a, _value_b)
+        _value, of = ops.overflowing_sub(_value_b, _value_a)
         zf = int(_value) == 0
         return zf, of
 
@@ -232,29 +234,23 @@ class PM1_EMULATOR(emulate.EmulatorBase):
             raise error.EmulationError("rom stack overflow")
         self.jump(_target_true)
 
-    def shut(self, ):
+    def shut(self):
         pass
 
     def jump_rednet(self, _target_true):
         pass
 
-    def jump_overflow_const_reg(self, _target_true):
-        if self.ALU_FLAGS["overflow"]:
-            self.jump(_target_true)
-    def jump_zero_const_reg(self, _target_true):
-        if self.ALU_FLAGS["zero"]:
-            self.jump(_target_true)
     def jump_flag(self, _target_true):
         FLAG = self.RAM[233]
-        if FLAG&128 != 0:
+        if FLAG & 128 != 0:
             self.jump_overflow_const_reg(_target_true)
-        elif FLAG&64 != 0:
+        elif FLAG & 64 != 0:
             pass
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
         addres = self.ROMStack.pop()
-        self.jump(addres)      
+        self.jump(addres)
     
     def interutp(self, _value_a, mode):
         pass
