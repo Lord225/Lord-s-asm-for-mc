@@ -45,6 +45,7 @@ class ProfileInfo:
         self.name = kwargs["Name"]
         self.arch = kwargs["Arch"]
         self.author = kwargs["Author"]
+        self.speed = kwargs["time_per_cycle"]
 class AdressingMode:
     def __init__(self, kwargs: dict, profile):
         self.mode = kwargs["ADRESSING"]["mode"] if "mode" in kwargs["ADRESSING"] else "align"

@@ -5,6 +5,7 @@ from core.profile.profile import Profile
 import inspect
 import abc
 import typing
+import time
 import enum
 
 class DataTypes(enum.Enum):
@@ -21,6 +22,10 @@ class EmulatorBase(abc.ABC):
 
     @abc.abstractmethod
     def is_running(self) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def get_machine_cycles(self) -> int:
         pass
 
     @abc.abstractmethod
@@ -86,13 +91,19 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
     elif command[0] == 'log':
         debug.log(f"{machine.get_current_pos()}  {' '.join(command[1:])}")
     elif '(' in command and ')' in command:
-        cmd = command[0]
+        cmd: str = command[0]
         start = command.index('(')
         end = command.index(')')
         if start != 1:
             raise error.EmulationError(f"Bad debug cmd: {command}")
         args = [token for token in command[(start+1):end] if token != ',']
-        machine.exec_command(None, cmd, args)
+
+        if cmd.startswith("ram") and len(args) == 2:
+            min_adress, max_adress = int(args[0]), int(args[1])
+            ram = machine.exec_command(None, 'get_ram_ref', [])
+            debug.ram_display(ram, profile.adressing.bin_len, min_adress, max_adress)
+        else:
+            machine.exec_command(None, cmd, args)
 
 def emulate(program, context):
     profile: Profile = context["profile"]
@@ -109,11 +120,16 @@ def emulate(program, context):
     print()
     print("Writing data to device")
 
-    debug_instructions = write_program(program, context, machine)
+    write_program(program, context, machine)
     write_data(program, context, machine)
 
+    debug_instructions = context["debug_instructions"]
+
     print("Starting Emulation")
-    # Load data from #data
+    emulate_start_time = time.thread_time_ns()
+    emulation_cycles = 0
+    machine_cycles = 0
+
     while machine.is_running():
         pos = machine.get_current_pos()
         
@@ -126,8 +142,15 @@ def emulate(program, context):
         if pos in debug_instructions:
             for instruction in (i for i in debug_instructions[pos] if 'post' in i): 
                 execute_debug_command(instruction['post'], machine, profile)
-
+        
+        emulation_cycles += 1
+        machine_cycles += machine.get_machine_cycles()
+    emulate_end_time = time.thread_time_ns()
+    
     print("Emulation finished")
+    print(f"Took: {(emulate_end_time-emulate_start_time)/1000000.0}ms")
+    print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}μs")
+    print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/profile.info.speed:0.1f}s")
 
 def write_program(program, context, machine):
     debug_instructions = dict()
@@ -139,7 +162,7 @@ def write_program(program, context, machine):
         machine.write_memory(chunk, DataTypes.PROGRAM, packed_instructions)
         for adress, val in debug.items():
             debug_instructions[adress] = val
-    return debug_instructions
+    context['debug_instructions'] = debug_instructions
 
 def write_data(program, context, machine):
     data: dict = context['data']

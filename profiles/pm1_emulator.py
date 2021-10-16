@@ -13,14 +13,20 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         self.ROM_COUNTER = 0
         self.ROMStack = []
         self.is_running_flag = True
+        self.cycles = 0
 
     def get_current_pos(self):
         return self.ROM_COUNTER
     
     def inc_counter(self, value=1):
+        self.cycles += 1
         self.ROM_COUNTER = (self.ROM_COUNTER+value)%255
-        
+    
+    def get_machine_cycles(self) -> int:
+        return self.cycles
+
     def next_tick(self,) -> Optional[str]:
+        self.cycles = 0
         self.parse_command()
 
     def write_memory(self, chunk_name: str, type: emulate.DataTypes, data: dict):
@@ -135,58 +141,69 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     def mov_const_reg(self, _value, _to):
         self.Regs[_to] = _value
 
+    @emulate.log_disassembly(format='mov reg[{_from}], ram[reg[{_to_pointer}]]')
     def write_pointer_reg(self, _from, _to_pointer):
         _value = self.Regs[_from]
         _adress = self.Regs[_to_pointer]
         
         self.RAM[_adress] =  _value
 
+    @emulate.log_disassembly(format='mov reg[{_from}], ram[{_adress}]')
     def write_const_reg(self, _from, _adress):
         _value = self.Regs[_from]
         self.RAM[_adress] =  _value
 
+    @emulate.log_disassembly(format='mov reg[{_from}], ram[reg[{_to}]]')
     def read_reg_pointer(self, _from, _to):
         _adress = self.Regs[_from]
         self.Regs[_to] = self.RAM[_adress]   
 
+    @emulate.log_disassembly(format='mov ram[{_adress}], ram[{_to}]')
     def read_ram_reg(self, _adress, _to):
         self.Regs[_to] = self.RAM[_adress]
     
+    @emulate.log_disassembly(format='mov reg[{_from}], ram[{_adress}]')
     def write_reg_ram(self, _from, _adress):
         _value = self.Regs[_from]
         self.RAM[_adress] =  _value
 
     #ALU OPERATIONS
+    @emulate.log_disassembly(format='or reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_or(self, _from_a, _from_b):
         _value = self.Regs[_from_b]
         _value = _value | self.Regs[_from_a]
 
         self.Regs[_from_b] = _value
 
+    @emulate.log_disassembly(format='and reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_and(self, _from_a, _from_b):
         _value = self.Regs[_from_b]
         _value = _value & self.Regs[_from_a]
 
         self.Regs[_from_b] = _value
 
+    @emulate.log_disassembly(format='xor reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_xor(self, _from_a, _from_b):
         _value = self.Regs[_from_b]
         _value = _value ^ self.Regs[_from_a]
 
         self.Regs[_from_b] = _value
 
+    @emulate.log_disassembly(format='rsh reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_rsh(self, _from_a, _to_b):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value, of = ops.underflowing_rsh(_value, 1)  #TODO
 
         self.Regs[_to_b] = _value
 
+    @emulate.log_disassembly(format='lsh reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_lsh(self, _from_a, _to_b):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value, of = ops.overflowing_lsh(_value, 1)  #TODO
         
         self.Regs[_to_b] = int(_value)
 
+    @emulate.log_disassembly(format='add reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_add(self, _from_a, _from_b):
         _value_a = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value_b = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned') 
@@ -195,6 +212,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
         self.Regs[_from_b] = int(_value)
 
+    @emulate.log_disassembly(format='inc reg[{_from_a}]')
     def alu_reg_inc(self, _from_a):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
 
@@ -202,6 +220,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
         self.Regs[_from_a] = _value
 
+    @emulate.log_disassembly(format='dec reg[{_from_a}]')
     def alu_reg_dec(self, _from_a):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
 
@@ -209,6 +228,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
         self.Regs[_from_a] = _value
 
+    @emulate.log_disassembly(format='sub reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_sub(self, _from_a, _from_b):
         _value_a = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned')
         _value_b = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned')
@@ -216,6 +236,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
         self.Regs[_from_b] = _value
     
+    @emulate.log_disassembly(format='cmp reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_cmp(self, _from_a, _from_b):
         _value_a = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned')
         _value_b = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned')
@@ -224,9 +245,11 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         return zf, of
 
     #JUMPS
+    @emulate.log_disassembly(format='jump {_target_true}')
     def jump(self, _target_true):
         self.ROM_COUNTER = _target_true
 
+    @emulate.log_disassembly(format='call {_target_true}')
     def call(self, _target_true):
         if len(self.ROMStack) < 15:
             self.ROMStack.append(self.ROM_COUNTER)
@@ -234,27 +257,33 @@ class PM1_EMULATOR(emulate.EmulatorBase):
             raise error.EmulationError("rom stack overflow")
         self.jump(_target_true)
 
+    @emulate.log_disassembly(format='shut')
     def shut(self):
         pass
-
+    
     def jump_rednet(self, _target_true):
         pass
 
+    @emulate.log_disassembly(format='jf {_target_true}')
     def jump_flag(self, _target_true):
         FLAG = self.RAM[233]
         if FLAG & 128 != 0:
             self.jump_overflow_const_reg(_target_true)
         elif FLAG & 64 != 0:
             pass
+
+    @emulate.log_disassembly(format='ret')
     def ret(self):
         if len(self.ROMStack) == 0:
             raise error.StackUnderFlowError("ROM")
         addres = self.ROMStack.pop()
         self.jump(addres)
     
+    @emulate.log_disassembly(format='int {_value_a}')
     def interutp(self, _value_a, mode):
         pass
 
+    @emulate.log_disassembly(format='cls')
     def clear_screen(self):
         pass
     
@@ -262,6 +291,12 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         vals = self.RAM[0xF0:0xFF]
         vals = [chr(x if x > 32 and x < 127 else 0) for x in vals]
         print('ASCII: ', ''.join(vals))
+
+    def get_keyboard(self):
+        keyboard_input = input("Czekam na interakcje... ")
+        if keyboard_input == 'enter':
+            keyboard_input = '\n'
+        self.RAM[0xE0] = ord(keyboard_input[0])
 
     def get_ram_ref(self):
         return self.RAM

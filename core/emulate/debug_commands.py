@@ -3,8 +3,9 @@ import core.error as error
 import core.save.formatter as formatter
 
 def breakpoint():
-    print("breakpoint")
-    input()
+    if not config.disable_breakpoints:
+        print("breakpoint")
+        input()
 
 def ram_display(ram, word_size, start, end):
     print(
@@ -14,7 +15,9 @@ def ram_display(ram, word_size, start, end):
             subrows=config.debug_ram_subrows_count,
             ADRESS_AS_HEX = config.debug_ram_adress_as_hex,
             VALUE_AS = config.debug_ram_values_mode,
-            ADD_ASCII_VIEW = config.debug_ram_add_ascii_view
+            ADD_ASCII_VIEW = config.debug_ram_add_ascii_view,
+            start = start,
+            end = end
         )
     )
 def log(message):
