@@ -5,7 +5,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 #TODO const adress space vs packed vs
 
@@ -122,6 +122,7 @@ def other_error(err):
     print("*"*50)
     print('Other compilig error:')
     print(f'{err}')
+
 
 if __name__ == "__main__":
     if config.CPYTHON_PROFILING:

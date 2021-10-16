@@ -142,7 +142,10 @@ def write_program(program, context, machine):
     return debug_instructions
 
 def write_data(program, context, machine):
-    pass
+    data: dict = context['data']
+
+    machine.write_memory(None, DataTypes.DATA, data)
+
         
         
         

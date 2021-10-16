@@ -1,12 +1,12 @@
+from tkinter.tix import DirTree
 from typing import Dict, List, Tuple
 import core.error as error
 import core.config as config
 import core.parse.base as parser_base
 
-
-
 def get_metadata(program, context):
-    context['entry'] = {}
+    context['entry'] = dict()
+    context['data'] = dict()
     for program_line in program:
         line: str = program_line.line
         if line.startswith("#profile"):
@@ -34,6 +34,29 @@ def get_metadata(program, context):
             except:
                 raise error.PreprocesorError(program_line.line_index_in_file, f"Expected structure '#global <NAME> <LABEL NAME> <OFFSET>' got: '{line}'")
             context['entry'][chunk_name] = (label_name, int(offset))
+        elif line.startswith("#data"):
+            splited = line.split(" ")
+            ADRESS_START = -1
+            try:
+                ADRESS_START = int(splited[1], base=0)
+            except ValueError:
+                raise error.PreprocesorError("Canno't interpretate datablock: {}".format(line))
+            start = line.find('"')
+            end = line.rfind('"')
+            if start != -1 or end != -1:
+                if start == -1 or end == -1:
+                    raise error.PreprocesorError("String hasn't been close or open")
+                if start != end:
+                    data = [ord(x) for x in line[start+1:end]]
+                else:
+                    raise error.PreprocesorError("String hasn't been close or open")
+            else:
+                data_raw = ''.join(splited[2:])
+                if len(data_raw) == 0:
+                    raise error.PreprocesorError("Datablock doesn't provide data.")
+                data = [int(x, base=0) for x in data_raw.split(',')]
+            for index, value in enumerate(data):
+                context['data'][index+ADRESS_START] = value
     return program, context
 
 KNOWON_PREPROCESOR_TOKENS = \
@@ -46,6 +69,7 @@ KNOWON_PREPROCESOR_TOKENS = \
     "#macro",
     "#endmacro",
     "#global",
+    "#data",
 ]
 
 DEBUG_TOKEN = "#debug"
