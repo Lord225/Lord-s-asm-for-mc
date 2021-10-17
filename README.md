@@ -36,9 +36,7 @@ format z jakim ma zostać zapisana binarka.
 * py  - surowy zapis pythona
 Domyślnie: None (Nie wykona zapisu)
 ### -c --comments
-Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z komendami assemblera.
-Na przykład:
-```0000 0000 0000 0000 | mov 0, reg[0]```
+Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
 Domyślnie: false
 ### -r --run
 Czy program ma zostać zemulowany
