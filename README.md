@@ -14,9 +14,9 @@ python compile.py --run --logs
 ```
 Skompiluj inny plik niż domyślny, zapisz z inną nazwą
 ```
-python compile.py --file src/nazwa_pliku.lor --outfile compiled/output.txt --save bin
+python compile.py -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
 ```
-Zapisz jako pythonowy dict
+Zapisz jako json
 ```
 python compile.py --save py
 ```
