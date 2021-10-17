@@ -40,13 +40,11 @@ if config.init is not None:
     config.override_from_file(config.init)
 config.override_from_dict(vars(parserargs))
 
-
-
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = True,
-            save = "pad",
+            run = False,
+            save = "py",
             comments = True,
             onerror = None,
             debug = True,
@@ -103,7 +101,11 @@ def main():
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
         if config.show_warnings:
             show_warnings(context)
-  
+        print()
+        print("Output files:")
+        SPACE = " "*4
+        for chunk, filename in context['outfiles'].items():
+            print(SPACE, chunk, filename)
     # Emulation
     if config.run:
         config.override_from_dict(save = 'raw', comments = 'False')

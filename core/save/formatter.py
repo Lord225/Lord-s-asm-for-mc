@@ -16,8 +16,10 @@ def paddec(x, pad, fill = "0"):
 
 def get_py(program, context):
     parsed = program['parsed_command']
-    meta = dict()
-    return str({'data':parsed, 'meta':meta})
+    meta = {'mached': program['mached_command']}
+    if 'debug' in program:
+        meta['debug'] = program['debug']
+    return {'data':parsed, 'meta':meta, 'adress':program['physical_adress']}
 
 def get_bin(program, context):
     profile: Profile = context['profile']
