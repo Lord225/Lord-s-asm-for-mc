@@ -6,7 +6,7 @@ Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposob�
 
 Uruchom i zapisz.
 ```
-python compile.py --run --comments --save bin 
+python compile.py --run --comments --save pad 
 ```
 Uruchom ze wszystkimi narzędziami do debugowwania
 ```
