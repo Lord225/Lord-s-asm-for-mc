@@ -6,7 +6,7 @@ Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposob�
 
 Uruchom i zapisz.
 ```
-python compile.py --run --comments --save bin 
+python compile.py --run --comments --save pad 
 ```
 Uruchom ze wszystkimi narzędziami do debugowwania
 ```
@@ -14,18 +14,18 @@ python compile.py --run --logs
 ```
 Skompiluj inny plik niż domyślny, zapisz z inną nazwą
 ```
-python compile.py --file src/nazwa_pliku.lor --outfile compiled/output.txt --save bin
+python compile.py -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
 ```
-Zapisz jako pythonowy dict
+Zapisz jako json
 ```
 python compile.py --save py
 ```
 ## ArgParser
-### -i
-Nazwa pliku z programem, 
+### -i --input
+Ścieżka pliku wejściowego z programem, 
 Domyślnie src/program.lor
-### -o
-Nazwa pliku wynikowego. Jeżeli ma zostać zapisane w wielu plikach, na końcu zostanie dołączona informacja z którego rdzenia jest to kod na przykład `compiled_CORE0.txt` zamiast `compiled.txt`
+### -o --output
+Ściezka pliku wyjściowego. Do nazwy zostanie dodana nazwa entrypoint'a.
 Domyślnie: compiled/compiled.txt
 ### -s --save
 format z jakim ma zostać zapisana binarka.
@@ -36,12 +36,10 @@ format z jakim ma zostać zapisana binarka.
 * py  - surowy zapis pythona
 Domyślnie: None (Nie wykona zapisu)
 ### -c --comments
-Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z komendami assemblera.
-Na przykład:
-```0000 0000 0000 0000 | mov 0, reg[0]```
+Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
 Domyślnie: false
 ### -r --run
-Czy program ma zostać zemulowany
+Uruchom emulacje
 ### --logs
-Czy emulator ma pokazywać w konsoli wszystkie komendy i skoki.
+Czy podczas emulacji mają się wyświetlać operacje procesora. (nie wpływa na komendy debugowania)
 Domyślnie: false
