@@ -21,10 +21,10 @@ Zapisz jako pythonowy dict
 python compile.py --save py
 ```
 ## ArgParser
-### -i
+### -i --input
 Nazwa pliku z programem, 
 Domyślnie src/program.lor
-### -o
+### -o --output
 Nazwa pliku wynikowego. Jeżeli ma zostać zapisane w wielu plikach, na końcu zostanie dołączona informacja z którego rdzenia jest to kod na przykład `compiled_CORE0.txt` zamiast `compiled.txt`
 Domyślnie: compiled/compiled.txt
 ### -s --save
