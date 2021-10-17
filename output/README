@@ -1,0 +1,2 @@
+Default Output directory
+Specify it in settings under 'outfile' field or add -o or --outfile to args

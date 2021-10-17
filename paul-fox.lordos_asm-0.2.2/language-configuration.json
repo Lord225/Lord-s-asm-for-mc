@@ -18,5 +18,11 @@
 		{ "open": "\"", "close": "\"", "notIn": ["string"] },
 		{ "open": "/*", "close": " */", "notIn": ["string"] },
 		{ "open": "MODULE", "close": "END", "notIn": ["string", "comment"]}
-	]
+	],
+	"folding": {
+		"markers": {
+		  "start": "(?:^\\s*)(#ifdef|#ifndef)",
+		  "end": "(?:^\\s*)(#endif|#else)"
+		}
+	  }
 }

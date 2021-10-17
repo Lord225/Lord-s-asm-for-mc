@@ -1,0 +1,160 @@
+{
+    "CPU":
+    {
+        "Name": "ZMASZYNA",
+        "Arch": "ZMASZYNA",
+        "Author": "Acerixx",
+        "emulator":"zmaszyna",
+        
+        "ARGUMENTS":{
+            "variants":{
+                // Commands 4-9
+                "static":
+                {
+                    "imm":{"size":11},
+                    "r1":{"size":4},
+                    "cmd":{"size":4}
+                },
+                // Commands 10-16
+                "floats":
+                {
+                    "regdst":{"size":4},
+                    "regA":{"size":4},
+                    "regB":{"size":4},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Command 17
+                "InvokeGPU":
+                {
+                    "adress":{"size":9},
+                    "padding":{"size":3},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Commands 18-19
+                "LoadStore":
+                {
+                    "regdst":{"size":4},
+                    "regSrc":{"size":4},
+                    "regPtr":{"size":4},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Commands 20-22
+                "JumpPtr":
+                {
+                    "OP":{"size":3},
+                    "padding":{"size":5},
+                    "regPtr":{"size":4},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Commands 23-24
+                "StackStatic":
+                {
+                    "MEM":{"size":11},
+                    "padding":{"size":1},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Command 25
+                "Return":
+                {
+                    "padding1":{"size":4},
+                    "OP":{"size":3},
+                    "padding2":{"size":2},
+                    "subsubcmd":{"size":3},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                // Command 26-27
+                "StackReg":
+                {
+                    "regDst":{"size":4},
+                    "regSrc":{"size":4},
+                    "padding":{"size":1},
+                    "subsubcmd":{"size":3},
+                    "subcmd":{"size":3},
+                    "cmd":{"size":4}
+                },
+                "ALU":
+                {
+                    "regDst":{"size":4},
+                    "regA":{"size":4},
+                    "regB":{"size":4},
+                    "IMM_NEG":{"size":1},
+                    "PFLAG":{"size":1},
+                    "Op":{"size":5}                    
+                }       
+            }
+            },
+        "ADRESSING":
+        {
+            "mode":"align",
+            "bin_len":18,
+            "offset":0
+        },
+
+        "DEFINES":[
+            "__ZMASZYNA__"
+        ],
+        "KEYWORDS":[
+            "CORE0"
+        ],
+        "COMMANDS":{
+            "stp":{
+                "pattern":"stp",
+                "emulator":"stp",
+                "command_cost":1,
+                "command_layout": "static",
+
+                "args":
+                {
+                },
+                "bin":
+                {
+                    "imm":0,
+                    "r1":0,
+                    "cmd":0
+                }
+            },
+            "ld static":{
+                "pattern":"ld static({src},{dst})",
+                "emulator":"ld_static",  
+                "command_cost":1,
+                "command_layout": "static",
+
+                "args":
+                {
+                    "src":"num",
+                    "dst":"num"
+                },
+                "bin":
+                {
+                    "imm":"src",
+                    "r1":"dst",
+                    "cmd":8
+                }
+            },
+            "st static":{
+                "pattern":"st static {dst} <- {src}",
+                "emulator":"st_static",
+                "command_cost":1,
+                "command_layout": "static",
+
+                "args":
+                {
+                    "dst":"num",
+                    "src":"num"
+                },
+                "bin":
+                {
+                    "imm":"dst",
+                    "r1":"src",
+                    "cmd":8
+                }
+            }
+        }
+    }
+}
