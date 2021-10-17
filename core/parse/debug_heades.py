@@ -7,10 +7,10 @@ def find_closest_command(program, debug_command):
     best = min(distances, key = lambda x: abs(x[1]))
     return best
 
+
 def tokenize_debug_comman(debug):
     _, _, *args = tokenize.remove_meaningless_tokens(tokenize.tokienize_line(debug.line))
     return args
-
 
 
 def add_debug_metadata(program, context):
@@ -29,6 +29,7 @@ def add_debug_metadata(program, context):
 
 def generate_debug_command(line_obj):
     return ['log', line_obj.line]
+
 
 def add_debug_command_logging(program, context):
     if not config.logmode or config.use_disassembly_as_logs:
