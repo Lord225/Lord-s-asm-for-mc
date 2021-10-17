@@ -40,16 +40,20 @@ class EmulatorBase(abc.ABC):
     def exec_command(self, chunk_name: str, method_name: str, args: typing.List) -> typing.Any:
         pass
 
+GLOBAL_CURRENT_ADRESS = 0
 
 def log_disassembly(**kwargs):
-    if config.use_disassembly_as_logs:
+    global GLOBAL_CURRENT_ADRESS
+    if config.logmode and config.use_disassembly_as_logs:
         def params(func):
+            global GLOBAL_CURRENT_ADRESS
             format = str(kwargs['format']) if 'format' in kwargs else func.__name__ 
             spec = inspect.getfullargspec(func).args
 
             def wrapper(*args, **kwargs):
+                global GLOBAL_CURRENT_ADRESS
                 formated = format.format_map({name: value for name, value in zip(spec, args)})
-                print(formated)
+                print(GLOBAL_CURRENT_ADRESS, formated)
                 return func(*args, **kwargs)
             return wrapper
     else:
@@ -78,6 +82,9 @@ def pack_adresses(instructions):
     return output
 
 def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile):
+    if config.disable_debug:
+        return
+        
     if len(command) == 1:
         command = command[0]
         if command.lower() == 'break':
@@ -106,6 +113,8 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
             machine.exec_command(None, cmd, args)
 
 def emulate(program, context):
+    global GLOBAL_CURRENT_ADRESS
+    
     profile: Profile = context["profile"]
     emulator: EmulatorBase = profile.emul
 
@@ -132,7 +141,9 @@ def emulate(program, context):
 
     while machine.is_running():
         pos = machine.get_current_pos()
-        
+        GLOBAL_CURRENT_ADRESS = pos
+
+
         if pos in debug_instructions:
             for instruction in (i for i in debug_instructions[pos] if 'pre' in i): 
                 execute_debug_command(instruction['pre'], machine, profile)
@@ -160,6 +171,7 @@ def write_program(program, context, machine):
         packed_instructions = pack_adresses(instructuons)
 
         machine.write_memory(chunk, DataTypes.PROGRAM, packed_instructions)
+
         for adress, val in debug.items():
             debug_instructions[adress] = val
     context['debug_instructions'] = debug_instructions
