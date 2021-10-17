@@ -40,6 +40,8 @@ if config.init is not None:
     config.override_from_file(config.init)
 config.override_from_dict(vars(parserargs))
 
+
+
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
@@ -79,6 +81,7 @@ def main():
         config.override_from_file(context['init'])
     config.override_from_dict(vars(parserargs))
     override_debug()
+    
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')

@@ -296,6 +296,16 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         keyboard_input = input("Czekam na interakcje... ")
         if keyboard_input == 'enter':
             keyboard_input = '\n'
+        if len(keyboard_input) == 0:
+            return
+        self.RAM[0xE0] = ord(keyboard_input[0])
+
+    def insert_keyboard(self, val):
+        keyboard_input = val
+        if keyboard_input == 'enter':
+            keyboard_input = '\n'
+        if len(keyboard_input) == 0:
+            return
         self.RAM[0xE0] = ord(keyboard_input[0])
 
     def get_ram_ref(self):

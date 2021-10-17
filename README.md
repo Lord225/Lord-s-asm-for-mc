@@ -21,17 +21,18 @@ Zapisz jako pythonowy dict
 python compile.py --save py
 ```
 ## ArgParser
-### -f --file
+### -i
 Nazwa pliku z programem, 
 Domyślnie src/program.lor
-### -o --outfile
+### -o
 Nazwa pliku wynikowego. Jeżeli ma zostać zapisane w wielu plikach, na końcu zostanie dołączona informacja z którego rdzenia jest to kod na przykład `compiled_CORE0.txt` zamiast `compiled.txt`
 Domyślnie: compiled/compiled.txt
 ### -s --save
 format z jakim ma zostać zapisana binarka.
 * dec - argumenty zarówno w systemie dziesiętnym jak i dwójkowym
-* raw - argumenty w systemie binarnym, wyrównane do co czwartego bitu tzn `0000 0000 0000`
+* raw - argumenty podane hexadecymalnie w bajtach
 * bin - argumenty w systemie binarnym, wyrównane do argumentów
+* pad - argumenty w systemie binarnym, wyrównane do bajta
 * py  - surowy zapis pythona
 Domyślnie: None (Nie wykona zapisu)
 ### -c --comments

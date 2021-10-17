@@ -82,6 +82,9 @@ def pack_adresses(instructions):
     return output
 
 def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile):
+    if config.disable_debug:
+        return
+        
     if len(command) == 1:
         command = command[0]
         if command.lower() == 'break':
@@ -166,6 +169,7 @@ def write_program(program, context, machine):
         packed_instructions = pack_adresses(instructuons)
 
         machine.write_memory(chunk, DataTypes.PROGRAM, packed_instructions)
+
         for adress, val in debug.items():
             debug_instructions[adress] = val
     context['debug_instructions'] = debug_instructions
