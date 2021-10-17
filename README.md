@@ -39,7 +39,7 @@ Domyślnie: None (Nie wykona zapisu)
 Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
 Domyślnie: false
 ### -r --run
-Czy program ma zostać zemulowany
+Uruchom emulacje
 ### --logs
-Czy emulator ma pokazywać w konsoli wszystkie komendy i skoki.
+Czy podczas emulacji mają się wyświetlać operacje procesora. (nie wpływa na komendy debugowania)
 Domyślnie: false
