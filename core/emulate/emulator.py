@@ -1,3 +1,4 @@
+from glob import glob
 import core.config as config
 import core.error as error
 import core.emulate.debug_commands as debug
@@ -40,16 +41,19 @@ class EmulatorBase(abc.ABC):
     def exec_command(self, chunk_name: str, method_name: str, args: typing.List) -> typing.Any:
         pass
 
-
+GLOBAL_CURR_ADRESS = 0
 def log_disassembly(**kwargs):
-    if config.use_disassembly_as_logs:
+    global GLOBAL_CURR_ADRESS
+    if config.use_disassembly_as_logs and config.logmode:
         def params(func):
+            global GLOBAL_CURR_ADRESS
             format = str(kwargs['format']) if 'format' in kwargs else func.__name__ 
             spec = inspect.getfullargspec(func).args
 
             def wrapper(*args, **kwargs):
+                global GLOBAL_CURR_ADRESS
                 formated = format.format_map({name: value for name, value in zip(spec, args)})
-                print(formated)
+                print(GLOBAL_CURR_ADRESS, formated)
                 return func(*args, **kwargs)
             return wrapper
     else:
@@ -106,6 +110,7 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
             machine.exec_command(None, cmd, args)
 
 def emulate(program, context):
+    global GLOBAL_CURR_ADRESS
     profile: Profile = context["profile"]
     emulator: EmulatorBase = profile.emul
 
@@ -132,6 +137,7 @@ def emulate(program, context):
 
     while machine.is_running():
         pos = machine.get_current_pos()
+        GLOBAL_CURR_ADRESS = pos
         
         if pos in debug_instructions:
             for instruction in (i for i in debug_instructions[pos] if 'pre' in i): 

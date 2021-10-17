@@ -5,16 +5,17 @@ import core
 import argparse
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 #TODO const adress space vs packed vs
 
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Assebly language Compiler. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n Example: \n\t python compile.py --save bin --comments \n Compiles program.lor\n\n add --run to emulate compiler program')
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Custom assembly Compiler and Emulator. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n You can start with: \n\n\t python compile.py --save pad --comments \n\n It will compile "program.lor" and save it in "output" dir.\n if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.')
 
-parser.add_argument("-f", "--file", type=str, default="src/program.lor",
+parser.add_argument("-i", "--input", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
+parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of binary to save")
 parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
@@ -29,8 +30,6 @@ parser.set_defaults(feature=False)
 
 parser.add_argument('-r', '--run', dest='run', action='store_true')
 parser.set_defaults(feature=False)
-
-parser.add_argument("-o", "--outfile", type=str, default="output/compiled.txt", help="Name of binary to save")
 
 parser.add_argument('--logs', dest='logmode', action='store_true', help="Choose method of logging CPU's command while executing")
 parser.set_defaults(feature=False)
@@ -57,14 +56,14 @@ def show_warnings(context):
         print(f"Warning: {warning}")
         
 def main():
-    print(f"Lord's Compiler Redux is working on '{config.file}'")
+    print(f"Lord's Compiler Redux is working on '{config.input}'")
 
     load_preproces_pipeline = core.pipeline.make_preproces_pipeline()
     parse_pipeline = core.pipeline.make_parser_pipeline()
     save_pipeline = core.pipeline.make_save_pipeline()
     format_pipeline = core.pipeline.make_format_pipeline()
     
-    start_file = config.file
+    start_file = config.input
 
     # First pass, loads settings and profiles into context
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, progress_bar_name='Loading')

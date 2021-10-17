@@ -4,7 +4,7 @@ import os
 from tabulate import tabulate
 
 def save(program, context):
-    outfile = config.outfile
+    outfile = config.output
     dirname = os.path.dirname(outfile)
     filename, ext = os.path.splitext(os.path.basename(outfile))
     filenames = {}

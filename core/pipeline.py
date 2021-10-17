@@ -10,6 +10,24 @@ from click import progressbar
 import pprint
 
 def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
+    """
+    Pipieline that is responsible for loading and preprocesing data.
+    Input:
+    * Path to file
+    Output:
+    * List of line obj
+       - `line_index_in_file` - line inside the file
+       - `line` - str of preprocessed lines of code without comments or preprocesing instructions
+    * Context dict
+       - `const` - dict of consts and its values
+       - `data` - dict of adresses and its values
+       - `debug` - list of debug lines obj's (these objs contains `line_index_in_file` field and `line` field)
+       - `defs` - list of definitions (`#define` without values)
+       - `entry` - dict of entrypoints with coresponding labels and offsets
+       - `macros` - dict of macros
+       - `profile_name` - name of profile
+       - `warnigns` - warnings that occure in this pipeline.
+    """
     pipeline = \
         [
             ('load', load.loading.load_raw),
@@ -27,6 +45,27 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
     return pipeline
 
 def make_parser_pipeline() -> List[Tuple[str, Callable]]:
+    """
+    Pipieline that is responsible for parsing the lines from preprocesing pipeline
+    Input:
+    * Output from preprocesing pipeline
+    Output:
+    * Dict of Lists that associates chunk of entrypoint with data
+    * Every Chunk contains list of line objs with fields:
+       - Everything from previous pipeline
+       - `debug` - debug meta-data for this line.
+       - `mached_command` - mached command in cmd defs in profile and argument values
+       - `parsed_command` - ROM arguments with parsed values
+       - `physical_adress` - adress of command in device space
+       - `tokenized` - tokenized line
+    * Context dict
+       - Everything from previous pipeline
+       - `profile` - profile object
+       - `warnigns` - warnings that occure in this pipeline.
+       - `labels` - founed labels with corresponding lines
+       - `physical_adress` - founded labels but with adresses in device space
+       - `namespace` - idk
+    """
     pipeline = \
         [
             ('tokenize lines', parse.tokenize.tokenize),
@@ -44,6 +83,18 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     return pipeline
 
 def make_save_pipeline()  -> List[Tuple[str, Callable]]:
+    """
+    Pipieline that is responsible for formatting and saveing files
+    Input:
+    * Output from parsing pipeline
+    Output:
+       - Everything from previous pipeline
+       - `formatted` - list of formated tokens (cound be merged to get formated and padded line)
+    * Context dict
+        - Everything from previous pipeline
+        - `chunk adresses` - adresses of the lines but relative to chunk start adress
+        - `outfiles` - outputed files with formatted output
+    """
     pipeline = \
         [
             ('format', save.formatter.format_output),
@@ -52,6 +103,17 @@ def make_save_pipeline()  -> List[Tuple[str, Callable]]:
         ]
     return pipeline
 def make_format_pipeline()  -> List[Tuple[str, Callable]]:
+    """
+    Pipieline that is responsible for formatting lines
+    Input:
+    * Output from parsing pipeline
+    Output:
+       - Everything from previous pipeline
+       - `formatted` - list of formated tokens without comments
+    * Context dict
+        - Everything from previous pipeline
+        - `chunk adresses` - adresses of the lines but relative to chunk start adress
+    """
     pipeline = \
         [
             ('format', save.formatter.format_output),
@@ -71,6 +133,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
         return str(x[1][0]) if x is not None else ''
 
     if config.show_pipeline_steges != 'bar':
+        # Placeholder that will mimic progressbar function.
         class PlaceHolder:
             def __init__(self, iter, **kwrgs):
                 self.iter = iter
@@ -85,7 +148,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
     with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
         for i, (stage, func) in pipeline_iterator:
             try:
-                output = func(data, external)
+                output = func(data, external)   # Execute stage
             except error.CompilerError as err:
                 err.stage == stage
                 raise err
