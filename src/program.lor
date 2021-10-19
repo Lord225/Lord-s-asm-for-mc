@@ -1,6 +1,6 @@
 #profile pm1.jsonc
 
-#global CORE0 CORE 0
+#global CORE0 CORE1 0
 #global CORE1 CORE1 0
 #data 0xF0 "NIWDWIJDWMIOEABD"
 
@@ -31,6 +31,7 @@ CORE0:
             mov 1, reg[2]
             add reg[2], reg[0]
             mov ram[reg[0]], reg[2]
+
             //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
 
             jg reg[2], reg[1], SKIP_SWAP
@@ -40,9 +41,13 @@ CORE0:
                 mov reg[2], ram[reg[0]]
                 add reg[1], reg[0]
             SKIP_SWAP:
+
             //[i+1, -, -, END_OUTER_LOOP_PTR]
+
             mov ram[ARR_END], reg[2]
+
             //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
+
             jg reg[3], reg[0], INNER
 
         mov 1, reg[1]
@@ -50,7 +55,9 @@ CORE0:
         add reg[1], reg[2]
         mov reg[2],  ram[OUTER_COUNTER]
         mov 15, reg[3]
+
         //[i+1, 1, OUTER_COUNTER, 15]
+        
         jg reg[3], reg[2], OUTER
     shut
     #debug ram(240, 256)

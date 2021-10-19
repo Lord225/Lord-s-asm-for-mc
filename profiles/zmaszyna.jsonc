@@ -138,16 +138,8 @@
                 }
             },
             "st static":{
-                "pattern":"st static {dst} <- {src}",
-                "emulator":"st_static",
-                "command_cost":1,
+                "pattern":"st static {dst:num} <- {src:num}",
                 "command_layout": "static",
-
-                "args":
-                {
-                    "dst":"num",
-                    "src":"num"
-                },
                 "bin":
                 {
                     "imm":"dst",

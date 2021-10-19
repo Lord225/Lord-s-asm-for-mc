@@ -5,7 +5,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 #TODO const adress space vs packed vs
 

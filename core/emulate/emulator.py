@@ -19,27 +19,46 @@ class EmulatorBase(abc.ABC):
 
     @abc.abstractmethod
     def get_current_pos(self, chunk_name: str) -> int:
-        pass
+        """
+        Function should return current program counter value for given chunk_name
+        """
 
     @abc.abstractmethod
     def is_running(self) -> bool:
-        pass
+        """
+        Function should return if machine is still running
+        """
 
     @abc.abstractmethod
     def get_machine_cycles(self) -> int:
-        pass
+        """
+        Function should return how many cycles was taken from last `next_tick` call
+        """
 
     @abc.abstractmethod
     def next_tick(self,) -> typing.Optional[str]:
-        pass
+        """
+        Should evaluate next instruction
+        """
 
     @abc.abstractmethod
     def write_memory(self, chunk_name: str, type: DataTypes, data: dict):
-        pass
+        """
+        For givern chunk_name, datatype and data, function should initliaze machine memory with given values
+        """
 
     @abc.abstractmethod
     def exec_command(self, chunk_name: str, method_name: str, args: typing.List) -> typing.Any:
-        pass
+        """
+        Function should call an arbitrary named function defined in emulator with given arguments and chunk_name
+        Example implementation
+        ```
+        method = self.__getattribute__(method_name) # Ignoring chunk_name in this case.
+        return method(*args)
+        ```
+        """
+        method = self.__getattribute__(method_name)
+        return method(*args)
 
 GLOBAL_CURR_ADRESS = 0
 def log_disassembly(**kwargs):
