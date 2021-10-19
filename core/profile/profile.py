@@ -7,6 +7,9 @@ import importlib
 import core.parse as parser
 import core.profile.patterns as patterns
 
+REQUIRED_FIELDS = ["pattern", "command_layout", "bin"]
+OPTIONAL_FIELDS = ["command_cost"]
+
 def load_json_profile(path):
     with open(path, "r") as file:
         try:
@@ -20,12 +23,10 @@ def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
     return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
 
 def check_raw_command_integrity(id: str, cmd: dict):
-    REQ_FIELDS = ["pattern", 'command_cost']
-    OPT_FIELDS = ["command_cost", "command_layout", 'bin']
-    required = [required for required in REQ_FIELDS if required not in cmd]
+    required = [required for required in REQUIRED_FIELDS if required not in cmd]
     if len(required) != 0:
-        raise error.ProfileLoadError(f"Command: {id} does not have one of these fields: {REQ_FIELDS}")
-    optional = [optional for optional in OPT_FIELDS if optional not in cmd]
+        raise error.ProfileLoadError(f"Command: {id} does not have one of these fields: {REQUIRED_FIELDS}")
+    optional = [optional for optional in OPTIONAL_FIELDS if optional not in cmd]
     return optional
 
 
@@ -33,11 +34,11 @@ def process_commands(commands: dict):
     warnings = dict()
     for cmd_id, cmd in commands.items():
         missing = check_raw_command_integrity(cmd_id, cmd)
+
         if len(missing) != 0:
             warnings[cmd_id] = missing
-        
-        cmd['args'] = {key: patterns.ArgumentTypes[val.upper()] for key, val in cmd['args'].items()}
-        cmd['pattern'] = patterns.Pattern(cmd['pattern'], cmd['args'])
+    
+        cmd['pattern'] = patterns.Pattern(cmd['pattern'])
     return commands
 
 class ProfileInfo:

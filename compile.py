@@ -5,7 +5,7 @@ import core
 import argparse
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 #TODO const adress space vs packed vs
 
@@ -43,10 +43,10 @@ config.override_from_dict(vars(parserargs))
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = False,
-            save = "py",
+            run = True,
+            save = "pad",
             comments = True,
-            onerror = None,
+            onerror = 'None',
             debug = True,
             logmode = True)
 override_debug()

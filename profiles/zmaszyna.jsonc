@@ -5,6 +5,7 @@
         "Arch": "ZMASZYNA",
         "Author": "Acerixx",
         "emulator":"zmaszyna",
+        "time_per_cycle": 3.3,
         
         "ARGUMENTS":{
             "variants":{
@@ -105,13 +106,8 @@
         "COMMANDS":{
             "stp":{
                 "pattern":"stp",
-                "emulator":"stp",
-                "command_cost":1,
                 "command_layout": "static",
 
-                "args":
-                {
-                },
                 "bin":
                 {
                     "imm":0,
@@ -120,16 +116,8 @@
                 }
             },
             "ld static":{
-                "pattern":"ld static({src},{dst})",
-                "emulator":"ld_static",  
-                "command_cost":1,
+                "pattern":"ld static({src:num},{dst:num})",
                 "command_layout": "static",
-
-                "args":
-                {
-                    "src":"num",
-                    "dst":"num"
-                },
                 "bin":
                 {
                     "imm":"src",

@@ -4,7 +4,7 @@ import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr
 
 def find_labels(program, context):
-    find_labels = patterns.Pattern("{label}:", {"label": patterns.ArgumentTypes.ANY_STR})
+    find_labels = patterns.Pattern("{label:any_str}:")
     labels = {}
     output = list()
     for line_obj in program:
