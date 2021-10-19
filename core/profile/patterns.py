@@ -16,6 +16,7 @@ class ArgumentTypes(Enum):
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'
     ARGUMENT_END_SYMBOL = '}'
+    TOKEN_SEPARATOR_SYMBOL = ':'
     
     def __init__(self, pattern: str, argument_types: dict):
         self.arguments = dict()
@@ -45,8 +46,13 @@ class Pattern:
                 continue
 
             if current_token == Pattern.ARGUMENT_START_SYMBOL:
-                # seq: ['{', TOKEN, '}']
-                close_token = self.__get_token_str(i+2)
+                # old: seq: ['{', TOKEN, '}']
+                # new: seq: ['{', NAME, ':', TYPE, '}']
+                
+                name_token = self.__get_token_str(i+1)
+                separator = self.__get_token_str(i+2)
+                type_token = self.__get_token_str(i+3)
+                close_token = self.__get_token_str(i+4)
 
                 if close_token != Pattern.ARGUMENT_END_SYMBOL:
                     raise
