@@ -12,6 +12,10 @@ class ArgumentTypes(Enum):
     NUM = auto()
     LABEL = auto()
     ANY_STR = auto()
+    OFFSET_LABEL = auto()
+    HEX_NUM = auto()
+    BIN_NUM = auto()
+    DEC_NUM = auto()
 
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'
@@ -36,17 +40,16 @@ class Pattern:
             next_token = self.__get_token_str(i+1)
             
             if current_token == Pattern.ARGUMENT_START_SYMBOL and next_token == Pattern.ARGUMENT_START_SYMBOL:
-                i += 2 # seq: ['{', '{'], escaping
+                i += 2 # seq: ['{', '{'], escaping '{'
                 processed_tokens.append((TokenTypes.LITERAL_WORD, Pattern.ARGUMENT_START_SYMBOL))
                 continue
 
             if current_token == Pattern.ARGUMENT_END_SYMBOL and next_token == Pattern.ARGUMENT_END_SYMBOL:
-                i += 2 # seq: ['}', '}'], escaping.
+                i += 2 # seq: ['}', '}'], escaping '}'
                 processed_tokens.append((TokenTypes.LITERAL_WORD, Pattern.ARGUMENT_END_SYMBOL))
                 continue
 
             if current_token == Pattern.ARGUMENT_START_SYMBOL:
-                # old: seq: ['{', TOKEN, '}']
                 # new: seq: ['{', NAME, ':', TYPE, '}']
                 
                 name_token = self.__get_token_str(i+1)
@@ -61,7 +64,6 @@ class Pattern:
                 if separator != Pattern.TOKEN_SEPARATOR_SYMBOL:
                     raise
 
-                
                 self.arguments[next_token] = len(processed_tokens)
                 processed_tokens.append((TokenTypes.ARGUMENT, name_token, ArgumentTypes[type_token.upper()]))
                 i += 4

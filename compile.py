@@ -4,10 +4,7 @@ import core.error as error
 import core
 import argparse
 
-
 DEBUG_MODE = False
-
-#TODO const adress space vs packed vs
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Custom assembly Compiler and Emulator. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n You can start with: \n\n\t python compile.py --save pad --comments \n\n It will compile "program.lor" and save it in "output" dir.\n if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.')
 
@@ -106,8 +103,13 @@ def main():
         SPACE = " "*4
         for chunk, filename in context['outfiles'].items():
             print(SPACE, chunk, filename)
+
     # Emulation
     if config.run:
+        if context['profile'].emul is None:
+            print("Emulation is not avalible")
+            return
+
         config.override_from_dict(save = 'raw', comments = 'False')
         output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
         emulate.emulator.emulate(output, context)

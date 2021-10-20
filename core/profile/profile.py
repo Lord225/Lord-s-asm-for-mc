@@ -8,7 +8,7 @@ import core.parse as parser
 import core.profile.patterns as patterns
 
 REQUIRED_FIELDS = ["pattern", "command_layout", "bin"]
-OPTIONAL_FIELDS = ["command_cost"]
+OPTIONAL_FIELDS = []
 
 def load_json_profile(path):
     with open(path, "r") as file:
@@ -47,6 +47,7 @@ class ProfileInfo:
         self.arch = kwargs["Arch"]
         self.author = kwargs["Author"]
         self.speed = kwargs["time_per_cycle"]
+        
 class AdressingMode:
     def __init__(self, kwargs: dict, profile):
         self.mode = kwargs["ADRESSING"]["mode"] if "mode" in kwargs["ADRESSING"] else "align"
