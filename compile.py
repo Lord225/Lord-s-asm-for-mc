@@ -30,7 +30,7 @@ parser.set_defaults(feature=False)
 parser.add_argument('--logs', dest='logmode', action='store_true', help="Show emulator's disassebly")
 parser.set_defaults(feature=False)
 
-parser.add_argument('--why', dest='why_error', action='store_true', help="Use exhausive, fuzzy search to find best fitting command and display errors")
+parser.add_argument('--why', dest='why_error', action='store_true', help="Program will try harder to find why command cannot be mached")
 parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
