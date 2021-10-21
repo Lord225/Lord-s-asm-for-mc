@@ -4,7 +4,7 @@ import core.error as error
 import core
 import argparse
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Custom assembly Compiler and Emulator. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n You can start with: \n\n\t python compile.py --save pad --comments \n\n It will compile "program.lor" and save it in "output" dir.\n if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.')
 
@@ -12,7 +12,7 @@ parser.add_argument("-i", "--input", type=str, default="src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor
 """)
-parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of binary to save")
+parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
 parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
 help="""
 > dec - Build source and save in easy-to-read format
@@ -22,13 +22,16 @@ help="""
 > raw - Build source and save as decimal representation of bytes
 Default: None (will not save)
 """)
-parser.add_argument('-c','--comments', dest='comments', action='store_true')
+parser.add_argument('-c','--comments', dest='comments', action='store_true', help="Add debug information on the end of every line in output files")
 parser.set_defaults(feature=False)
 
-parser.add_argument('-r', '--run', dest='run', action='store_true')
+parser.add_argument('-r', '--run', dest='run', action='store_true', help="Run emulation after compilation")
 parser.set_defaults(feature=False)
 
-parser.add_argument('--logs', dest='logmode', action='store_true', help="Choose method of logging CPU's command while executing")
+parser.add_argument('--logs', dest='logmode', action='store_true', help="Show emulator's disassebly")
+parser.set_defaults(feature=False)
+
+parser.add_argument('--why', dest='why_error', action='store_true', help="Use exhausive, fuzzy search to find best fitting command")
 parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
@@ -45,7 +48,8 @@ def override_debug():
             comments = True,
             onerror = 'None',
             debug = True,
-            logmode = True)
+            logmode = True,
+            why_error=True)
 override_debug()
 
 def show_warnings(context):

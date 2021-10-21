@@ -32,6 +32,10 @@ class Pattern:
             return self.tokens[id]
         except IndexError:
             return None
+    
+    def summarize(self):
+        return ' '.join((token[1] for token in self.tokens))
+
     def __parse_tokens(self):
         i = 0
         processed_tokens = []
