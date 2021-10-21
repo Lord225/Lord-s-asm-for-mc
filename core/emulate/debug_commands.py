@@ -37,7 +37,7 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
         end = len(RAM)
 
     if rows%subrows != 0:
-        raise error.UndefinedSetting("Row number should be dividable by subrow count.")
+        raise error.CompilerError("Row number should be dividable by subrow count.")
     def generate_value(PAD = -1, MODE = "dec"):
         ADRESS = ""
         try:

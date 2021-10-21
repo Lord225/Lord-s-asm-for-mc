@@ -1,4 +1,3 @@
-from cv2 import line
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr

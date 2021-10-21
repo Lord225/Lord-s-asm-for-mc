@@ -9,7 +9,6 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     def __init__(self):
         self.RAM = np.zeros(shape=(256,), dtype=np.uint8)
         self.Regs = np.zeros(shape=(4,), dtype=np.uint8)
-        self.ALU_FLAGS = {"overflow": False, "sign": False, "zero": False, "partity": False}
         self.ROM_COUNTER = 0
         self.ROMStack = []
         self.is_running_flag = True

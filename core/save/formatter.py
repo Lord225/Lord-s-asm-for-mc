@@ -1,6 +1,5 @@
 import core.error as error
 import core.config as config
-import tabulate
 from textwrap import wrap
 from core.profile.profile import Profile
 

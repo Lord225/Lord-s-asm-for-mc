@@ -4,10 +4,7 @@ import core.error as error
 import core
 import argparse
 
-
 DEBUG_MODE = False
-
-#TODO const adress space vs packed vs
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Custom assembly Compiler and Emulator. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n You can start with: \n\n\t python compile.py --save pad --comments \n\n It will compile "program.lor" and save it in "output" dir.\n if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.')
 
@@ -43,10 +40,10 @@ config.override_from_dict(vars(parserargs))
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = False,
-            save = "py",
+            run = True,
+            save = "pad",
             comments = True,
-            onerror = None,
+            onerror = 'None',
             debug = True,
             logmode = True)
 override_debug()
@@ -54,6 +51,11 @@ override_debug()
 def show_warnings(context):
     for warning in context['warnings']:
         print(f"Warning: {warning}")
+def show_outfiles(context):
+    print("Output files:")
+    SPACE = " "*4
+    for chunk, filename in context['outfiles'].items():
+        print(SPACE, chunk, filename)
         
 def main():
     print(f"Lord's Compiler Redux is working on '{config.input}'")
@@ -102,12 +104,14 @@ def main():
         if config.show_warnings:
             show_warnings(context)
         print()
-        print("Output files:")
-        SPACE = " "*4
-        for chunk, filename in context['outfiles'].items():
-            print(SPACE, chunk, filename)
+        show_outfiles(context)
+
     # Emulation
     if config.run:
+        if context['profile'].emul is None:
+            print("Emulation is not avalible")
+            return
+
         config.override_from_dict(save = 'raw', comments = 'False')
         output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
         emulate.emulator.emulate(output, context)
