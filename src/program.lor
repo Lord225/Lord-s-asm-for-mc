@@ -28,7 +28,7 @@ CORE0:
 
         INNER:
             mov ram[reg[0]], reg[1]
-            mv 1, reg[2]
+            mov 1, reg[2]
             add reg[2], reg[0]
             mov ram[reg[0]], reg[2]
             //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
