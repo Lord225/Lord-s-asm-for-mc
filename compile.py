@@ -14,8 +14,7 @@ Default: src/program.lor
 """)
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
 parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
-help="""
-> dec - Build source and save in easy-to-read format
+help="""> dec - Build source and save in easy-to-read format
 > pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
@@ -31,7 +30,7 @@ parser.set_defaults(feature=False)
 parser.add_argument('--logs', dest='logmode', action='store_true', help="Show emulator's disassebly")
 parser.set_defaults(feature=False)
 
-parser.add_argument('--why', dest='why_error', action='store_true', help="Use exhausive, fuzzy search to find best fitting command")
+parser.add_argument('--why', dest='why_error', action='store_true', help="Use exhausive, fuzzy search to find best fitting command and display errors")
 parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
