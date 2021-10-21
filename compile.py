@@ -36,10 +36,14 @@ parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
 
-if config.init is not None:
-    config.override_from_file(config.init)
-config.override_from_dict(vars(parserargs))
-
+def show_warnings(context):
+    for warning in context['warnings']:
+        print(f"Warning: {warning}")
+def show_outfiles(context):
+    print("Output files:")
+    SPACE = " "*4
+    for chunk, filename in context['outfiles'].items():
+        print(SPACE, chunk, filename)
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
@@ -50,24 +54,19 @@ def override_debug():
             debug = True,
             logmode = True,
             why_error=True)
+
+if config.init is not None:
+    config.override_from_file(config.init)
+config.override_from_dict(vars(parserargs))
 override_debug()
 
-def show_warnings(context):
-    for warning in context['warnings']:
-        print(f"Warning: {warning}")
-def show_outfiles(context):
-    print("Output files:")
-    SPACE = " "*4
-    for chunk, filename in context['outfiles'].items():
-        print(SPACE, chunk, filename)
-        
 def main():
     print(f"Lord's Compiler Redux is working on '{config.input}'")
 
-    load_preproces_pipeline = core.pipeline.make_preproces_pipeline()
-    parse_pipeline = core.pipeline.make_parser_pipeline()
-    save_pipeline = core.pipeline.make_save_pipeline()
-    format_pipeline = core.pipeline.make_format_pipeline()
+    load_preproces_pipeline = core.pipeline.make_preproces_pipeline() # Load & Preprocess
+    parse_pipeline = core.pipeline.make_parser_pipeline()             # Parse & Extract arguments
+    save_pipeline = core.pipeline.make_save_pipeline()                # Format & Save
+    format_pipeline = core.pipeline.make_format_pipeline()            # Format
     
     start_file = config.input
 
@@ -86,7 +85,6 @@ def main():
     config.override_from_dict(vars(parserargs))
     override_debug()
     
-
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
     if config.show_warnings:
@@ -101,8 +99,7 @@ def main():
     if config.show_warnings:
         show_warnings(context)
 
-
-    # Compile and save
+    # Compile and Save
     if config.save in ['bin', 'py', 'dec', 'raw', 'pad']:
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
         if config.show_warnings:

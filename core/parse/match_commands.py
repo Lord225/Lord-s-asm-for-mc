@@ -26,9 +26,9 @@ def find_commands(program, context):
         if founded is None and config.why_error:
             output = serach_harder_for_command(line_obj, cpu_profile, context)
             print(output)
-            raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}', maybe you meant: {summarise_best_fit(output, context)}")
+            raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}', Maybe you meant: {summarise_best_fit(output, context)}")
         if founded is None and config.rise_on_unknown_command:
-            raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}'")
+            raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}', Use --why to get estimate why it failed")
         
         line_obj.mached_command = founded
 
@@ -44,7 +44,7 @@ def summarise_best_fit(best_fit, context):
     best_cmd = cpu_profile.commands_definitions[best_fit[0]]
     new_line = "\n *  "
     missmaches = best_fit[1]['missmaches'][:1]
-    message = f"'{best_cmd['pattern'].summarize()}', \nCommand differs with: {new_line}{new_line.join(missmaches)}"
+    message = f"'{best_cmd['pattern'].summarize()}'\nCommand differs with: {new_line}{new_line.join(missmaches)}"
     return message
 
 def serach_harder_for_command(line_obj, profile: profile.Profile, context):

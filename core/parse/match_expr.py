@@ -64,13 +64,14 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
         lenght_bias = 3
     else:
         lenght_bias = 2*len_diff
+    if len_diff != 0:
+        global_miss = f"Missing token"
 
     for offset in range(max(len(pattern.tokens), len(expr))):
         command_cost = lenght_bias
         misses = []
         if offset != 0:
-            misses.append(f"Missaligment")
-            command_cost += 1+offset
+            command_cost += 1 + offset if offset > 1 else 0
         
         for i, (pattern_token, expr_token) in enumerate(zip(pattern.tokens, expr)):
             if i != 0 and offset == i:
@@ -80,7 +81,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
                 dis = soft_word_match(pattern_token[1], expr_token, context)
                 if dis != 0:
                     if expr_token in pattern_token[1] or pattern_token[1] in expr_token:
-                        command_cost += 0.5
+                        command_cost += 0.2
                     else:
                         command_cost += 1     
                     misses.append(f"'{pattern_token[1]}' != '{expr_token}'")
@@ -93,5 +94,6 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
                     command_cost += 0.8
                 else:
                     command_cost -= 0.1
+        misses.append(global_miss)
         output.append({'offset': offset, 'cost': float(command_cost+abs(1.5*offset))/max(len(pattern.tokens), len(expr)), 'missmaches': misses})
     return output
