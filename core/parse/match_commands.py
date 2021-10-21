@@ -17,6 +17,7 @@ def serach_for_command(line_obj, profile: profile.Profile, context):
     else:
         return None
 
+
 def find_commands(program, context):
     cpu_profile: profile.Profile = context['profile']
     
@@ -33,10 +34,12 @@ def find_commands(program, context):
 
     return program, context
 
+
 def find_comands_chunked(program, context):
     for _, program_chunk in program.items():
         program_chunk, _ = find_commands(program_chunk, context)
     return program, context
+
 
 def summarise_best_fit(best_fit, context):
     cpu_profile: profile.Profile = context['profile']
@@ -45,6 +48,7 @@ def summarise_best_fit(best_fit, context):
     missmaches = best_fit[1]['missmaches'][:1]
     message = f"'{best_cmd['pattern'].summarize()}'\nCommand differs with: {new_line}{new_line.join(missmaches)}"
     return message
+
 
 def serach_harder_for_command(line_obj, profile: profile.Profile, context):
     tokens = line_obj.tokenized

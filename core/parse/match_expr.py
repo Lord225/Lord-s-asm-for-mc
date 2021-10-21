@@ -53,6 +53,8 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
 def soft_word_match(token, expr_token, context):
     distance = lev.distance(token, expr_token)
     return distance
+
+    
 def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
     output = list()
     len_diff = abs(len(pattern.tokens)-len(expr))

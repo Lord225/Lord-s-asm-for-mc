@@ -11,12 +11,14 @@ def get_next_chunk(entry, minimal_offset):
             minimal = (key, val)
     return minimal
 
+
 def find_key_by_value(dict: dict, value):
     output = []
     for key, val in dict.items():
         if val == value:
             output.append(key)
     return output
+
 
 def check_keywords_exists(entry, context):
     profile: Profile = context['profile']
@@ -39,11 +41,13 @@ def check_keywords_exists(entry, context):
         else:
             context['warnings'].append(msg)
 
+
 def get_adress_offset(current_line_obj, profile: Profile):
     if profile.adressing.mode == 'align':
         return max(profile.arguments_len.values())
     elif profile.adressing.mode == 'packed':
         return profile.arguments_len[list(current_line_obj.parsed_command.keys())[0]]
+
 
 def split_into_chunks(program, context):
     entry: dict = context['entry']

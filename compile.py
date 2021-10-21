@@ -10,8 +10,8 @@ parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, 
 
 parser.add_argument("-i", "--input", type=str, default="src/program.lor",
 help="""Name of file to compile
-Default: src/program.lor
-""")
+Default: src/program.lor""")
+
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
 parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
 help="""> dec - Build source and save in easy-to-read format
@@ -19,8 +19,8 @@ help="""> dec - Build source and save in easy-to-read format
 > bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
 > raw - Build source and save as decimal representation of bytes
-Default: None (will not save)
-""")
+Default: None (will not save)""")
+
 parser.add_argument('-c','--comments', dest='comments', action='store_true', help="Add debug information on the end of every line in output files")
 parser.set_defaults(feature=False)
 
@@ -153,4 +153,3 @@ if __name__ == "__main__":
                     input()
                 elif config.onerror == "abort":
                     pass
-

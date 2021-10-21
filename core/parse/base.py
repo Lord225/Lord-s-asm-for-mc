@@ -1,5 +1,4 @@
 import core.error as error
-from enum import Enum, auto
 import re
 
 
@@ -17,9 +16,11 @@ def get_value(strage_format:str):
     else:
         raise error.ParserError(f"Value: '{strage_format}' cannot be parsed.")
 
+
 def smart_replace(line: str, From: str, To: str):
     line = re.sub("(?<![a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From), To, line)
     return line
+
 
 def smart_find(line: str, From: str):
     finded = re.search("(?<![a-zA-Z0-9])({})(?![a-zA-Z0-9])".format(From),line)
