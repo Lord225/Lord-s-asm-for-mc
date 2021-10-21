@@ -41,9 +41,10 @@ format z jakim ma zostać zapisana binarka.
 Domyślnie: None (Nie wykona zapisu)
 ### -c --comments
 Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
-Domyślnie: false
 ### -r --run
 Uruchom emulacje
 ### --logs
 Czy podczas emulacji mają się wyświetlać operacje procesora. (nie wpływa na komendy debugowania)
-Domyślnie: false
+### --why
+Kompilator bardziej się postara przy wyświetlaniu komunikatu błędu.
+
