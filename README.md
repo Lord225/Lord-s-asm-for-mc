@@ -1,4 +1,5 @@
 # Lord-s-asm-for-mc
+Program służący do kompilacji i emulacji customowego assemblera.
 Na [wiki](../../wiki) opisana jest składnia.
 ## Przykłady
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
