@@ -20,6 +20,10 @@ Zapisz jako json
 ```
 python compile.py --save py
 ```
+Przekierowanie outputu do pliku (wyłącz breakpointy)
+```
+python compile.py --run --logs > output.txt
+```
 ## ArgParser
 ### -i --input
 Ścieżka pliku wejściowego z programem, 

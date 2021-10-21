@@ -4,7 +4,7 @@
         "Name": "ZMASZYNA",
         "Arch": "ZMASZYNA",
         "Author": "Acerixx",
-        "emulator":"zmaszyna",
+        "emulator": null,
         "time_per_cycle": 3.3,
         
         "ARGUMENTS":{
@@ -116,7 +116,7 @@
                 }
             },
             "ld static":{
-                "pattern":"ld static({src:num},{dst:num})",
+                "pattern":"ld static({src:num}, {dst:num})",
                 "command_layout": "static",
                 "bin":
                 {

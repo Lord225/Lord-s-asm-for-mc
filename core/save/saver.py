@@ -19,7 +19,7 @@ def save(program, context):
         with open(new_filename, 'w') as file:
             if context['tabulate']:
                 collected = [line.formatted for line in data]
-                file.write(tabulate(collected))
+                file.write(tabulate(collected, tablefmt = config.tablefmt))
             else:
                 output_structure = {'entry': chunk, 'program': collect_data(data)}
                 json.dump(output_structure, file, indent=config.json_output_indent)

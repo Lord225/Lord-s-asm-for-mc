@@ -61,6 +61,7 @@ class EmulatorBase(abc.ABC):
         return method(*args)
 
 GLOBAL_CURR_ADRESS = 0
+
 def log_disassembly(**kwargs):
     global GLOBAL_CURR_ADRESS
     if config.use_disassembly_as_logs and config.logmode:
@@ -133,6 +134,7 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
 
 def emulate(program, context):
     global GLOBAL_CURR_ADRESS
+
     profile: Profile = context["profile"]
     emulator: EmulatorBase = profile.emul
 
@@ -153,6 +155,7 @@ def emulate(program, context):
     debug_instructions = context["debug_instructions"]
 
     print("Starting Emulation")
+    
     emulate_start_time = time.thread_time_ns()
     emulation_cycles = 0
     machine_cycles = 0

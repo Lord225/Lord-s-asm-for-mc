@@ -51,6 +51,11 @@ override_debug()
 def show_warnings(context):
     for warning in context['warnings']:
         print(f"Warning: {warning}")
+def show_outfiles(context):
+    print("Output files:")
+    SPACE = " "*4
+    for chunk, filename in context['outfiles'].items():
+        print(SPACE, chunk, filename)
         
 def main():
     print(f"Lord's Compiler Redux is working on '{config.input}'")
@@ -99,10 +104,7 @@ def main():
         if config.show_warnings:
             show_warnings(context)
         print()
-        print("Output files:")
-        SPACE = " "*4
-        for chunk, filename in context['outfiles'].items():
-            print(SPACE, chunk, filename)
+        show_outfiles(context)
 
     # Emulation
     if config.run:
