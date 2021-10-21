@@ -7,6 +7,30 @@ import core.profile.patterns as patterns
 import core.parse as parse
 import core.error as error
 
+def match_word(pattern_token, expr_token):
+    return pattern_token[1] != expr_token
+
+
+def parse_argument_token(context, pattern_token, expr_token):
+    parsed_token = None
+    if pattern_token[2] == patterns.ArgumentTypes.NUM:
+        parsed_token = parse.parse_number(expr_token)
+    elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
+        parsed_token = parse.parse_label(expr_token, context)
+    elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
+        parsed_token = expr_token
+    elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
+        raise UnImplemented("ArgumentTypes.OFFSET_LABEL")
+    elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
+        raise UnImplemented("ArgumentTypes.HEX_NUM")
+    elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
+        raise UnImplemented("ArgumentTypes.BIN_NUM")
+    elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
+        raise UnImplemented("ArgumentTypes.DEC_NUM")
+    else:
+        raise
+    return parsed_token
+
 
 def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
     args = dict()
@@ -15,31 +39,16 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
         return None
     for pattern_token, expr_token in zip(pattern.tokens, expr):
         if pattern_token[0] == patterns.TokenTypes.LITERAL_WORD:
-            if pattern_token[1] != expr_token:
+            if match_word(pattern_token, expr_token):
                 return None
         elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
-            parsed_token = None
-            if pattern_token[2] == patterns.ArgumentTypes.NUM:
-                parsed_token = parse.parse_number(expr_token)
-            elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
-                parsed_token = parse.parse_label(expr_token, context)
-            elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
-                parsed_token = expr_token
-            elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
-                raise UnImplemented("ArgumentTypes.OFFSET_LABEL")
-            elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
-                raise UnImplemented("ArgumentTypes.HEX_NUM")
-            elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
-                raise UnImplemented("ArgumentTypes.BIN_NUM")
-            elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
-                raise UnImplemented("ArgumentTypes.DEC_NUM")
-            else:
-                raise
+            parsed_token = parse_argument_token(context, pattern_token, expr_token)
 
             if parsed_token is None:
                 return None
             args[pattern_token[1]] = parsed_token
     return args
+
 
 def soft_word_match(token, expr_token, context):
     distance = lev.distance(token, expr_token)
@@ -61,7 +70,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
         misses = []
         if offset != 0:
             misses.append(f"Missaligment")
-            command_cost += 1+2*offset
+            command_cost += 1+offset
         
         for i, (pattern_token, expr_token) in enumerate(zip(pattern.tokens, expr)):
             if i != 0 and offset == i:
@@ -71,30 +80,14 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
                 dis = soft_word_match(pattern_token[1], expr_token, context)
                 if dis != 0:
                     if expr_token in pattern_token[1] or pattern_token[1] in expr_token:
-                        command_cost += dis**0.5 - 1
+                        command_cost += 0.5
                     else:
-                        command_cost += dis**0.5     
+                        command_cost += 1     
                     misses.append(f"'{pattern_token[1]}' != '{expr_token}'")
                 else:
                     command_cost -= 0.5
             elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
-                parsed_token = None
-                if pattern_token[2] == patterns.ArgumentTypes.NUM:
-                    parsed_token = parse.parse_number(expr_token)
-                elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
-                    parsed_token = parse.parse_label(expr_token, context)
-                elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
-                    parsed_token = expr_token
-                elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
-                    raise UnImplemented("ArgumentTypes.OFFSET_LABEL")
-                elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
-                    raise UnImplemented("ArgumentTypes.HEX_NUM")
-                elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
-                    raise UnImplemented("ArgumentTypes.BIN_NUM")
-                elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
-                    raise UnImplemented("ArgumentTypes.DEC_NUM")
-                else:
-                    raise
+                parsed_token = parse_argument_token(context, pattern_token, expr_token)
                 if parsed_token is None:
                     misses.append(f"'{expr_token}' cannot be parsed as {pattern_token[2]}")
                     command_cost += 0.8
