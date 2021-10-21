@@ -25,7 +25,6 @@ def find_commands(program, context):
         
         if founded is None and config.why_error:
             output = serach_harder_for_command(line_obj, cpu_profile, context)
-            print(output)
             raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}', Maybe you meant: {summarise_best_fit(output, context)}")
         if founded is None and config.rise_on_unknown_command:
             raise error.ParserError(line_obj.line_index_in_file, f"Cannot parse command: '{line_obj.line}', Use --why to use fuzzy search to get more info")

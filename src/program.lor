@@ -14,7 +14,7 @@ CORE0:
     #debug ram
     mov 0xFF, reg[1]       //end
     mov 0xFE, reg[1]       //end-1
-    mov reg[1], ram[ARR_DEC_END]
+    mv reg[1], ram[ARR_DEC_END]
     mov 0, reg[1]          //outer counter
     mov reg[1], ram[OUTER_COUNTER]
 

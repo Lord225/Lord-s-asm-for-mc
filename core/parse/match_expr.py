@@ -63,9 +63,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
     elif len_diff==2:
         lenght_bias = 3
     else:
-        lenght_bias = 2*len_diff
-    if len_diff != 0:
-        global_miss = f"Missing token"
+        lenght_bias = 2*len_diff        
 
     for offset in range(max(len(pattern.tokens), len(expr))):
         command_cost = lenght_bias
@@ -94,6 +92,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
                     command_cost += 0.8
                 else:
                     command_cost -= 0.1
-        misses.append(global_miss)
+        if len_diff != 0:
+            misses.append(f"Missing token")
         output.append({'offset': offset, 'cost': float(command_cost+abs(1.5*offset))/max(len(pattern.tokens), len(expr)), 'missmaches': misses})
     return output
