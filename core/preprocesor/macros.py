@@ -1,5 +1,6 @@
 import core.error as error
 import core.config as config
+from core.load.base import Line
 import core.parse.base as parser_base
 
 def find_macros(program, context):
@@ -68,6 +69,8 @@ def apply_macro(program, name, macro):
             if len(args) != macro[0]:
                 raise error.LoadError("Expected {} arguments in macro, but got: {}".format(macro[0], len(args)))
             for macro_line in macro[1]:
+                as_dict = dict(macro_line).copy()
+                macro_line = Line(**as_dict)
                 macro_line.line = macro_line.line.format_map(args)
                 macro_line.macro_instruction_index_in_file=macro_line.line_index_in_file
                 macro_line.line_index_in_file=line_obj.line_index_in_file

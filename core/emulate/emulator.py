@@ -180,7 +180,10 @@ def emulate(program, context):
     
     print("Emulation finished")
     print(f"Took: {(emulate_end_time-emulate_start_time)/1000000.0}ms")
-    print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}μs")
+    try:
+        print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}μs")
+    except:
+        print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}us")
     print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/profile.info.speed:0.1f}s")
 
 def write_program(program, context, machine):

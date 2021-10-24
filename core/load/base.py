@@ -23,6 +23,7 @@ class Line(dict):
 
     def __getattr__(self, key):
         return self.__dict__[key]
+        
     def __setattr__(self, name: str, value):
         self.__dict__[name] = value
 

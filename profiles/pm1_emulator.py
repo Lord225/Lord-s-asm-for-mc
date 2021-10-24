@@ -152,12 +152,12 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         _value = self.Regs[_from]
         self.RAM[_adress] =  _value
 
-    @emulate.log_disassembly(format='mov reg[{_from}], ram[reg[{_to}]]')
+    @emulate.log_disassembly(format='mov ram[reg[{_from}]], reg[{_to}]')
     def read_reg_pointer(self, _from, _to):
         _adress = self.Regs[_from]
         self.Regs[_to] = self.RAM[_adress]   
 
-    @emulate.log_disassembly(format='mov ram[{_adress}], ram[{_to}]')
+    @emulate.log_disassembly(format='mov ram[{_adress}], reg[{_to}]')
     def read_ram_reg(self, _adress, _to):
         self.Regs[_to] = self.RAM[_adress]
     
@@ -188,14 +188,14 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
         self.Regs[_from_b] = _value
 
-    @emulate.log_disassembly(format='rsh reg[{_from_a}], reg[{_from_b}]')
+    @emulate.log_disassembly(format='rsh reg[{_from_a}], reg[{_to_b}]')
     def alu_reg_reg_rsh(self, _from_a, _to_b):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value, of = ops.underflowing_rsh(_value, 1)  #TODO
 
         self.Regs[_to_b] = _value
 
-    @emulate.log_disassembly(format='lsh reg[{_from_a}], reg[{_from_b}]')
+    @emulate.log_disassembly(format='lsh reg[{_from_a}], reg[{_to_b}]')
     def alu_reg_reg_lsh(self, _from_a, _to_b):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value, of = ops.overflowing_lsh(_value, 1)  #TODO
