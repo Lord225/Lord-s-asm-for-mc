@@ -10,9 +10,9 @@ def serach_for_command(line_obj, profile: profile.Profile, context):
     tokens = line_obj.tokenized
 
     for name, pattern in profile.commands_definitions.items():
-        pattern: patterns.Pattern = pattern
+        pattern_instance: patterns.Pattern = pattern['pattern']
         
-        matched = match_expr.match_expr(pattern['pattern'], tokens, context)
+        matched = match_expr.match_expr(pattern_instance, tokens, context)
         if matched is not None:
             return name, matched
     else:
@@ -55,8 +55,8 @@ def serach_harder_for_command(line_obj, profile: profile.Profile, context):
     tokens = line_obj.tokenized
     output = dict()
     for name, pattern in profile.commands_definitions.items():
-        pattern: patterns.Pattern = pattern
-        output[name] = match_expr.soft_match_expr(pattern['pattern'], tokens, context)
+        pattern_instance: patterns.Pattern = pattern['pattern']
+        output[name] = match_expr.soft_match_expr(pattern_instance, tokens, context)
     
 
     best_offsets = {key:min(val, key=lambda x: x['cost']) for key, val in output.items()}

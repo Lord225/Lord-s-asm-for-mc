@@ -37,20 +37,20 @@ def get_metadata(program, context):
             try:
                 ADRESS_START = int(splited[1], base=0)
             except ValueError:
-                raise error.PreprocesorError("Canno't interpretate datablock: {}".format(line))
+                raise error.PreprocesorError(program_line.line_index_in_file, "Canno't interpretate datablock: {}".format(line))
             start = line.find('"')
             end = line.rfind('"')
             if start != -1 or end != -1:
                 if start == -1 or end == -1:
-                    raise error.PreprocesorError("String hasn't been close or open")
+                    raise error.PreprocesorError(program_line.line_index_in_file, "String hasn't been close or open")
                 if start != end:
                     data = [ord(x) for x in line[start+1:end]]
                 else:
-                    raise error.PreprocesorError("String hasn't been close or open")
+                    raise error.PreprocesorError(program_line.line_index_in_file, "String hasn't been close or open")
             else:
                 data_raw = ''.join(splited[2:])
                 if len(data_raw) == 0:
-                    raise error.PreprocesorError("Datablock doesn't provide data.")
+                    raise error.PreprocesorError(program_line.line_index_in_file, "Datablock doesn't provide data.")
                 data = [int(x, base=0) for x in data_raw.split(',')]
             for index, value in enumerate(data):
                 context['data'][index+ADRESS_START] = value

@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, Union
-from pybytes import *
+from pybytes import Binary, ops
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -267,14 +267,14 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     def jump_flag(self, _target_true):
         FLAG = self.RAM[233]
         if FLAG & 128 != 0:
-            self.jump_overflow_const_reg(_target_true)
+            self.jump(_target_true)
         elif FLAG & 64 != 0:
             pass
 
     @emulate.log_disassembly(format='ret')
     def ret(self):
         if len(self.ROMStack) == 0:
-            raise error.StackUnderFlowError("ROM")
+            raise error.EmulationError("ROM")
         addres = self.ROMStack.pop()
         self.jump(addres)
     

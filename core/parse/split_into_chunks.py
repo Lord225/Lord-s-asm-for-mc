@@ -31,13 +31,13 @@ def check_keywords_exists(entry, context):
     if len(missing_keywords) != 0:
         msg = f"Keywords: {missing_keywords} are not defined in profile" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_keywords} is not defined in profile"
         if config.rise_on_missing_keyword:
-            raise error.ParserError(msg) # bad one
+            raise error.ParserError(None, msg) # bad one
         else:
             context['warnings'].append(msg)
     if len(missing_entrypoints) != 0:
         msg = f"Keywords: {missing_entrypoints} are defined in profile but not used" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_entrypoints} is defined in profile but never used"
         if config.rise_on_missing_entrypoint:
-            raise error.ParserError(msg)
+            raise error.ParserError(None, msg)
         else:
             context['warnings'].append(msg)
 

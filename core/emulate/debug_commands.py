@@ -37,13 +37,13 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
         end = len(RAM)
 
     if rows%subrows != 0:
-        raise error.CompilerError("Row number should be dividable by subrow count.")
+        raise error.EmulationError("Row number should be dividable by subrow count.")
     def generate_value(PAD = -1, MODE = "dec"):
         ADRESS = ""
         try:
             val = RAM[adress + i]
         except IndexError:
-            raise "END"
+            raise
         if MODE == "dec":
             PAD = len(str(int(2**WORD_SIZE)-1))+1
             ADRESS = str(val)

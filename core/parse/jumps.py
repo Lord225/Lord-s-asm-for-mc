@@ -11,9 +11,9 @@ def find_labels(program, context):
         label = match_expr.match_expr(find_labels, line_obj.tokenized, None)
         if label is not None:
             if 'label' not in label:
-                raise error.ParserError(f"Cannot find label '{label}'")
+                raise error.ParserError(line_obj.line_index_in_file, f"Cannot find label '{label}'")
             if label['label'] in labels:
-                raise error.ParserError(f"Label '{label['label']}' is not unique")
+                raise error.ParserError(line_obj.line_index_in_file, f"Label '{label['label']}' is not unique")
             labels[label['label']] = len(output)+1
         else:
             output.append(line_obj)

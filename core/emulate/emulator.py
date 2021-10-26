@@ -18,7 +18,7 @@ class EmulatorBase(abc.ABC):
         super().__init__()
 
     @abc.abstractmethod
-    def get_current_pos(self, chunk_name: str) -> int:
+    def get_current_pos(self, chunk_name: typing.Optional[str]) -> int:
         """
         Function should return current program counter value for given chunk_name
         """
@@ -42,13 +42,13 @@ class EmulatorBase(abc.ABC):
         """
 
     @abc.abstractmethod
-    def write_memory(self, chunk_name: str, type: DataTypes, data: dict):
+    def write_memory(self, chunk_name: typing.Optional[str], type: DataTypes, data: dict):
         """
         For givern chunk_name, datatype and data, function should initliaze machine memory with given values
         """
 
     @abc.abstractmethod
-    def exec_command(self, chunk_name: str, method_name: str, args: typing.List) -> typing.Any:
+    def exec_command(self, chunk_name: typing.Optional[str], method_name: str, args: typing.List) -> typing.Any:
         """
         Function should call an arbitrary named function defined in emulator with given arguments and chunk_name
         Example implementation
@@ -64,8 +64,14 @@ GLOBAL_CURR_ADRESS = 0
 
 def log_disassembly(**kwargs):
     global GLOBAL_CURR_ADRESS
-    if config.use_disassembly_as_logs and config.logmode:
-        def params(func):
+
+    def params_ignore(func):
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        return wrapper
+
+
+    def params_log_dissasembly(func):
             global GLOBAL_CURR_ADRESS
             format = str(kwargs['format']) if 'format' in kwargs else func.__name__ 
             spec = inspect.getfullargspec(func).args
@@ -76,12 +82,10 @@ def log_disassembly(**kwargs):
                 print(GLOBAL_CURR_ADRESS, formated)
                 return func(*args, **kwargs)
             return wrapper
+    if config.use_disassembly_as_logs and config.logmode:
+        return params_log_dissasembly
     else:
-        def params(func):
-            def wrapper(*args, **kwargs):
-                return func(*args, **kwargs)
-            return wrapper
-    return params
+        return params_ignore
 
 
 def gather_instructions(program, context):
@@ -106,17 +110,18 @@ def execute_debug_command(command: list, machine: EmulatorBase, profile: Profile
         return
         
     if len(command) == 1:
-        command = command[0]
-        if command.lower() == 'break':
+        command_str: str = command[0]
+        if command_str.lower() == 'break':
             debug.breakpoint()
-        elif command.lower() == 'ram':
+        elif command_str.lower() == 'ram':
             ram = machine.exec_command(None, 'get_ram_ref', [])
             debug.ram_display(ram, profile.adressing.bin_len, 0, None)
-        elif command.lower() == 'regs':
+        elif command_str.lower() == 'regs':
             regs = machine.exec_command(None, 'get_regs_ref', [])
             print(regs)
     elif command[0] == 'log':
-        debug.log(f"{machine.get_current_pos()}  {' '.join(command[1:])}")
+        pos = machine.get_current_pos(None)
+        debug.log(f"{pos}  {' '.join(command[1:])}")
     elif '(' in command and ')' in command:
         cmd: str = command[0]
         start = command.index('(')
@@ -136,10 +141,10 @@ def emulate(program, context):
     global GLOBAL_CURR_ADRESS
 
     profile: Profile = context["profile"]
-    emulator: EmulatorBase = profile.emul
+    emulator = profile.emul
 
     try:
-        machine = emulator.get_emulator()
+        machine: EmulatorBase = emulator.get_emulator()
     except:
         raise error.EmulationError("File with emulator definition should define the 'get_emulator' function")
 
@@ -161,7 +166,7 @@ def emulate(program, context):
     machine_cycles = 0
 
     while machine.is_running():
-        pos = machine.get_current_pos()
+        pos = machine.get_current_pos(None)
         GLOBAL_CURR_ADRESS = pos
         
         if pos in debug_instructions:

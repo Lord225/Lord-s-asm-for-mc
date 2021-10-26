@@ -2,7 +2,7 @@ from . import load
 from . import parse
 from . import preprocesor
 from . import save
-from typing import *
+from typing import List, Tuple, Callable, Any
 import core.config as config
 import core.error as error
 from click import progressbar

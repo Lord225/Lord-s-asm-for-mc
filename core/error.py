@@ -1,6 +1,9 @@
 
+from typing import Optional
+
+
 class CompilerError(Exception):
-    def __init__(self, line_number: int, info: str, *args: object) -> None:
+    def __init__(self, line_number: Optional[int], info: str, *args: object) -> None:
         super().__init__(*args)
         self.line = line_number
         self.info = info
@@ -10,7 +13,7 @@ class CompilerError(Exception):
 # Derives
 
 class PreprocesorError(CompilerError):
-    def __init__(self,  line_number: int, info: str, *args: object) -> None:
+    def __init__(self,  line_number: Optional[int], info: str, *args: object) -> None:
         super().__init__(line_number, info, *args)
         self.stage = None
 
@@ -18,7 +21,7 @@ class PreprocesorError(CompilerError):
          return f"Preprocesing error: {self.info}"
 
 class ParserError(CompilerError):
-    def __init__(self,  line_number: int, info: str, *args: object) -> None:
+    def __init__(self,  line_number: Optional[int], info: str, *args: object) -> None:
         super().__init__(line_number, info, *args)
 
     def __str__(self):

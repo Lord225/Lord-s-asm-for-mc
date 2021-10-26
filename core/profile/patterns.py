@@ -60,12 +60,12 @@ class Pattern:
                 separator = self.__get_token_str(i+2)
                 type_token = self.__get_token_str(i+3)
                 close_token = self.__get_token_str(i+4)
-
-                if close_token != Pattern.ARGUMENT_END_SYMBOL:
+                
+                if close_token is None or close_token != Pattern.ARGUMENT_END_SYMBOL:
                     raise
-                if type_token == Pattern.ARGUMENT_END_SYMBOL:
+                if type_token is None or type_token == Pattern.ARGUMENT_END_SYMBOL:
                     raise
-                if separator != Pattern.TOKEN_SEPARATOR_SYMBOL:
+                if separator is None or separator != Pattern.TOKEN_SEPARATOR_SYMBOL:
                     raise
 
                 self.arguments[next_token] = len(processed_tokens)

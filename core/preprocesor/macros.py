@@ -12,7 +12,7 @@ def find_macros(program, context):
                 line = next(line_iter)
                 line_str = line.line
                 if line_str.startswith("#endmacro"):
-                    raise error.PreprocesorError("The macro definition hasn't been started (found '#endmacro' without '#macro')")
+                    raise error.PreprocesorError(line.line_index_in_file, "The macro definition hasn't been started (found '#endmacro' without '#macro')")
                 if line_str.startswith("#macro"):
                     components = line_str.split(" ")
                     if components[1].find("(") != -1 and components[-1].find(")") != -1:
@@ -21,24 +21,24 @@ def find_macros(program, context):
                         start = conact.find("(")
                         end = conact.find(")")
                         if start == -1:
-                            raise error.PreprocesorError("Expected '(' in macro definition")
+                            raise error.PreprocesorError(line.line_index_in_file, "Expected '(' in macro definition")
                         if end == -1:
-                            raise error.PreprocesorError("Expected ')' in macro definition")
+                            raise error.PreprocesorError(line.line_index_in_file, "Expected ')' in macro definition")
                         name = components[1][:components[1].find("(")]
                         if len(name) == 0:
-                            raise error.PreprocesorError("Expected name for the macro")
+                            raise error.PreprocesorError(line.line_index_in_file, "Expected name for the macro")
                         parametres = conact[start+1:end].split(',')
                         line = next(line_iter)
                         while not line.line.startswith("#endmacro"):
                             if line.line.startswith("#macro"):
-                                raise error.PreprocesorError("Canno't define macros in macro")
+                                raise error.PreprocesorError(line.line_index_in_file, "Canno't define macros in macro")
                             for i, param in enumerate(parametres):
                                 line.line = parser_base.smart_replace(line.line, param, "{arg_"+str(i)+"}") #sorry
                             DATA.append(line)
                             try:
                                 line = next(line_iter)
                             except StopIteration:
-                                raise error.PreprocesorError("he macro definition hasn't been ended (found '#macro' without '#endmacro')")
+                                raise error.PreprocesorError(line.line_index_in_file, "he macro definition hasn't been ended (found '#macro' without '#endmacro')")
                         macros[name] = (len(parametres), DATA)
                 else:
                     new_program.append(line)
@@ -62,12 +62,12 @@ def apply_macro(program, name, macro):
             start = line.find("(")
             end = line.find(")")
             if start == -1:
-                raise error.LoadError("Expected '(' in macro call")
+                raise error.PreprocesorError(line_obj.line_index_in_file, "Expected '(' in macro call")
             if end == -1:
-                raise error.LoadError("Expected ')' in macro call")
+                raise error.PreprocesorError(line_obj.line_index_in_file, "Expected ')' in macro call")
             args = {"arg_{}".format(i):x.strip() for i, x in enumerate(line[start+1:end].split(","))}
             if len(args) != macro[0]:
-                raise error.LoadError("Expected {} arguments in macro, but got: {}".format(macro[0], len(args)))
+                raise error.PreprocesorError(line_obj.line_index_in_file, "Expected {} arguments in macro, but got: {}".format(macro[0], len(args)))
             for macro_line in macro[1]:
                 as_dict = dict(macro_line).copy()
                 macro_line = Line(**as_dict)

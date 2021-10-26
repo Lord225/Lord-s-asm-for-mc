@@ -42,17 +42,17 @@ def definition_solver(program, context):
                     consts.update(new_consts)
                     definition.extend(new_defs)
     if len(recursion) != 1:
-        raise error.PreprocesorError(i, "Expected #endif")
+        raise error.PreprocesorError(None, "Expected #endif")
     context["defs"] = definition
     context["consts"] = consts
     return new_program, context
 def add_definition(line: str, i) -> Tuple[List[str], Dict[str, str]]:
     components = line.split(" ")
     if len(components) > 2:
-        return list(), {str(components[1]): ''.join([x+" " for x in components[2:]]).strip()}
+        return list(), {str(components[1]): ''.join([x + " " for x in components[2:]]).strip()}
     elif len(components) == 2:
         if not components[1].isupper():
-            raise error.PreprocesorError(f"Definitions should have UPPER CASE NAMES. got: {components[1]}")
+            raise error.PreprocesorError(i, f"Definitions should have UPPER CASE NAMES. got: {components[1]}")
         return [components[1]], {}
     else:
         raise error.PreprocesorError(i, "Can't inteprete #define expression: '{}'".format(line))

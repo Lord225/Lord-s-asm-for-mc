@@ -8,21 +8,21 @@ def get_value(strage_format:str):
     if strage_format.isdecimal():
         return int(strage_format)
     elif len(strage_format[2:]) == 0:
-        raise error.ParserError(f"Value: '{strage_format}' cannot be parsed.")
+        raise error.ParserError(-1, f"Value: '{strage_format}' cannot be parsed.")
     elif strage_format[:2] == "0x":
         return int(strage_format[2:],base=16)
     elif strage_format[:2] == "0b":
         return int(strage_format[2:],base=2)
     else:
-        raise error.ParserError(f"Value: '{strage_format}' cannot be parsed.")
+        raise error.ParserError(-1, f"Value: '{strage_format}' cannot be parsed.")
 
 
 def smart_replace(line: str, From: str, To: str):
-    line = re.sub("(?<![a-zA-Z0-9\w])({})(?![a-zA-Z0-9\w])".format(From), To, line)
+    line = re.sub(r"(?<![a-zA-Z0-9\w])({})(?![a-zA-Z0-9\w])".format(From), To, line)
     return line
 
 
 def smart_find(line: str, From: str):
-    finded = re.search("(?<![a-zA-Z0-9\w])({})(?![a-zA-Z0-9\w])".format(From),line)
+    finded = re.search(r"(?<![a-zA-Z0-9\w])({})(?![a-zA-Z0-9\w])".format(From),line)
     return finded
 

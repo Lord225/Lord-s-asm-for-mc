@@ -3,7 +3,7 @@ import core.config as config
 import core.parse.base as parser_base
 import re
 
-TOKENIZE_PATTERN = re.compile("(\W|\s)")
+TOKENIZE_PATTERN = re.compile(r"(\W|\s)")
 USELSESS = ' '
 
 def tokienize_line(line: str):

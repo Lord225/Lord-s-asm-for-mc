@@ -31,7 +31,7 @@ CORE0:
     #debug ram
     
     mov INPUT_ARRAY, reg[0]
-    mov reg[0], ram[COUNTER]
+    ov reg[0], ram[COUNTER]
     mov COUNT_ARRAY, reg[3]
     mov MASK, reg[1]
 

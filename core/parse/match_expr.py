@@ -1,7 +1,6 @@
 from dis import dis
-from typing import List
+from typing import List, Optional
 import Levenshtein as lev
-from tables import UnImplemented
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse as parse
@@ -20,19 +19,19 @@ def parse_argument_token(context, pattern_token, expr_token):
     elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
         parsed_token = expr_token
     elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
-        raise UnImplemented("ArgumentTypes.OFFSET_LABEL")
+        raise NotImplementedError("ArgumentTypes.OFFSET_LABEL")
     elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
-        raise UnImplemented("ArgumentTypes.HEX_NUM")
+        raise NotImplementedError("ArgumentTypes.HEX_NUM")
     elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
-        raise UnImplemented("ArgumentTypes.BIN_NUM")
+        raise NotImplementedError("ArgumentTypes.BIN_NUM")
     elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
-        raise UnImplemented("ArgumentTypes.DEC_NUM")
+        raise NotImplementedError("ArgumentTypes.DEC_NUM")
     else:
         raise
     return parsed_token
 
 
-def match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
+def match_expr(pattern:profile.patterns.Pattern, expr: List, context: Optional[dict]):
     args = dict()
 
     if len(pattern.tokens) != len(expr):

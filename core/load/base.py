@@ -48,9 +48,6 @@ class Line(dict):
     def items(self):
         return self.__dict__.items()
 
-    def __cmp__(self, dict_):
-        return self.__cmp__(self.__dict__, dict_)
-
     def __contains__(self, item):
         return item in self.__dict__
 
