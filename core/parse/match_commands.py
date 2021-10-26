@@ -1,3 +1,4 @@
+from pprint import pp
 from sklearn.datasets import load_svmlight_file
 import core.profile.profile as profile
 import core.profile.patterns as patterns
@@ -57,7 +58,11 @@ def serach_harder_for_command(line_obj, profile: profile.Profile, context):
         pattern: patterns.Pattern = pattern
         output[name] = match_expr.soft_match_expr(pattern['pattern'], tokens, context)
     
+
     best_offsets = {key:min(val, key=lambda x: x['cost']) for key, val in output.items()}
+    
+    #pp(best_offsets)
+    
     best_fit = min(best_offsets.items(), key = lambda x: x[1]['cost'])
     return best_fit
 

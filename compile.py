@@ -1,8 +1,7 @@
-from core import emulate
-import core.config as config
-import core.error as error
 import core
 import argparse
+import core.error as error
+import core.config as config
 
 DEBUG_MODE = False
 
@@ -114,7 +113,7 @@ def main():
 
         config.override_from_dict(save = 'raw', comments = 'False')
         output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
-        emulate.emulator.emulate(output, context)
+        core.emulator.emulate(output, context)
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)
