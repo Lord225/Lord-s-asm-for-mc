@@ -14,7 +14,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         self.is_running_flag = True
         self.cycles = 0
 
-    def get_current_pos(self):
+    def get_current_pos(self, chunk_name) -> int:
         return self.ROM_COUNTER
     
     def inc_counter(self, value=1):

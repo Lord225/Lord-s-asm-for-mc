@@ -3,9 +3,18 @@ import argparse
 import core.error as error
 import core.config as config
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
-parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Custom assembly Compiler and Emulator. \n Github: https://github.com/Lord225/Lord-s-asm-for-mc \n\n You can start with: \n\n\t python compile.py --save pad --comments \n\n It will compile "program.lor" and save it in "output" dir.\n if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.')
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawTextHelpFormatter, 
+    description=
+"""Custom assembly Compiler and Emulator. Github: https://github.com/Lord225/Lord-s-asm-for-mc
+    
+You can start with: \t 'python compile.py --save pad --comments'
+
+It will compile "program.lor" and save it in "output" dir.
+if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.
+""")
 
 parser.add_argument("-i", "--input", type=str, default="src/program.lor",
 help="""Name of file to compile
@@ -114,6 +123,9 @@ def main():
         config.override_from_dict(save = 'raw', comments = 'False')
         output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
         core.emulator.emulate(output, context)
+
+    if config.run is False and config.save is None:
+        print("Type: 'python compile.py --help' for help.")
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)
