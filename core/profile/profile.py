@@ -21,7 +21,11 @@ def load_json_profile(path):
     return profile
 
 def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
-    return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
+    emul: dict = CPU_PROFILE["CPU"]["emulator"]
+    if emul is str:
+        return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
+    else:
+        return emul
 
 def check_raw_command_integrity(id: str, cmd: dict):
     required = [required for required in REQUIRED_FIELDS if required not in cmd]
@@ -60,7 +64,7 @@ class Profile:
         self.builded = False
 
         self.profile: dict[str, Any] = profile["CPU"]
-        self.emul: Any = emulator
+        self.emul = emulator
 
         self.build_profile()
         self.__selfcheck()

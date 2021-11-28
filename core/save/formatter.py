@@ -72,7 +72,7 @@ def get_raw(program, context):
         for name, val in args.items():
             line.append("{}".format(padbin(val, int(layout[name]["size"]) ,prefix=False)))
         values = wrap(''.join(line), 8)
-        return [int(val, base=2) for val in values]
+        return [f'{int(val, base=2):02x}' for val in values]
 
 
 def format_output(program, context):

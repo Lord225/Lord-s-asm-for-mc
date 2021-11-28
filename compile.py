@@ -1,3 +1,4 @@
+from types import ModuleType
 import core
 import argparse
 import core.error as error
@@ -119,10 +120,14 @@ def main():
         if context['profile'].emul is None:
             print("Emulation is not avalible")
             return
-
-        config.override_from_dict(save = 'raw', comments = 'False')
-        output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
-        core.emulator.emulate(output, context)
+        if isinstance(context['profile'].emul, dict):
+            core.emulator.custom_emulator.emulate(output, context)
+            return
+        if isinstance(context['profile'].emul, ModuleType):
+            config.override_from_dict(save = 'raw', comments = 'False')
+            output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
+            core.emulator.emulate(output, context)
+            return
 
     if config.run is False and config.save is None:
         print("Type: 'python compile.py --help' for help.")

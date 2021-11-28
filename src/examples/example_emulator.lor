@@ -1,0 +1,16 @@
+#profile example_emulator.jsonc
+
+#global ENTRY ENTRY 0
+
+ENTRY:
+    imm 16384
+    mov acc -> 2
+    imm 1
+    mov acc -> 3
+    JMP:
+        mov 0 -> [0]
+        add 3, 0
+        mov acc -> 0
+        sub 2, 0
+        jne JMP
+        halt

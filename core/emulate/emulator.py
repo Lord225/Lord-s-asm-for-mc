@@ -208,13 +208,3 @@ def write_data(program, context, machine):
     data: dict = context['data']
 
     machine.write_memory(None, DataTypes.DATA, data)
-
-        
-        
-        
-
-
-
-
-
-

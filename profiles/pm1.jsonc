@@ -33,6 +33,13 @@
                     "n1":{
                         "size":8
                     }
+                },
+                "inject":
+                {
+                    "value":
+                    {
+                        "size": 8
+                    }
                 }
             }
         },
@@ -54,8 +61,20 @@
             "nop":{
                 "pattern":"nop",
                 "command_layout": "short",
-                "bin":{}
+                "bin":{
+                    "CU":2,
+                    "r1":0,
+                    "r2":0
+                }
             },
+            "inject":{
+                "pattern":"inject {stream:num}",
+                "command_layout": "inject",
+                "bin":{
+                    "value":"stream"
+                }
+            },
+
 
             "mov imm reg":{
                 "pattern":"mov {arg1:num}, reg[{arg2:num}]",
