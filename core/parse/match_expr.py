@@ -21,11 +21,13 @@ def parse_argument_token(context, pattern_token, expr_token):
     elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
         raise NotImplementedError("ArgumentTypes.OFFSET_LABEL")
     elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
-        raise NotImplementedError("ArgumentTypes.HEX_NUM")
+        parsed_token = parse.parse_hex(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
-        raise NotImplementedError("ArgumentTypes.BIN_NUM")
+        parsed_token = parse.parse_bin(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
-        raise NotImplementedError("ArgumentTypes.DEC_NUM")
+        parsed_token = parse.parse_dec(expr_token)
+    elif pattern_token[2] == patterns.ArgumentTypes.QUOTE_STR:
+        parsed_token = parse.parse_quote_str(expr_token, context)
     else:
         raise
     return parsed_token
@@ -42,7 +44,6 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, context: Optional[d
                 return None
         elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
             parsed_token = parse_argument_token(context, pattern_token, expr_token)
-
             if parsed_token is None:
                 return None
             args[pattern_token[1]] = parsed_token

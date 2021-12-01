@@ -5,6 +5,7 @@ import core.error as error
 import core.emulate as emulate
 import numpy as np
 
+
 class PM1_EMULATOR(emulate.EmulatorBase):
     def __init__(self):
         self.RAM = np.zeros(shape=(256,), dtype=np.uint8)

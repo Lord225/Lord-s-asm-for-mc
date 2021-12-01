@@ -14,8 +14,34 @@ def parse_number(token):
     except:
         return None
 
+def parse_hex(token):
+    try:
+        if token[:2] == "0x":
+            return int(token[2:],base=16)
+        else:
+            return int(token, base=16)
+    except:
+        return None
+def parse_bin(token):
+    try:
+        if token[:2] == "0b":
+            return int(token[2:], base=2)
+        else:
+            return int(token, base=2)
+    except:
+        return None
+def parse_dec(token):
+    try:
+        return int(token[2:], base=10)
+    except:
+        return None
 def parse_label(token, context):
     labels = context['physical_adresses'] if 'use_phisical_adresses' in context else context['labels']
     if token not in labels:
         return None
     return labels[token]
+
+def parse_quote_str(token, context):
+    if token[0] == '"' and token[-1] == '"':
+        return token[1:-1]
+    return None

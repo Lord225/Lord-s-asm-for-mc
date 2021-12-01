@@ -12,12 +12,12 @@
 
 CORE0:
     #debug ram
-    mov 0xFF, reg[1]       //end
+    mov 0xFF, "Quote Quote Q u   o    t       e", reg[1]       //end
     mov 0xFE, reg[1]       //end-1
     mov reg[1], ram[ARR_DEC_END]
     mov 0, reg[1]          //outer counter
     mov reg[1], ram[OUTER_COUNTER]
-
+    inject 0b00000000  
     OUTER:
         mov ram[OUTER_COUNTER], reg[1]
         mov ram[ARR_END], reg[3]
@@ -52,4 +52,4 @@ CORE0:
     shut
     #debug ram(240, 256)
     #debug break
-CORE1:
+CORE1: 

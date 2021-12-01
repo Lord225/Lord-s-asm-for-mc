@@ -126,8 +126,9 @@ def main():
         if isinstance(context['profile'].emul, ModuleType):
             config.override_from_dict(save = 'raw', comments = 'False')
             output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
-            core.emulator.__emulate(output, context)
+            core.emulator.emulate(output, context)
             return
+
 
     if config.run is False and config.save is None:
         print("Type: 'python compile.py --help' for help.")

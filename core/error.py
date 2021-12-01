@@ -1,6 +1,4 @@
-
 from typing import Optional
-
 
 class CompilerError(Exception):
     def __init__(self, line_number: Optional[int], info: str, *args: object) -> None:
@@ -8,9 +6,6 @@ class CompilerError(Exception):
         self.line = line_number
         self.info = info
         self.stage = None
-        
-
-# Derives
 
 class PreprocesorError(CompilerError):
     def __init__(self,  line_number: Optional[int], info: str, *args: object) -> None:
@@ -30,7 +25,7 @@ class ParserError(CompilerError):
 class ProfileLoadError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
-
+ 
 class EmulationError(Exception):
     def __init__(self, msg: str, *args: object) -> None:
         super().__init__(*args)

@@ -16,6 +16,7 @@ class ArgumentTypes(Enum):
     HEX_NUM = auto()
     BIN_NUM = auto()
     DEC_NUM = auto()
+    QUOTE_STR = auto()
 
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'

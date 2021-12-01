@@ -38,5 +38,7 @@ def add_comments(program, context):
             line.formatted.append(get_line_labels(labels, i+1))
             if config.show_adresses:
                 line.formatted.append(line.physical_adress if 'physical_adress' in line else "None")
+            if config.save_comments_after_lines:
+                line.formatted.append(line.comment if line.has_key("comment") else "")
 
     return program, context
