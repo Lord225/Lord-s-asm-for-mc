@@ -10,8 +10,12 @@ def find_key_by_value(dict: dict, value):
     return output
 
 def within_bounds(bit_size, value):
-    max_val = 2**bit_size - 1
-    return value <= max_val
+    if value >= 0:
+        max_val = 2**bit_size - 1
+        return value <= max_val
+    else:
+        min_val = -(2**bit_size)
+        return value >= min_val
 
 def assert_arguments_chunked(program, context):
     for _, program_chunk in program.items():

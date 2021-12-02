@@ -11,8 +11,8 @@ def ram_display(ram, word_size, start, end):
     print(
         generate_ram_display(
             ram, 
-            rows=config.debug_ram_rows_count, 
-            subrows=config.debug_ram_subrows_count,
+            rows = config.debug_ram_rows_count, 
+            subrows = config.debug_ram_subrows_count,
             ADRESS_AS_HEX = config.debug_ram_adress_as_hex,
             VALUE_AS = config.debug_ram_values_mode,
             ADD_ASCII_VIEW = config.debug_ram_add_ascii_view,

@@ -12,7 +12,7 @@
 
 CORE0:
     #debug ram
-    mov 0xFF, "Quote Quote Q u   o    t       e", reg[1]       //end
+    mov 0xFF, reg[1]       //end
     mov 0xFE, reg[1]       //end-1
     mov reg[1], ram[ARR_DEC_END]
     mov 0, reg[1]          //outer counter

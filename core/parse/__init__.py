@@ -45,3 +45,12 @@ def parse_quote_str(token, context):
     if token[0] == '"' and token[-1] == '"':
         return token[1:-1]
     return None
+
+def parse_offset_label(token, context, line):
+    labels = context['physical_adresses'] if 'use_phisical_adresses' in context else context['labels']
+    if token not in labels:
+        return None
+    if line.has_key('physical_adress'):
+        return labels[token]-line.physical_adress
+    else:
+        return 0

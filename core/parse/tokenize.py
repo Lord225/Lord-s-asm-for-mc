@@ -6,13 +6,26 @@ import re
 TOKENIZE_PATTERN = re.compile(r"(\W|\s)")
 USELSESS = ' '
 
-def tokienize_line(line: str):
-    return re.split(TOKENIZE_PATTERN, line)
+def tokienize_str(string):
+    return re.split(TOKENIZE_PATTERN, string)
 
-def remove_meaningless_tokens(tokens):
-    return [str(token) for token in tokens if token not in USELSESS]
+def tokienize_line(line):
+    line.tokenized = tokienize_str(line.line)
+    return line
 
-def join_quote_str(tokens):
+def remove_meaningless_tokens_list(tokens_list):
+    return [str(token) for token in tokens_list if token not in USELSESS]
+
+def remove_meaningless_tokens(line):
+    line.tokenized = remove_meaningless_tokens_list(line.tokenized)
+    return line
+
+def join_quote_str(line):
+    """
+    Joins tokens between euotes:
+    `['a', 'b', '"', ' ', "c". '"'] => ['a', 'b', '" c"']
+    """
+    tokens = line.tokenized
     state = False
     output = list()
     joined = ""
@@ -27,10 +40,12 @@ def join_quote_str(tokens):
             joined += tokens[i]
         else:
             output.append(tokens[i])
-    return output
+    if state:
+        raise error.ParserError(line.line_index_in_file, 'Expected \'"\'')
+    line.tokenized = output
+    return line
     
 def tokenize(program, context):
     for line_obj in program:
-        line: str = line_obj.line
-        line_obj.tokenized = remove_meaningless_tokens(join_quote_str(tokienize_line(line)))
+        line_obj = remove_meaningless_tokens(join_quote_str(tokienize_line(line_obj)))
     return program, context

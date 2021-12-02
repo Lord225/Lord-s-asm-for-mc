@@ -9,7 +9,7 @@ def find_closest_command(program, debug_command):
 
 
 def tokenize_debug_comman(debug):
-    _, _, *args = tokenize.remove_meaningless_tokens(tokenize.tokienize_line(debug.line))
+    _, _, *args = tokenize.remove_meaningless_tokens_list(tokenize.tokienize_str(debug.line))
     return args
 
 

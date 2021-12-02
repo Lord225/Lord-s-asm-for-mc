@@ -10,7 +10,7 @@ def match_word(pattern_token, expr_token):
     return pattern_token[1] != expr_token
 
 
-def parse_argument_token(context, pattern_token, expr_token):
+def parse_argument_token(context, pattern_token, expr_token, line):
     parsed_token = None
     if pattern_token[2] == patterns.ArgumentTypes.NUM:
         parsed_token = parse.parse_number(expr_token)
@@ -19,7 +19,7 @@ def parse_argument_token(context, pattern_token, expr_token):
     elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
         parsed_token = expr_token
     elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
-        raise NotImplementedError("ArgumentTypes.OFFSET_LABEL")
+        parsed_token = parse.parse_offset_label(expr_token, context, line)
     elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
         parsed_token = parse.parse_hex(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
@@ -33,8 +33,9 @@ def parse_argument_token(context, pattern_token, expr_token):
     return parsed_token
 
 
-def match_expr(pattern:profile.patterns.Pattern, expr: List, context: Optional[dict]):
+def match_expr(pattern: profile.patterns.Pattern, line, context: Optional[dict]):
     args = dict()
+    expr = line.tokenized
 
     if len(pattern.tokens) != len(expr):
         return None
@@ -43,7 +44,7 @@ def match_expr(pattern:profile.patterns.Pattern, expr: List, context: Optional[d
             if match_word(pattern_token, expr_token):
                 return None
         elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
-            parsed_token = parse_argument_token(context, pattern_token, expr_token)
+            parsed_token = parse_argument_token(context, pattern_token, expr_token, line)
             if parsed_token is None:
                 return None
             args[pattern_token[1]] = parsed_token
@@ -55,7 +56,9 @@ def soft_word_match(token, expr_token, context):
     return distance
 
     
-def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict):
+def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
+    expr = line.tokenized
+
     output = list()
     len_diff = abs(len(pattern.tokens)-len(expr))
     if len_diff == 0:
@@ -88,7 +91,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, expr: List, context: dict)
                 else:
                     command_cost -= 0.5
             elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
-                parsed_token = parse_argument_token(context, pattern_token, expr_token)
+                parsed_token = parse_argument_token(context, pattern_token, expr_token, line)
                 if parsed_token is None:
                     misses.append(f"'{expr_token}' cannot be parsed as {pattern_token[2]}")
                     command_cost += 0.8

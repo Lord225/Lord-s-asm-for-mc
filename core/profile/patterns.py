@@ -25,7 +25,7 @@ class Pattern:
     
     def __init__(self, pattern: str):
         self.arguments = dict()
-        self.tokens = parse.tokenize.remove_meaningless_tokens(parse.tokenize.tokienize_line(pattern))
+        self.tokens = parse.tokenize.remove_meaningless_tokens_list(parse.tokenize.tokienize_str(pattern))
         self.tokens = self.__parse_tokens()
         
     def __get_token_str(self, id: int):

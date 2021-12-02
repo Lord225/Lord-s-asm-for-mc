@@ -8,7 +8,7 @@ def find_labels(program, context):
     labels = {}
     output = list()
     for line_obj in program:
-        label = match_expr.match_expr(find_labels, line_obj.tokenized, None)
+        label = match_expr.match_expr(find_labels, line_obj, None)
         if label is not None:
             if 'label' not in label:
                 raise error.ParserError(line_obj.line_index_in_file, f"Cannot find label '{label}'")

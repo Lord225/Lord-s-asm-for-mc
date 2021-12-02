@@ -7,12 +7,10 @@ import core.config as config
 import core.error as error
 
 def serach_for_command(line_obj, profile: profile.Profile, context):
-    tokens = line_obj.tokenized
-
     for name, pattern in profile.commands_definitions.items():
         pattern_instance: patterns.Pattern = pattern['pattern']
         
-        matched = match_expr.match_expr(pattern_instance, tokens, context)
+        matched = match_expr.match_expr(pattern_instance, line_obj, context)
         if matched is not None:
             return name, matched
     else:
@@ -52,11 +50,10 @@ def summarise_best_fit(best_fit, context):
 
 
 def serach_harder_for_command(line_obj, profile: profile.Profile, context):
-    tokens = line_obj.tokenized
     output = dict()
     for name, pattern in profile.commands_definitions.items():
         pattern_instance: patterns.Pattern = pattern['pattern']
-        output[name] = match_expr.soft_match_expr(pattern_instance, tokens, context)
+        output[name] = match_expr.soft_match_expr(pattern_instance, line_obj, context)
     
 
     best_offsets = {key:min(val, key=lambda x: x['cost']) for key, val in output.items()}

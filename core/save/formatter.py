@@ -9,11 +9,13 @@ def padhex(x, pad, prefix = True):
 
 def padbin(x, pad, prefix = True):
     x = 0 if x is None else x
-    return '{}{}{}'.format('0b' if prefix else '',"0"*(pad-len(bin(x)[2:])),bin(x)[2:])
+    value = bin(x if x>=0 else x+(1<<pad))[2:]
+    return '{}{}{}'.format('0b' if prefix else '',"0"*(pad-len(value)), value)
 
 def paddec(x, pad, fill = "0"):
     x = 0 if x is None else x
     return '{}{}'.format(fill*(pad-len(str(x))), str(x))
+
 
 def get_py(program, context):
     parsed = program['parsed_command']
@@ -59,7 +61,6 @@ def get_pad(program, context):
             line.append("{}".format(padbin(val, layout[name]["size"],prefix=False)))
         return wrap(''.join(line), 8)
 
-
 def get_raw(program, context):
     profile: Profile = context['profile']
     layouts = profile.arguments
@@ -94,5 +95,4 @@ def format_output(program, context):
     context['tabulate'] = req_tabulate
 
     return program, context
-
-
+    
