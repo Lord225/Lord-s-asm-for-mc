@@ -322,6 +322,27 @@
                     "r1":1,
                     "r2":1
                 }
+            },
+            "int":{
+                "pattern":"int {arg1:num}",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":1
+                }
+            },
+            "cls":
+            {
+                "pattern":"cls",
+                "command_layout":"short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
+                    "r2":1
+                }
             }
         }
     }

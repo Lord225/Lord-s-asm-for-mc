@@ -22,7 +22,7 @@ def load_json_profile(path):
 
 def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
     emul: dict = CPU_PROFILE["CPU"]["emulator"]
-    if emul is str:
+    if isinstance(emul, str):
         return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
     else:
         return emul

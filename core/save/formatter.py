@@ -34,7 +34,7 @@ def get_bin(program, context):
         layout = layouts[layout]
         for name, val in args.items():
             line.append("{}".format(padbin(val, layout[name]["size"], prefix=False)))
-        return line
+    return line
 
 def get_dec(program, context):
     profile: Profile = context['profile']
@@ -47,7 +47,7 @@ def get_dec(program, context):
         for name, val in args.items():
             line.append("{}".format(padbin(val, layout[name]["size"], prefix=False)))
             line.append("({})".format(paddec(val, 3," ")))
-        return line
+    return line
 
 def get_pad(program, context):
     profile: Profile = context['profile']
@@ -59,7 +59,7 @@ def get_pad(program, context):
         layout = layouts[layout]
         for name, val in args.items():
             line.append("{}".format(padbin(val, layout[name]["size"],prefix=False)))
-        return wrap(''.join(line), 8)
+    return wrap(''.join(line), 8)
 
 def get_raw(program, context):
     profile: Profile = context['profile']
@@ -71,8 +71,8 @@ def get_raw(program, context):
         layout = layouts[layout]
         for name, val in args.items():
             line.append("{}".format(padbin(val, int(layout[name]["size"]) ,prefix=False)))
-        values = wrap(''.join(line), 8)
-        return [f'{int(val, base=2):02x}' for val in values]
+    values = wrap(''.join(line), 8)
+    return [int(val, base=2) for val in values]
 
 
 def format_output(program, context):

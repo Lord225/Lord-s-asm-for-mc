@@ -285,7 +285,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='cls')
     def clear_screen(self):
-        pass
+        self.RAM[0xF0:0xFF] = 0
     
     def show_ascii(self):
         vals = self.RAM[0xF0:0xFF]

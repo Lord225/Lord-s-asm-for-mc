@@ -46,7 +46,8 @@ def get_adress_offset(current_line_obj, profile: Profile):
     if profile.adressing.mode == 'align':
         return max(profile.arguments_len.values())
     elif profile.adressing.mode == 'packed':
-        return profile.arguments_len[list(current_line_obj.parsed_command.keys())[0]]
+        return int(profile.arguments_len[list(current_line_obj.parsed_command.keys())[0]])
+    raise RuntimeError("Logic Error")
 
 
 def split_into_chunks(program, context):

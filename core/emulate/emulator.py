@@ -241,7 +241,7 @@ def emulate(program, context):
         print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}μs")
     except:
         print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}us")
-    print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/profile.info.speed:0.1f}s")
+    print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/float(profile.info.speed):0.1f}s")
 
 def __write_program(program, context, machine):
     debug_instructions = dict()
