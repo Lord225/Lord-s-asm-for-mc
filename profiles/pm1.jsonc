@@ -343,7 +343,18 @@
                     "r1":1,
                     "r2":1
                 }
-            }
+            },
+            "jf":{
+                "pattern":"jf {adress:label}",
+                "command_layout": "long",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":3,
+                    "r2":0,
+                    "n1":"adress"
+                }
+            },
         }
     }
 }

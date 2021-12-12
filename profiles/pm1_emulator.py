@@ -4,7 +4,7 @@ import core.config as config
 import core.error as error
 import core.emulate as emulate
 import numpy as np
-
+import queue
 
 class PM1_EMULATOR(emulate.EmulatorBase):
     def __init__(self):
@@ -14,6 +14,8 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         self.ROMStack = []
         self.is_running_flag = True
         self.cycles = 0
+        self.overflow_flag = False
+        self.red_net_queue = queue.SimpleQueue()
 
     def get_current_pos(self, chunk_name) -> int:
         return self.ROM_COUNTER
@@ -193,6 +195,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     def alu_reg_reg_rsh(self, _from_a, _to_b):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
         _value, of = ops.underflowing_rsh(_value, 1)  #TODO
+        self.overflow_flag = of
 
         self.Regs[_to_b] = _value
 
@@ -209,6 +212,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         _value_b = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned') 
         
         _value, of = ops.overflowing_add(_value_a, _value_b)
+        self.overflow_flag = of
 
         self.Regs[_from_b] = int(_value)
 
@@ -217,7 +221,8 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
 
         _value, of = ops.overflowing_add(_value, 1)
-
+        self.overflow_flag = of
+        
         self.Regs[_from_a] = _value
 
     @emulate.log_disassembly(format='dec reg[{_from_a}]')
@@ -225,6 +230,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
 
         _value, of = ops.overflowing_sub(_value, 1)
+        self.overflow_flag = of
 
         self.Regs[_from_a] = _value
 
@@ -259,18 +265,17 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='shut')
     def shut(self):
-        pass
-    
-    def jump_rednet(self, _target_true):
-        pass
+        self.is_running_flag = False
 
     @emulate.log_disassembly(format='jf {_target_true}')
     def jump_flag(self, _target_true):
         FLAG = self.RAM[233]
         if FLAG & 128 != 0:
-            self.jump(_target_true)
+            if self.overflow_flag:
+                self.jump(_target_true)
         elif FLAG & 64 != 0:
-            pass
+            if not self.red_net_queue.empty():
+                self.jump(_target_true)
 
     @emulate.log_disassembly(format='ret')
     def ret(self):
@@ -307,7 +312,14 @@ class PM1_EMULATOR(emulate.EmulatorBase):
         if len(keyboard_input) == 0:
             return
         self.RAM[0xE0] = ord(keyboard_input[0])
-
+    def insert_data_to_rednet(self):
+        val = input()
+        val = val.split(' ')
+        for v in val:
+            self.red_net_queue.put(v)
+    def show_rednet_queue(self):
+        print(self.red_net_queue)
+    
     def get_ram_ref(self):
         return self.RAM
 

@@ -7,6 +7,6 @@ CORE0:
     mov 1, reg[0]
     mov 2, reg[0]
     #debug regs
-    #debug get_keyboard()
+    #debug insert_data_to_rednet()
     #debug ram
 CORE1: 
