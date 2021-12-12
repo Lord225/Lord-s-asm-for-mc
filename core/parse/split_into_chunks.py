@@ -64,6 +64,9 @@ def split_into_chunks(program, context):
         entry = {chunk_name:(label_name, offset, labels[label_name]) for chunk_name, (label_name, offset) in entry.items()}
     except KeyError as err:
         raise error.ParserError(None, f"Label marked as global: {err} cannot be founded in skope")
+    if len(entry) == 0:
+        raise error.ParserError(None, f"No entrypoint is defined (Consider adding #global to file. Avalible are {profile.keywords})")
+
     chunks = {chunk_name: list() for chunk_name in entry.keys()}
 
     chunk_name, current_chunk = get_next_chunk(entry, 0)
