@@ -57,6 +57,31 @@
             "CORE0",
             "CORE1"
         ],
+        "SCHEMATIC":
+        {
+            "blank":"pm1_blank_rom.schem",
+            "layout": 
+            {
+                "offset":[0, 0, 0],
+                "stride":[0, 0, 9],
+                "size": 16,
+                "layout": 
+                {
+                    "offset":[0, 0, 0],
+                    "stride":[0, 3, 0],
+                    "size": 16,
+                    "layout":
+                    {
+                        "offset":[14, 0, 0],
+                        "stride":[-2, 0, 0],
+                        "size": 8,
+                        "layout": null
+                    }
+                }
+            }
+            
+        },
+
         "COMMANDS":{
             "nop":{
                 "pattern":"nop",

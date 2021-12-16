@@ -146,6 +146,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
         bar = progressbar
 
     with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
+
         for i, (stage, func) in pipeline_iterator:
             try:
                 output = func(data, external)   # Execute stage

@@ -4,7 +4,7 @@ import argparse
 import core.error as error
 import core.config as config
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
@@ -22,12 +22,13 @@ help="""Name of file to compile
 Default: src/program.lor""")
 
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
-parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad", "schem"], type=str, default = None,
 help="""> dec - Build source and save in easy-to-read format
 > pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
 > raw - Build source and save as decimal representation of bytes
+> schem - Build source and save as schematic
 Default: None (will not save)""")
 
 parser.add_argument('-c','--comments', dest='comments', action='store_true', help="Add debug information on the end of every line in output files")
@@ -55,8 +56,8 @@ def show_outfiles(context):
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = True,
-            save = "pad",
+            run = False,
+            save = "schem",
             comments = True,
             onerror = 'None',
             debug = True,
@@ -108,7 +109,9 @@ def main():
         show_warnings(context)
 
     # Compile and Save
-    if config.save in ['bin', 'py', 'dec', 'raw', 'pad']:
+    if config.save in ['bin', 'py', 'dec', 'raw', 'pad', "schem"]:
+        if config.save == 'schem':
+            config.override_from_dict(comments = 'False')
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
         if config.show_warnings:
             show_warnings(context)

@@ -16,7 +16,6 @@ def paddec(x, pad, fill = "0"):
     x = 0 if x is None else x
     return '{}{}'.format(fill*(pad-len(str(x))), str(x))
 
-
 def get_py(program, context):
     parsed = program['parsed_command']
     meta = {'mached': program['mached_command']}
@@ -84,7 +83,7 @@ def format_output(program, context):
         formatter_function, req_tabulate = get_dec, True
     elif config.save == 'pad':
         formatter_function, req_tabulate = get_pad, True
-    elif config.save == 'raw':
+    elif config.save == 'raw' or config.save == "schem":
         formatter_function, req_tabulate = get_raw, True
     else: 
         raise 

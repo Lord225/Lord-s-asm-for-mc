@@ -1,96 +1,91 @@
 #profile pm1.jsonc
 
+#global CORE0 CORE0 0
+#global CORE1 CORE1 0
+
 #define FLAGS 0xE9
+#define KEYBOARD 0xE0
+#define BIN_IN 0xE1
 #define REDNET_DATA 0xE2
 #define REDNET_ADDRESS 0xE3
 #define REDNET_OUTPUT 0xE4
-#define K 0x4B
-#define P 0x50
-
-    // REG[0] - wartość od komuutera o adresie 1
-    // REG[1] - wartość od komuutera o adresie 2
-    // REG[2] - adres REDNET_OUTPUT
-    // REG[3] - 1 / wartości ascii
 
 CORE0:
-
-    mov 66, reg[0] //FLAG
-    mov reg[0], ram[FLAGS]
-    mov REDNET_OUTPUT, reg[2]
-    mov 1, reg[3] 
-
-    LOOP:   
-    int 0//skip?
-    mov ram[reg[2]], reg[0]
-    je reg[0], reg[3], ONE
-    mov ram[reg[2]], reg[1]
-    jmp TWO
-    ONE:
-    mov ram[reg[2]], reg[0]
-    jf SKIP1
-    int 0
-    SKIP1:
-    mov ram[reg[2]], reg[1]
-    mov ram[reg[2]], reg[1]
-    jmp NEXT
-    TWO:
-    jf SKIP2
-    int 0
-    SKIP2:
-    mov ram[reg[2]], reg[0]
-    mov ram[reg[2]], reg[0]
-
-    NEXT:
-    je reg[0], reg[1], DRAW
-
-    mov K, reg[3]
-    je reg[0], reg[3], P1_K
-    mov P, reg[3]
-    je reg[0], reg[3], P1_P
-    // P1_N
-    jg reg[0], reg[1], P2_WIN
-    jmp P1_WIN
-
-    P1_K:
-    mov P, reg[3]
-    je reg[1], reg[3], P2_WIN
-
-    P1_WIN:
-    mov 0, reg[0]
-    mov 1, reg[3]
-    mov 2, reg[1]
-    mov reg[3], ram[REDNET_ADDRESS]
-    mov reg[3], ram[REDNET_DATA]
-    mov reg[1], ram[REDNET_ADDRESS]
-    mov reg[0], ram[REDNET_DATA]
-    //%wygral P1
-    jmp LOOP
-
-    P1_P:
-    mov K, reg[3]
-    je reg[1], reg[3], P1_WIN
     
-    P2_WIN: 
-    mov 0, reg[0]
+    // SET ADDRESS
     mov 1, reg[3]
-    mov 2, reg[1]
-    mov reg[1], ram[REDNET_ADDRESS]
-    mov reg[3], ram[REDNET_DATA]
+    mov reg[3], ram[FLAGS]
+    int 0
+    mov ram[BIN_IN], reg[3]
     mov reg[3], ram[REDNET_ADDRESS]
-    mov reg[0], ram[REDNET_DATA]
-    //%wygral P2
-    jmp LOOP
 
-    DRAW:
-    mov 0, reg[0]
+    START:
+    mov 67, reg[0] //FLAG
+    mov reg[0], ram[FLAGS]
+    jf RECEIVING_HEADING
+
+    START_EDIT:
+    mov 240, reg[0] //ASCII POINTER
+    mov 8, reg[1] //BACKSPACE
+    mov 13, reg[2]//ENTER
+    int 0 
+    jf RECEIVING_HEADING
+    cls
+    mov ram[KEYBOARD], reg[3]
+    je reg[1], reg[3], BACKSPACE
+    je reg[2], reg[3], SEND_HEADING
+    mov reg[3], ram[reg[0]]
+    inc reg[0]
+    
+    // set flags
     mov 1, reg[3]
-    mov 2, reg[1]
-    mov reg[3], ram[REDNET_ADDRESS]
-    mov reg[0], ram[REDNET_DATA]
-    mov reg[1], ram[REDNET_ADDRESS]
-    mov reg[0], ram[REDNET_DATA]
-    //%remis
-    jmp LOOP
+    mov reg[3], ram[FLAGS]
+
+    EDITOR:
+    int 0 
+    mov ram[KEYBOARD], reg[3]
+    je reg[1], reg[3], BACKSPACE
+    je reg[2], reg[3], SEND_HEADING
+    mov reg[3], ram[reg[0]]
+    inc reg[0]
+    jmp EDITOR
+    
+    BACKSPACE:
+    mov 0, reg[3]
+    dec reg[0]
+    mov reg[3], ram[reg[0]]
+    jmp EDITOR
+
+    SEND_HEADING:
+    mov 240, reg[0]
+    mov 0, reg[1]
+    mov REDNET_DATA, reg[2]
+    SEND:
+    mov ram[reg[0]], reg[3]
+    je reg[1], reg[3], SEND_END
+    mov reg[3], ram[reg[2]]    
+    inc reg[0]
+    je reg[1], reg[0], SEND_END
+    jmp SEND
+
+    SEND_END:
+    mov 3, reg[3]
+    mov reg[3], ram[reg[2]]
+    jmp START
+
+    RECEIVING_HEADING:
+    cls
+    mov 240, reg[0]
+    mov REDNET_OUTPUT, reg[1]
+    
+    RECEIVING:
+    mov ram[reg[1]], reg[2]
+    je reg[2], reg[3], START_EDIT
+    mov reg[2], ram[reg[0]]
+    inc reg[0]
+    jf RECEIVING
+    int 0
+    jmp RECEIVING
 
     #debug break
-    CORE1:
+CORE1:

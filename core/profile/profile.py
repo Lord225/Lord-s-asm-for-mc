@@ -75,6 +75,7 @@ class Profile:
         self.__build_commands()
         self.__build_arguments()
         self.__build_info()
+        self.__get_schematics()
     
     def __build_commands(self):
         raw_commandset = self.profile["COMMANDS"]
@@ -87,6 +88,8 @@ class Profile:
         self.defs: dict[str, Any] = self.profile["DEFINES"]
         self.keywords: dict[str, Any] = self.profile["KEYWORDS"]
         self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
+    def __get_schematics(self):
+        self.schematic = self.profile["SCHEMATIC"]
 
     def __selfcheck(self):
         assert self.info is not None

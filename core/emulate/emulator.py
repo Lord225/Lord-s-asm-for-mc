@@ -140,7 +140,7 @@ def log_disassembly(**kwargs):
         return params_ignore
 
 
-def __gather_instructions(program, context):
+def gather_instructions(program, context):
     output = dict()
     debug = dict()
     for line_obj in program:
@@ -148,7 +148,7 @@ def __gather_instructions(program, context):
         if 'debug' in line_obj:
             debug[line_obj.physical_adress] = line_obj.debug
     return output, debug
-def __pack_adresses(instructions):
+def pack_adresses(instructions):
     output = dict()
     for adress, data in instructions.items():
         for i, cell in enumerate(data):
@@ -247,8 +247,8 @@ def __write_program(program, context, machine):
     debug_instructions = dict()
 
     for chunk, chunked_program in program.items():
-        instructuons, debug = __gather_instructions(chunked_program, context)
-        packed_instructions = __pack_adresses(instructuons)
+        instructuons, debug = gather_instructions(chunked_program, context)
+        packed_instructions = pack_adresses(instructuons)
 
         machine.write_memory(chunk, DataTypes.PROGRAM, packed_instructions)
 

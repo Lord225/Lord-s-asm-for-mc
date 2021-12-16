@@ -1,5 +1,6 @@
 import core.error as error
 import core.config as config
+import core.save.exporter as exporter
 import os
 from tabulate import tabulate
 import json
@@ -12,7 +13,10 @@ def save(program, context):
     dirname = os.path.dirname(outfile)
     filename, ext = os.path.splitext(os.path.basename(outfile))
     filenames = {}
-    json_encode = json.JSONEncoder()
+    if config.save == 'schem':
+        exporter.generate_schematic_from_formatted(program, context)
+        return program, context
+
     for chunk, data in program.items():
         new_filename = os.path.join(dirname, f"{filename}_{chunk}{ext}")
         filenames[chunk] = new_filename
