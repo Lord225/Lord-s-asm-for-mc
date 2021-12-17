@@ -9,6 +9,10 @@ Uruchom i zapisz.
 ```
 python compile.py --run --comments --save pad 
 ```
+Zapisz jako schematic (Jeżeli dostępne)
+```
+python compile.py --save schem 
+```
 Uruchom ze wszystkimi narzędziami do debugowwania
 ```
 python compile.py --run --logs
@@ -38,7 +42,8 @@ format z jakim ma zostać zapisana binarka.
 * raw - argumenty podane hexadecymalnie w bajtach
 * bin - argumenty w systemie binarnym, wyrównane do argumentów
 * pad - argumenty w systemie binarnym, wyrównane do bajta
-* py  - surowy zapis pythona
+* py  - zapisuje w postaci json'a
+* schem - zapisuje w postaci schematica
 Domyślnie: None (Nie wykona zapisu)
 ### -c --comments
 Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
