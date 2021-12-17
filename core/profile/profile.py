@@ -59,6 +59,14 @@ class AdressingMode:
         self.bin_len: int = kwargs["ADRESSING"]["bin_len"] if "bin_len" in kwargs["ADRESSING"] else 1 if self.mode == "packed" else max(profile.arguments_len.values())
         self.offset: int = kwargs["ADRESSING"]["offset"] if "offset" in kwargs["ADRESSING"] else 0
 
+class SchematicInfo:
+    def __init__(self, kwargs: dict):
+        schem_settings = kwargs["SCHEMATIC"]
+        self.blank_name = f"profiles/{schem_settings['blank']}"
+        self.layout = schem_settings["layout"]
+        self.high_state = schem_settings["high"]
+        self.low_state = schem_settings["low"]
+
 class Profile:
     def __init__(self, profile, emulator):
         self.builded = False
@@ -89,7 +97,7 @@ class Profile:
         self.keywords: dict[str, Any] = self.profile["KEYWORDS"]
         self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
     def __get_schematics(self):
-        self.schematic = self.profile["SCHEMATIC"] if "SCHEMATIC" in self.profile else None
+        self.schematic = SchematicInfo(self.profile) if "SCHEMATIC" in self.profile else None
 
     def __selfcheck(self):
         assert self.info is not None

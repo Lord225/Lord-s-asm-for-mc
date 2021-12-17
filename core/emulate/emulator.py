@@ -141,10 +141,13 @@ def log_disassembly(**kwargs):
 
 
 def gather_instructions(program, context):
+    if config.save != 'raw' and config.save != 'schem':
+        raise Exception("Logic Error. Invalid configuration for gathering instructions")
+
     output = dict()
     debug = dict()
     for line_obj in program:
-        output[line_obj.physical_adress] = line_obj.formatted
+        output[line_obj.physical_adress] = [int(word, base=16) for word in line_obj.formatted]
         if 'debug' in line_obj:
             debug[line_obj.physical_adress] = line_obj.debug
     return output, debug

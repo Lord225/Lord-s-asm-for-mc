@@ -64,16 +64,19 @@
             "low":"minecraft:redstone_block",
             "layout": 
             {
+                // block
                 "offset":[0, 0, 0],
                 "stride":[0, 0, 9],
                 "size": 16,
                 "layout": 
                 {
+                    // floor 
                     "offset":[0, 0, 0],
                     "stride":[0, 3, 0],
                     "size": 16,
                     "layout":
                     {
+                        // word
                         "offset":[14, 0, 0],
                         "stride":[-2, 0, 0],
                         "size": 8,

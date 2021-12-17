@@ -17,6 +17,7 @@ def paddec(x, pad, fill = "0"):
     return '{}{}'.format(fill*(pad-len(str(x))), str(x))
 
 def get_py(program, context):
+    """Returns program line as dict"""
     parsed = program['parsed_command']
     meta = {'mached': program['mached_command']}
     if 'debug' in program:
@@ -24,6 +25,7 @@ def get_py(program, context):
     return {'data':parsed, 'meta':meta, 'adress':program['physical_adress']}
 
 def get_bin(program, context):
+    """Returns program written in binary (padded on arguments)"""
     profile: Profile = context['profile']
     layouts = profile.arguments
 
@@ -36,6 +38,7 @@ def get_bin(program, context):
     return line
 
 def get_dec(program, context):
+    """Returns program written in binary with decimal representation."""
     profile: Profile = context['profile']
     layouts = profile.arguments
 
@@ -49,6 +52,7 @@ def get_dec(program, context):
     return line
 
 def get_pad(program, context):
+    """Returns program written in binary padded to byte"""
     profile: Profile = context['profile']
     layouts = profile.arguments
 
@@ -61,6 +65,7 @@ def get_pad(program, context):
     return wrap(''.join(line), 8)
 
 def get_raw(program, context):
+    """Returns program written in hex padded to bytes"""
     profile: Profile = context['profile']
     layouts = profile.arguments
 
@@ -71,7 +76,7 @@ def get_raw(program, context):
         for name, val in args.items():
             line.append("{}".format(padbin(val, int(layout[name]["size"]) ,prefix=False)))
     values = wrap(''.join(line), 8)
-    return [int(val, base=2) for val in values]
+    return [padhex(int(val, base=2), 2, False) for val in values]
 
 
 def format_output(program, context):

@@ -22,46 +22,84 @@ def get_size(layout):
     
     return get_size(next_level)*size
 
+def getbucket(cumsize, index):
+    """Returns index of bucket that index would land in
+    ```
+    cumsum = [512, 1024, 1536]
+    index = 0 => 0 
+    index = 511 => 0
+    index = 512 => 1
+    index = 1024 => 2
+    ```
+    """
+    for i, end in enumerate(cumsize):
+        if index < end:
+            return i
+    return len(cumsize)
+
 def calculate_bit_cords(index, layout):
-    offset = np.array(layout["offset"])
-    stride = np.array(layout["stride"])
-    size = layout["size"]
-    next_level = layout["layout"] 
-    
-    if next_level is None:
-        return offset+stride*index
+    if isinstance(layout, dict): 
+        offset = np.array(layout["offset"])
+        stride = np.array(layout["stride"])
+        next_level = layout["layout"] 
 
-    total_size = get_size(next_level)
-    next_index = index%total_size
-    current_index = index//total_size
-    
-    next_level_cords = calculate_bit_cords(next_index, next_level)
+        if index >= get_size(layout):
+            raise error.CompilerError(None, "Adress out of bounds")
+        
+        if next_level is None:
+            return offset+stride*index
 
-    return next_level_cords+offset+stride*current_index
+        total_size = get_size(next_level)
+        next_index = index%total_size
+        current_index = index//total_size
+        
+        next_level_cords = calculate_bit_cords(next_index, next_level)
+
+        return next_level_cords+offset+stride*current_index
+
+    elif isinstance(layout, list):
+        sizes = [get_size(block) for block in layout]
+        cumsize = np.cumsum(sizes) 
+
+        i = getbucket(cumsize, index)
+
+        actual_layout = layout[i]
+        if i == 0:
+            new_index = index
+        elif i == len(cumsize):
+            raise error.CompilerError(None, "Adress out of bounds")
+        else:
+            new_index = cumsize[i-1]-index
+
+        return calculate_bit_cords(new_index, actual_layout)
+    raise error.ProfileLoadError("Bad schematic layout")
 
 
-def generate_block_data(data, layout, blank, high_id, low_id, word_size):
+
+def generate_block_data(data, layout, blank, high_id, low_id):
     blocks = bytearray(blank["BlockData"].value)
+
     Width, Lenght, Height = get_dimensions(blank)
+    def flatten(x, y, z):
+        return x+y*Width+z*Width*Lenght
+
     high, low = high_id, low_id
-    if config.debug_show_schematic_updates:
-        print(f'{Width, Lenght, Height}')
-    for word_index, word in enumerate(data):
-        str_byte = padbin(word, word_size, False)                                           
-        for bit_index, bit in enumerate(str_byte):
-            x, y, z = calculate_bit_cords(word_size*word_index+bit_index, layout)
-            state = low if bit == "0" else high
-            if config.debug_show_schematic_updates:
-                print(f"i: {word_size*word_index+bit_index} \t [{x}, {y}, {z}] \t {bit == '0'}")
-            flat = x+y*Width+z*Width*Lenght
-            try:
-                blocks[flat] = state
-            except:
-                print(f"Error: Writing to cell outside rom volume. ([{x}, {y}, {z}])")
-                return blocks
+    def get_state(bit):
+        return low if bit == "0" else high
+    
+    for i, bit in enumerate(data):                                   
+        x, y, z = calculate_bit_cords(i, layout)
+        
+        try:
+            blocks[flatten(x, y, z)] = get_state(bit)
+            
+        except IndexError:
+            print(f"Error: Writing to cell outside rom volume. ([{x}, {y}, {z}])")
+            return blocks
     return blocks
 
 def flatten_instructions(instructions: dict):
+    """Maps dict of adresses and word sequneses to flat array of words"""
     if not instructions:
         return []
     maximum_adress = max(instructions.keys())
@@ -74,21 +112,25 @@ def flatten_instructions(instructions: dict):
 
     return space 
 
+def convert_to_bitstream(data: list, context):
+    word_size = context["profile"].adressing.bin_len
+    return ''.join((padbin(word, word_size, False) for word in data)) 
 
-def generate_schematic_from_formatted(program, context):
+def generate_schematic_from_formatted(program: dict, context: dict):
     profile: Profile = context["profile"]
     if profile.schematic is None:
-        print("Schematic export is not suporrted. (Missing schematic settings) Skipping.")
+        print("Schematic export is not suporrted. (Missing definition in profile) Skipping.")
         return
 
+    # Unpack schematic settings
     schem_settings = profile.schematic
-    blank_name = f"profiles/{schem_settings['blank']}"
-    layout = schem_settings["layout"]
-    high_state = schem_settings["high"]
-    low_state = schem_settings["low"]
+    blank_name = schem_settings.blank_name
+    layout = schem_settings.layout
+    high_state = schem_settings.high_state
+    low_state = schem_settings.low_state
     
+    # Prepare output filenames
     context['outfiles'] = dict()
-
     outfile = config.output
     dirname = os.path.dirname(outfile)
     filename, _ = os.path.splitext(os.path.basename(outfile))
@@ -96,15 +138,20 @@ def generate_schematic_from_formatted(program, context):
 
     for chunk_name, instructions_objs in program.items():
         new_filename = os.path.join(dirname, f"{filename}_{chunk_name}.schem")
+        
+        # Transform data
         data, _ = gather_instructions(instructions_objs, context)
         data = flatten_instructions(data)
-        generate_schematic(data, layout, blank_name, new_filename, context, low_state, high_state)
+        data = convert_to_bitstream(data, context)
+
+        # Generate and save schematic
+        generate_schematic(data, layout, blank_name, new_filename, low_state, high_state)
 
         filenames[chunk_name] = new_filename
 
     context['outfiles'] = filenames
 
-def auto_generate_palette(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile, low_state, high_state):
+def generate_palette(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile, low_state: str, high_state: str):
     blankpalette = {k:v.value for k, v in blankschem["Palette"].items()}
 
     palette = nbt.TAG_Compound(name="Palette")
@@ -113,11 +160,15 @@ def auto_generate_palette(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile, low_sta
         palette.tags.append(nbt.TAG_Int(name=name, value=id))
     
     to_check = max(blankpalette.values())+2
+    
+    # Find id of low state (create new if it is not present in palette)
     if low_state not in blankpalette:
         low_id = min(x for x in range(to_check) if x not in blankpalette.values())
         palette.tags.append(nbt.TAG_Int(name=low_state, value=low_id))
     else:
         low_id = blankpalette[low_state]
+    
+    # Find id of high state (create new if it is not present in palette)
     if high_state not in blankpalette:
         high_id = min(x for x in range(to_check) if x not in blankpalette.values())
         palette.tags.append(nbt.TAG_Int(name=high_state, value=high_id))
@@ -128,18 +179,23 @@ def auto_generate_palette(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile, low_sta
     nbtfile.tags.append(nbt.TAG_Int(name="PaletteMax", value=len(palette)))
     return nbtfile, low_id, high_id
 
-def generate_schematic(data, layout, blank_name, name, context, low_state, high_state) -> None:
-    blankschem = nbt.NBTFile(blank_name, "rb")
-    
-    word_size = context["profile"].adressing.bin_len
+def generate_meta(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile):
+    nbtfile["Offset"].value = blankschem["Offset"].value
+    metadata = nbt.TAG_Compound()
+    metadata.tags = blankschem["Metadata"].tags.copy()
+    metadata.name = "Metadata"
+    nbtfile.tags.append(metadata)
+    return nbtfile
 
+def generate_schematic(data, layout, blank_name, name, low_state, high_state) -> None:
+    blankschem = nbt.NBTFile(blank_name, "rb")
     nbtfile = nbt.NBTFile()
+
     nbtfile.name = "Schematic"
 
-    nbtfile, low_id, high_id = auto_generate_palette(nbtfile, blankschem, low_state, high_state)
+    nbtfile, low_id, high_id = generate_palette(nbtfile, blankschem, low_state, high_state)
 
     Width, Lenght, Height = get_dimensions(blankschem)
-
     nbtfile.tags.extend([
         nbt.TAG_Int(name="DataVersion", value=blankschem["DataVersion"].value),       
         nbt.TAG_Int(name="Version", value=blankschem["Version"].value),
@@ -148,15 +204,10 @@ def generate_schematic(data, layout, blank_name, name, context, low_state, high_
         nbt.TAG_Short(name="Width", value=Width),
         nbt.TAG_Int_Array(name="Offset"),
     ])
-    nbtfile["Offset"].value = blankschem["Offset"].value
-    metadata = nbt.TAG_Compound()
-    metadata.tags = blankschem["Metadata"].tags.copy()
-    metadata.name = "Metadata"
-    nbtfile.tags.append(metadata)
+    
+    nbtfile = generate_meta(nbtfile, blankschem)
 
-    basedata = generate_block_data(data, layout, blankschem, high_id, low_id, word_size)
     nbtfile.tags.append(nbt.TAG_Byte_Array(name="BlockData"))
-    nbtfile["BlockData"].value = basedata
-    nbtfile.tags.append(nbt.TAG_List(name="BlockEntities", type=nbt.TAG_Compound))
+    nbtfile["BlockData"].value = generate_block_data(data, layout, blankschem, high_id, low_id)
 
-    nbtfile.write_file(name)                  #TODO output in out dir
+    nbtfile.write_file(name)

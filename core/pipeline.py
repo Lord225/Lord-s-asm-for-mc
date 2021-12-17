@@ -147,10 +147,12 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
         bar = progressbar
 
     with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
-        x = iter(pipeline_iterator)
 
+        for st in pipeline_iterator:
+            if isinstance(st, int):
+                raise
+            i, (stage, func) = st
 
-        for i, (stage, func) in x:
             try:
                 output = func(data, external)   # Execute stage
             except error.CompilerError as err:

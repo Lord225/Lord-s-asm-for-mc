@@ -1,5 +1,10 @@
+try:
+    import core
+except ModuleNotFoundError as module:
+    print(f"{module} You can install dependencies by running:\n\t pip install -r requirements.txt")
+    exit()
+
 from types import ModuleType
-import core
 import argparse
 import core.error as error
 import core.config as config
@@ -134,7 +139,7 @@ def main():
 
 
     if config.run is False and config.save is None:
-        print("Type: 'python compile.py --help' for help.")
+        print("Type: \n\tpython compile.py --help \n\nto display help. \n\nExample use:\n * python compile.py --save pad --comments\n * python compile.py --run --logs\n * python compile.py -i src/examples/pm1.lor -o output/sort.schem --save schem")
 
 def on_compilation_error(err: error.CompilerError):
     print("*"*50)
