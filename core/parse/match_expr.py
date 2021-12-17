@@ -110,7 +110,7 @@ def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
                 parsed_token = parse_argument_token(context, pattern_token, expr_token, line)
                 if parsed_token is None:
                     misses.append(f"'{expr_token}' cannot be parsed as {pattern_token[2]}")
-                    command_cost += 0.8
+                    command_cost += 0.5
                 else:
                     command_cost -= 0.1
         if len_diff != 0:
