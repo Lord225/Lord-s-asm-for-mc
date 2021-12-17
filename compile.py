@@ -4,7 +4,7 @@ import argparse
 import core.error as error
 import core.config as config
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 

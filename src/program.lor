@@ -3,89 +3,62 @@
 #global CORE0 CORE0 0
 #global CORE1 CORE1 0
 
-#define FLAGS 0xE9
-#define KEYBOARD 0xE0
-#define BIN_IN 0xE1
-#define REDNET_DATA 0xE2
-#define REDNET_ADDRESS 0xE3
-#define REDNET_OUTPUT 0xE4
+#data 0xF0 "BDCEFABCDEFGCAF"
+
+#define DATA_START 0xF0
+#define ARR_END 0xA0
+#define ARR_DEC_END 0xA1
+#define OUTER_COUNTER 0xA2
+#define COUTER_LIMIT 0xA3
 
 CORE0:
+#debug ram
+    mov 0xFF, reg[1]       //end
+    mov reg[1], ram[ARR_END]
+    mov 0xFE, reg[1]       //end-1
+    mov reg[1], ram[ARR_DEC_END]
+    mov 0, reg[1]          //outer counter
+    mov reg[1], ram[OUTER_COUNTER]
+
+    OUTER:
+    mov ram[OUTER_COUNTER], reg[1]
+    mov ram[ARR_END], reg[3]
+    sub reg[2], reg[3]
+
+    mov DATA_START, reg[0] //reset inner
+
+    //[inner, -, -, END_OUTER_LOOP_PTR]k
+    INNER:
+    mov ram[reg[0]], reg[1]
+    mov 1, reg[2]
+    add reg[2], reg[0]
+    mov ram[reg[0]], reg[2]
+    //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
+
+    jg reg[2], reg[1], SKIP_SWAP
+        mov reg[1], ram[reg[0]]
+        mov 1, reg[1]
+        sub reg[1], reg[0]
+        mov reg[2], ram[reg[0]]
+        add reg[1], reg[0]
+    SKIP_SWAP:
+
+    //[i+1, -, -, END_OUTER_LOOP_PTR]
+
+    mov ram[ARR_END], reg[2]
+    //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
+    jg reg[3], reg[0], INNER
     
-    // SET ADDRESS
-    mov 1, reg[3]
-    mov reg[3], ram[FLAGS]
-    int 0
-    mov ram[BIN_IN], reg[3]
-    mov reg[3], ram[REDNET_ADDRESS]
+    mov 1, reg[1]
+    mov ram[OUTER_COUNTER], reg[2]
+    add reg[1], reg[2]
+    mov reg[2],  ram[OUTER_COUNTER]
+    mov 15, reg[3]
 
-    START:
-    mov 67, reg[0] //FLAG
-    mov reg[0], ram[FLAGS]
-    jf RECEIVING_HEADING
+    //[i+1, 1, OUTER_COUNTER, 15]
+    jg reg[3], reg[2], OUTER
 
-    START_EDIT:
-    mov 240, reg[0] //ASCII POINTER
-    mov 8, reg[1] //BACKSPACE
-    mov 13, reg[2]//ENTER
-    int 0 
-    jf RECEIVING_HEADING
-    cls
-    mov ram[KEYBOARD], reg[3]
-    je reg[1], reg[3], BACKSPACE
-    je reg[2], reg[3], SEND_HEADING
-    mov reg[3], ram[reg[0]]
-    inc reg[0]
-    
-    // set flags
-    mov 1, reg[3]
-    mov reg[3], ram[FLAGS]
-
-    EDITOR:
-    int 0 
-    mov ram[KEYBOARD], reg[3]
-    je reg[1], reg[3], BACKSPACE
-    je reg[2], reg[3], SEND_HEADING
-    mov reg[3], ram[reg[0]]
-    inc reg[0]
-    jmp EDITOR
-    
-    BACKSPACE:
-    mov 0, reg[3]
-    dec reg[0]
-    mov reg[3], ram[reg[0]]
-    jmp EDITOR
-
-    SEND_HEADING:
-    mov 240, reg[0]
-    mov 0, reg[1]
-    mov REDNET_DATA, reg[2]
-    SEND:
-    mov ram[reg[0]], reg[3]
-    je reg[1], reg[3], SEND_END
-    mov reg[3], ram[reg[2]]    
-    inc reg[0]
-    je reg[1], reg[0], SEND_END
-    jmp SEND
-
-    SEND_END:
-    mov 3, reg[3]
-    mov reg[3], ram[reg[2]]
-    jmp START
-
-    RECEIVING_HEADING:
-    cls
-    mov 240, reg[0]
-    mov REDNET_OUTPUT, reg[1]
-    
-    RECEIVING:
-    mov ram[reg[1]], reg[2]
-    je reg[2], reg[3], START_EDIT
-    mov reg[2], ram[reg[0]]
-    inc reg[0]
-    jf RECEIVING
-    int 0
-    jmp RECEIVING
-
+    shut
+    #debug ram
     #debug break
 CORE1:

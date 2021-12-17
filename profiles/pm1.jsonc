@@ -60,6 +60,8 @@
         "SCHEMATIC":
         {
             "blank":"pm1_blank_rom.schem",
+            "high":"minecraft:lapis_block",
+            "low":"minecraft:redstone_block",
             "layout": 
             {
                 "offset":[0, 0, 0],
