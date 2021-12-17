@@ -77,6 +77,10 @@ def flatten_instructions(instructions: dict):
 
 def generate_schematic_from_formatted(program, context):
     profile: Profile = context["profile"]
+    if profile.schematic is None:
+        print("Schematic export is not suporrted. (Missing schematic settings) Skipping.")
+        return
+
     schem_settings = profile.schematic
     blank_name = f"profiles/{schem_settings['blank']}"
     layout = schem_settings["layout"]

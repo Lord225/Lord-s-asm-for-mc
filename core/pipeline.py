@@ -1,8 +1,9 @@
+from numpy import issubdtype
 from . import load
 from . import parse
 from . import preprocesor
 from . import save
-from typing import List, Tuple, Callable, Any
+from typing import Iterator, List, Tuple, Callable, Any
 import core.config as config
 import core.error as error
 from click import progressbar
@@ -146,8 +147,10 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
         bar = progressbar
 
     with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
+        x = iter(pipeline_iterator)
 
-        for i, (stage, func) in pipeline_iterator:
+
+        for i, (stage, func) in x:
             try:
                 output = func(data, external)   # Execute stage
             except error.CompilerError as err:
