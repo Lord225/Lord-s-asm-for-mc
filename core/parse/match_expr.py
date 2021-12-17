@@ -66,19 +66,35 @@ def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
     elif len_diff==1:
         lenght_bias = 0
     elif len_diff==2:
-        lenght_bias = 3
+        lenght_bias = 2
     else:
-        lenght_bias = 2*len_diff        
+        lenght_bias = len_diff        
 
     for offset in range(max(len(pattern.tokens), len(expr))):
         command_cost = lenght_bias
         misses = []
         if offset != 0:
-            command_cost += 1 + offset if offset > 1 else 0
+            command_cost += 0.2*offset if offset > 2 else 0
         
-        for i, (pattern_token, expr_token) in enumerate(zip(pattern.tokens, expr)):
-            if i != 0 and offset == i:
-                continue 
+        #for i, (pattern_token, expr_token) in enumerate(zip(pattern.tokens, expr)):
+        for i in range(min(len(pattern.tokens), len(expr))):
+            
+            if offset == 0:
+                pattern_token = pattern.tokens[i]
+                expr_token = expr[i]
+            elif offset > 0:
+                if i+offset < len(pattern.tokens):
+                    pattern_token = pattern.tokens[i+offset]
+                    expr_token = expr[i]
+                else:
+                    break
+            else:
+                offset = -offset
+                if i+offset < len(expr):
+                    pattern_token = pattern.tokens[i]
+                    expr_token = expr[i+offset]
+                else:
+                    break
         
             if pattern_token[0] == patterns.TokenTypes.LITERAL_WORD:
                 dis = soft_word_match(pattern_token[1], expr_token, context)
@@ -86,10 +102,10 @@ def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
                     if expr_token in pattern_token[1] or pattern_token[1] in expr_token:
                         command_cost += 0.2
                     else:
-                        command_cost += 1     
+                        command_cost += 0.5     
                     misses.append(f"'{pattern_token[1]}' != '{expr_token}'")
                 else:
-                    command_cost -= 0.5
+                    command_cost -= 0.1
             elif pattern_token[0] == patterns.TokenTypes.ARGUMENT:
                 parsed_token = parse_argument_token(context, pattern_token, expr_token, line)
                 if parsed_token is None:
