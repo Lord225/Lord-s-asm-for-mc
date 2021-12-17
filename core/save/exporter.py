@@ -114,10 +114,13 @@ def flatten_instructions(instructions: dict):
 
 def convert_to_bitstream(data: list, context):
     word_size = context["profile"].adressing.bin_len
-    return ''.join((padbin(word, word_size, False) for word in data)) 
+    offset = context["schematic_offset"]                                #TODO MAKE IT FOR global 
+    return "0"*offset*word_size+''.join((padbin(word, word_size, False) for word in data)) 
 
 def generate_schematic_from_formatted(program: dict, context: dict):
     profile: Profile = context["profile"]
+    
+
     if profile.schematic is None:
         print("Schematic export is not suporrted. (Missing definition in profile) Skipping.")
         return

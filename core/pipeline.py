@@ -1,9 +1,8 @@
-from numpy import issubdtype
 from . import load
 from . import parse
 from . import preprocesor
 from . import save
-from typing import Iterator, List, Tuple, Callable, Any
+from typing import List, Tuple, Callable, Any
 import core.config as config
 import core.error as error
 from click import progressbar

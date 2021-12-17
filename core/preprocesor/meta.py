@@ -27,9 +27,17 @@ def get_metadata(program, context):
                 raise
         elif line.startswith("#global"):
             try:
-                _, chunk_name, label_name, offset = line.split()
+                _, chunk_name, label_name, *other = line.split()
+                if len(other) == 1:
+                    offset = other[0]
+                elif len(other) == 2:
+                    offset, schemoffset = other
+                    context["schematic_offset"] = int(schemoffset, base = 0)
+                else:
+                    raise
             except:
-                raise error.PreprocesorError(program_line.line_index_in_file, f"Expected structure '#global <NAME> <LABEL NAME> <OFFSET>' got: '{line}'")
+                raise error.PreprocesorError(program_line.line_index_in_file, f"Expected structure '#global <NAME> <LABEL NAME> <OFFSET> [<OFFSET>]' got: '{line}'")
+
             context['entry'][chunk_name] = (label_name, int(offset))
         elif line.startswith("#data"):
             splited = line.split(" ")
@@ -54,6 +62,7 @@ def get_metadata(program, context):
                 data = [int(x, base=0) for x in data_raw.split(',')]
             for index, value in enumerate(data):
                 context['data'][index+ADRESS_START] = value
+
     return program, context
 
 KNOWON_PREPROCESOR_TOKENS = \
