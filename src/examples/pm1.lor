@@ -20,7 +20,7 @@ CORE0:
     mov 0, reg[1]          //outer counter
     mov reg[1], ram[OUTER_COUNTER]
 
-    OUTER:
+OUTER:
     mov ram[OUTER_COUNTER], reg[1]
     mov ram[ARR_END], reg[3]
     sub reg[2], reg[3]
@@ -28,7 +28,7 @@ CORE0:
     mov DATA_START, reg[0] //reset inner
 
     //[inner, -, -, END_OUTER_LOOP_PTR]k
-    INNER:
+INNER:
     mov ram[reg[0]], reg[1]
     mov 1, reg[2]
     add reg[2], reg[0]
@@ -41,7 +41,7 @@ CORE0:
         sub reg[1], reg[0]
         mov reg[2], ram[reg[0]]
         add reg[1], reg[0]
-    SKIP_SWAP:
+SKIP_SWAP:
 
     //[i+1, -, -, END_OUTER_LOOP_PTR]
 

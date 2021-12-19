@@ -1,4 +1,4 @@
-#profile pm1_syntax_variant.jsonc
+#profile pm1_sv.jsonc
 
 #global CORE0 CORE0 0
 #global CORE1 CORE1 0
@@ -44,17 +44,18 @@ INNER:
     SKIP_SWAP:
 
     //[i+1, -, -, END_OUTER_LOOP_PTR]
+    
     reg[2] = ram[ARR_END]
     //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
-    if reg[0] > reg[3] jmp INNER
+    if reg[3] > reg[0] jmp INNER
     
     reg[1] = 1
     reg[2] = ram[OUTER_COUNTER]
-    reg[2] += reg[1]
+    reg[2] = reg[1]
     ram[OUTER_COUNTER] = reg[2]
     reg[3] = 15
     //[i+1, 1, OUTER_COUNTER, 15]
-    if reg[2] > reg[3] jmp OUTER 
+    if reg[3] > reg[2] jmp OUTER 
     shut
     #debug ram
     #debug break
