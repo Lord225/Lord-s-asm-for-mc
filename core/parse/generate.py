@@ -1,6 +1,12 @@
+from threading import local
 import core.error as error
 import core.config as config
 from core.profile.profile import Profile
+
+def eval_space(args, evaluation):
+    locals().update(args)
+
+    return eval(evaluation)
 
 def generate(program, context):
     profile: Profile = context['profile']
@@ -21,12 +27,14 @@ def generate(program, context):
                 if isinstance(process_request, int):
                     output_line[arg_name] = process_request
                 elif isinstance(process_request, str):
-                    output_line[arg_name] = args[process_request]
-                elif isinstance(process_request, dict):
-                    if 'eval' in process_request:
-                        output_line[arg_name] = eval(process_request['eval'])
-                    else:
-                        raise error.ProfileLoadError(f"Binary map in '{name}'' cannot be resolved becouse of token: '{process_request}' with name '{arg_name}'") 
+                    output_line[arg_name] = eval_space(args, process_request)
+                else:
+                    raise error.ProfileLoadError(f"Binary map in '{name}'' cannot be resolved becouse of token: '{process_request}' with name '{arg_name}'")
+                
+                if output_line[arg_name] is None:
+                    raise error.CompilerError(line_obj.line_index_in_file, f"Cannot evalate value: `{process_request}` with args: {args}")
+                if not isinstance(output_line[arg_name], int):
+                    raise error.ProfileLoadError(f"Evaluator: `{process_request}` returned None-integer value: {output_line[arg_name]} for args: {args}")
         line_obj.parsed_command = {cmd['command_layout']: output_line}
     return program, context
 

@@ -28,30 +28,28 @@ OUTER:
     reg[0] = DATA_START
 
     //[inner, -, -, END_OUTER_LOOP_PTR]k
-INNER:
-    reg[1] = ram[reg[0]]
-    reg[2] = 1
-    reg[0] += reg[2]
-    reg[2] = ram[reg[0]]
-    //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
+    INNER:
+        reg[1] = ram[reg[0]]
+        reg[2] = 1
+        reg[0] += reg[2]
+        reg[2] = ram[reg[0]]
+        //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
 
-    if reg[1] > reg[2] jmp SKIP_SWAP
-        ram[reg[0]] = reg[1]
-        reg[1] = 1
-        reg[0] -= reg[1]
-        ram[reg[0]] = reg[2]
-        reg[0] += reg[1]
-    SKIP_SWAP:
+        if reg[1] > reg[2] jmp SKIP_SWAP
+            ram[reg[0]] = reg[1]
+            reg[1] = 1
+            reg[0] -= reg[1]
+            ram[reg[0]] = reg[2]
+            reg[0] += reg[1]
+        SKIP_SWAP:
 
-    //[i+1, -, -, END_OUTER_LOOP_PTR]
-    
-    reg[2] = ram[ARR_END]
-    //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
-    if reg[3] > reg[0] jmp INNER
-    
-    reg[1] = 1
+        //[i+1, -, -, END_OUTER_LOOP_PTR]
+        reg[2] = ram[ARR_END]
+        //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
+        if reg[3] > reg[0] jmp INNER
     reg[2] = ram[OUTER_COUNTER]
-    reg[2] = reg[1]
+    reg[1] = 1
+    reg[2] += reg[1]
     ram[OUTER_COUNTER] = reg[2]
     reg[3] = 15
     //[i+1, 1, OUTER_COUNTER, 15]

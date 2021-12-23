@@ -62,7 +62,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = False,
-            save = "schem",
+            save = "pad",
             comments = True,
             onerror = 'None',
             debug = True,

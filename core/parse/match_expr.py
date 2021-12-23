@@ -63,9 +63,9 @@ def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
     len_diff = abs(len(pattern.tokens)-len(expr))
     if len_diff == 0:
         lenght_bias = 0
-    elif len_diff==1:
+    elif len_diff == 1:
         lenght_bias = 0
-    elif len_diff==2:
+    elif len_diff == 2:
         lenght_bias = 2
     else:
         lenght_bias = len_diff        
@@ -76,7 +76,6 @@ def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
         if offset != 0:
             command_cost += 0.2*offset if offset > 2 else 0
         
-        #for i, (pattern_token, expr_token) in enumerate(zip(pattern.tokens, expr)):
         for i in range(min(len(pattern.tokens), len(expr))):
             
             if offset == 0:

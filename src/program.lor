@@ -1,4 +1,4 @@
-#profile pm1_syntax_variant.jsonc
+#profile pm1.jsonc
 
 #global CORE0 CORE0 0
 #global CORE1 CORE1 0
@@ -13,48 +13,49 @@
 
 CORE0:
 #debug ram
-    reg[1] = 0xFF  //end
-    ram[ARR_END] = reg[1]
-    reg[1] = 0xFE  //end-1
-    ram[ARR_DEC_END] = reg[1]
-    reg[1] = 0    //outer counter
-    ram[OUTER_COUNTER] = reg[1]
+    mov 0xFF, reg[1]       //end
+    mov reg[1], ram[ARR_END]
+    mov 0xFE, reg[1]       //end-1
+    mov reg[1], ram[ARR_DEC_END]
+    mov 0, reg[1]          //outer counter
+    mov reg[1], ram[OUTER_COUNTER]
 
 OUTER:
-    reg[1] = ram[OUTER_COUNTER]
-    reg[3] = ram[ARR_END]
-    reg[3] -= reg[2]
+    mov ram[OUTER_COUNTER], reg[1]
+    mov ram[ARR_END], reg[3]
+    sub reg[2], reg[3]
 
-    reg[0] = DATA_START
+    mov DATA_START, reg[0] //reset inner
 
     //[inner, -, -, END_OUTER_LOOP_PTR]k
-INNER:
-    reg[1] = ram[reg[0]]
-    reg[2] = 1
-    reg[0] += reg[2]
-    reg[2] = ram[reg[0]]
-    //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
+    INNER:
+        mov ram[reg[0]], reg[1]
+        mov 1, reg[2]
+        add reg[2], reg[0]
+        mov ram[reg[0]], reg[2]
+        //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
 
-    if reg[1] > reg[2] jmp SKIP_SWAP
-        ram[reg[0]] = reg[1]
-        reg[1] = 1
-        reg[0] -= reg[1]
-        ram[reg[0]] = reg[2]
-        reg[0] += reg[1]
-    SKIP_SWAP:
+        jg reg[2], reg[1], SKIP_SWAP
+            mov reg[1], ram[reg[0]]
+            mov 1, reg[1]
+            sub reg[1], reg[0]
+            mov reg[2], ram[reg[0]]
+            add reg[1], reg[0]
+        SKIP_SWAP:
 
-    //[i+1, -, -, END_OUTER_LOOP_PTR]
-    reg[2] = ram[ARR_END]
-    //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
-    if reg[0] > reg[3] jmp INNER
-    
-    reg[1] = 1
-    reg[2] = ram[OUTER_COUNTER]
-    reg[2] += reg[1]
-    ram[OUTER_COUNTER] = reg[2]
-    reg[3] = 15
+        //[i+1, -, -, END_OUTER_LOOP_PTR]
+        mov ram[ARR_END], reg[2]
+        //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
+        jg reg[3], reg[0], INNER
+    mov 1, reg[1]
+    mov ram[OUTER_COUNTER], reg[4]
+    add reg[1], reg[2]
+    mov reg[2],  ram[OUTER_COUNTER]
+    mov 15, reg[3]
+
     //[i+1, 1, OUTER_COUNTER, 15]
-    if reg[2] > reg[3] jmp OUTER 
+    jg reg[3], reg[2], OUTER
+
     shut
     #debug ram
     #debug break
