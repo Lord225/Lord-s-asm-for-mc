@@ -66,11 +66,11 @@ def get_encoding(layout):
     elif transform_type == "onehotrev":
         return reversed_one_hot
     elif transform_type == "unsignedbin":
-        return reversed_one_hot
+        return unsigned_binary
     elif transform_type == "signmodulebin":
-        return reversed_one_hot
+        return sign_module_binary
     elif transform_type == "u2bin":
-        return reversed_one_hot
+        return u2_module_binary
     else:
         pass 
     
