@@ -1,5 +1,3 @@
-from pprint import pp
-from sklearn.datasets import load_svmlight_file
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr

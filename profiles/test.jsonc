@@ -19,6 +19,14 @@
             "argPart2":{
                 "size":5
             }
+        },
+        "offset":{
+            "label":{
+                "size":8
+            },
+            "pad":{
+                "size":5
+            }
         }
     }
 },
@@ -46,6 +54,15 @@
                     "argPart1":"(arg1>>5)%16",
                     "r1":"arg2",
                     "argPart2":"arg1%32"
+                }
+            },
+            "offset":
+            {
+                "pattern":"offset {arg1:offset_label}",
+                "command_layout": "offset",
+                "bin":
+                {
+                    "label":"arg1"
                 }
             }
         }

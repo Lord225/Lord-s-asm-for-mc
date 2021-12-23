@@ -22,7 +22,7 @@ def binary(x, size):
     if len(output) != size:
         raise error.ParserError(None, f"Argument of value: {x} ({len(output)} bits) cannot be parsed with {size} bits.")
     return output
-    
+
 def reversed_binary(x, size):
     return "".join((x for x in reversed(binary(x, size))))
 
@@ -32,6 +32,26 @@ def one_hot(x, size):
 def reversed_one_hot(x, size):
     return reversed_binary(2**x, size)
 
+def unsigned_binary(x, size):
+    if x < 0:
+        raise error.ParserError(None, f"Cannot parse value: {x} as unsigned.")
+    output = padbin(x, size, False)
+    if len(output) != size:
+        raise error.ParserError(None, f"Argument of value: {x} ({len(output)} bits) cannot be parsed with {size} bits.")
+    return output
+def sign_module_binary(x, size):
+    if size <= 1:
+        raise error.ParserError(None, "Cannot use value of lenght 1 for sign module.")
+    output = f"{'0' if x >= 0 else '1'}{padbin(abs(x), size-1, False)}"
+    if len(output) != size:
+        raise error.ParserError(None, f"Argument of value: {x} ({len(output)} bits) cannot be parsed with {size} bits.")
+    return output
+
+def u2_module_binary(x, size):
+    output = padbin(x, size, False)
+    if x > 2**size or x <= -(2**size):
+        raise error.ParserError(None, f"Argument of value: {x} cannot be parsed as {size} bit u2 number")
+    return output
 def get_encoding(layout):
     if "encoding" not in layout:
         return binary
@@ -44,6 +64,12 @@ def get_encoding(layout):
     elif transform_type == "onehot":
         return one_hot
     elif transform_type == "onehotrev":
+        return reversed_one_hot
+    elif transform_type == "unsignedbin":
+        return reversed_one_hot
+    elif transform_type == "signmodulebin":
+        return reversed_one_hot
+    elif transform_type == "u2bin":
         return reversed_one_hot
     else:
         pass 
