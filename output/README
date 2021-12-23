@@ -1,2 +1,2 @@
 Default Output directory
-Specify it in settings under 'output' field or add -o or --output to args
+Specify it in settings under 'output' field or add -o/--output as commandline arg
