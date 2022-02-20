@@ -1,13 +1,14 @@
 import core.error as error
 import re
 
-
 def get_value(strage_format:str):
     """Returns value of strage_format"""
     strage_format = strage_format.strip()
-    if strage_format.isdecimal():
+    try:
         return int(strage_format, base=0)
-    elif len(strage_format[2:]) == 0:
+    except:
+        pass
+    if len(strage_format[2:]) == 0:
         raise error.ParserError(-1, f"Value: '{strage_format}' cannot be parsed.")
     elif strage_format[:2] == "0x":
         return int(strage_format[2:],base=16)

@@ -1,12 +1,15 @@
+from dis import Instruction
 import core.config as config
 import core.error as error
 import core.emulate.debug_commands as debug
-from core.profile.profile import Profile
+from core.profile.profile import AdressingMode, Profile
 import inspect
 import abc
 import typing
 import time
 import enum
+
+from core.save.formatter import as_values, padbin, wrap
 
 class DataTypes(enum.Enum):
     PROGRAM = 1,
@@ -141,13 +144,14 @@ def log_disassembly(**kwargs):
 
 
 def gather_instructions(program, context):
-    if config.save != 'raw' and config.save != 'schem':
+    if config.save != 'bin' and config.save != 'schem':
         raise Exception("Logic Error. Invalid configuration for gathering instructions")
-
+    adressing: AdressingMode = context['profile'].adressing
+    
     output = dict()
     debug = dict()
     for line_obj in program:
-        output[line_obj.physical_adress] = [int(word, base=16) for word in line_obj.formatted]
+        output[line_obj.physical_adress] = as_values(line_obj.formatted, adressing.bin_len)
         if 'debug' in line_obj:
             debug[line_obj.physical_adress] = line_obj.debug
     return output, debug
@@ -217,7 +221,7 @@ def emulate(program, context):
     print("Starting Emulation")
     
     emulate_start_time = time.thread_time_ns()
-    emulation_cycles = 0
+    emulation_cycles = 1
     machine_cycles = 0
 
     while machine.is_running():

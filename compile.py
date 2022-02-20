@@ -8,8 +8,9 @@ from types import ModuleType
 import argparse
 import core.error as error
 import core.config as config
+from core.profile.reasume import reasume
 
-DEBUG_MODE = False 
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
@@ -48,6 +49,9 @@ parser.set_defaults(feature=False)
 parser.add_argument('--why', dest='why_error', action='store_true', help="Program will try harder to find why command cannot be mached")
 parser.set_defaults(feature=False)
 
+parser.add_argument('--reassume', dest='reassume', action='store_true', help="Show informations about profile")
+parser.set_defaults(feature=False)
+
 parserargs = parser.parse_args()
 
 def show_warnings(context):
@@ -62,12 +66,14 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = False,
-            save = "pad",
+            save = "schem",
             comments = True,
             onerror = 'None',
             debug = True,
             logmode = True,
-            why_error=True)
+            why_error=True
+        )
+        
 
 if config.init is not None:
     config.override_from_file(config.init)
@@ -98,7 +104,7 @@ def main():
         config.override_from_file(context['init'])
     config.override_from_dict(vars(parserargs))
     override_debug()
-    
+
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
     if config.show_warnings:
@@ -107,6 +113,12 @@ def main():
     # Load profile and pass it to context
     profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
     context['profile'] = profile
+    
+    if config.reassume:
+        from core.profile.reasume import reasume
+        reasume(context)
+        return
+        
 
     # Process data using ouput from second pass.
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
@@ -114,7 +126,7 @@ def main():
         show_warnings(context)
 
     # Compile and Save
-    if config.save in ['bin', 'py', 'dec', 'raw', 'pad', "schem"]:
+    if config.save in ['bin', 'py', 'raw', 'pad', "schem"]:
         if config.save == 'schem':
             config.override_from_dict(comments = 'False')
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
@@ -132,7 +144,7 @@ def main():
             core.emulator.custom_emulator.emulate(output, context)
             return
         if isinstance(context['profile'].emul, ModuleType):
-            config.override_from_dict(save = 'raw', comments = 'False')
+            config.override_from_dict(save = 'bin', comments = 'False')
             output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
             core.emulator.emulate(output, context)
             return
@@ -142,7 +154,7 @@ def main():
         print("Type: \n\tpython compile.py --help \n\nto display help. \n\nExample use:\n * python compile.py --save pad --comments\n * python compile.py --run --logs\n * python compile.py -i src/examples/pm1.lor -o output/sort.schem --save schem")
 
 def on_compilation_error(err: error.CompilerError):
-    print("*"*50)
+    print("*"*50) 
     print(f"Error in line {err.line}:" if err.line is not None else f"Error in unknown line:")
     print(f"{err}")
 
@@ -155,6 +167,10 @@ def other_error(err):
     print("*"*50)
     print('Other compilig error:')
     print(f'{err}')
+
+def key_error(err):
+    print("*"*50)
+    print(f"Internal compiler error (missing key): Expected: {err}")
 
 
 if __name__ == "__main__":
@@ -171,6 +187,8 @@ if __name__ == "__main__":
                 on_compilation_error(err)
             except error.ProfileLoadError as err:
                 on_profile_error(err)
+            except KeyError as err:
+                key_error(err) 
             except Exception as err:
                 other_error(err)
             finally:
@@ -178,3 +196,5 @@ if __name__ == "__main__":
                     input()
                 elif config.onerror == "abort":
                     pass
+        if DEBUG_MODE:
+            print("WARNING: Turn off debug mode before push")

@@ -1,4 +1,4 @@
-#profile example_emulator.jsonc
+#profile rusty_emulator.jsonc
 
 #global ENTRY ENTRY 0
 

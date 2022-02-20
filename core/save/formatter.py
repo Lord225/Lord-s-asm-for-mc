@@ -1,6 +1,5 @@
 import core.error as error
 import core.config as config
-from textwrap import wrap
 from core.profile.profile import Profile
 
 def padhex(x, pad, prefix = True):
@@ -16,6 +15,22 @@ def paddec(x, pad, fill = "0"):
     x = 0 if x is None else x
     return '{}{}'.format(fill*(pad-len(str(x))), str(x))
 
+def split_by_n(seq, n):
+    while len(seq) != 0:
+        yield seq[-n:]
+        seq = seq[:-n]
+def wrap(seq, n):
+    """
+    Chunks sequence into chunks with size n, starting from end:
+
+    `wrap("12345", n=2)` => `["1", "23", "45"]`
+    """
+    return list(split_by_n(seq, n))[::-1]
+def as_values(seq, n: int):
+    """Returns sequence of integers, where every integer is up to n bits long, based on binary value seq"""
+    if not isinstance(seq, list):
+        seq = [seq]
+    return [int(chunk, base = 2) for chunk in wrap(''.join(seq), n)]
 
 def binary(x, size):
     output = padbin(x, size, False)
@@ -77,22 +92,30 @@ def get_encoding(layout):
     print("WARNING LAYOUT ENCODING NOT FOUND")            #TODO Warnings in warnings context (modify pipeline execution)
     return binary
 
-
-
-def get_py(program, context):
-    """Returns program line as dict"""
-    parsed = program['parsed_command']
-    meta = {'mached': program['mached_command']}
-    if 'debug' in program:
-        meta['debug'] = program['debug']
-    return {'data':parsed, 'meta':meta, 'adress':program['physical_adress']}
-
 def encode_argument(layout, name, val):
     encoding = get_encoding(layout[name])
     try:
         return "{}".format(encoding(val, layout[name]["size"]))
     except error.ParserError as err:
         raise error.ParserError(None, f"{err.info}, Encoding: {encoding.__name__}, Argument: {name}")
+
+def get_py(program, context):
+    """Returns program line as dict"""
+    parsed = program['parsed_command']
+    meta = {'mached': program['mached_command']}
+    profile: Profile = context['profile']
+    layouts = profile.arguments
+
+    if 'debug' in program:
+        meta['debug'] = program['debug']
+    encoded = list()
+    for layout, args in parsed.items():
+        layout = layouts[layout]
+        for name, val in args.items():
+            encoded.append(encode_argument(layout, name, val))
+    value = as_values(encoded, profile.adressing.bin_len)
+    return {'data':parsed, 'meta':meta, 'adress':program['physical_adress'], 'encoded':encoded, 'value':value}
+
 
 def get_bin(program, context):
     """Returns program written in binary (padded on arguments)"""
@@ -105,20 +128,6 @@ def get_bin(program, context):
         layout = layouts[layout]
         for name, val in args.items():
             line.append(encode_argument(layout, name, val))
-    return line
-
-def get_dec(program, context):
-    """Returns program written in binary with decimal representation."""
-    profile: Profile = context['profile']
-    layouts = profile.arguments
-
-    parsed = program['parsed_command']
-    line = list()
-    for layout, args in parsed.items():
-        layout = layouts[layout]
-        for name, val in args.items():
-            line.append(encode_argument(layout, name, val))
-            line.append("({})".format(paddec(val, 3," ")))
     return line
 
 def get_pad(program, context):
@@ -154,12 +163,9 @@ def format_output(program, context):
         formatter_function, req_tabulate = get_py, False
     elif config.save == 'bin':
         formatter_function, req_tabulate = get_bin, True
-    elif config.save == 'dec':
-        print("WARNING: dec is not supported.")
-        formatter_function, req_tabulate = get_dec, True
-    elif config.save == 'pad':
+    elif config.save == 'pad' or config.save == "schem":
         formatter_function, req_tabulate = get_pad, True
-    elif config.save == 'raw' or config.save == "schem":
+    elif config.save == 'raw':
         formatter_function, req_tabulate = get_raw, True
     else: 
         raise 

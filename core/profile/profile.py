@@ -52,6 +52,8 @@ class ProfileInfo:
         self.arch: str = kwargs["Arch"]
         self.author: str = kwargs["Author"]
         self.speed: str = kwargs["time_per_cycle"]
+    def __str__(self) -> str:
+        return f"Name: '{self.name}', Arch: '{self.arch}', Author: '{self.author}', Speed: '{self.speed}'"
         
 class AdressingMode:
     def __init__(self, kwargs: dict, profile):

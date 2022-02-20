@@ -11,7 +11,7 @@
 #define OUTER_COUNTER 0xA2
 #define COUTER_LIMIT 0xA3
 
-CORE0:
+CORE0: 
 #debug ram
     reg[1] = 0xFF  //end
     ram[ARR_END] = reg[1]

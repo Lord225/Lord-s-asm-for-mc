@@ -19,7 +19,7 @@
             },
             "emulation":
             {
-                "path": "profiles/example_emulator.exe",
+                "path": "profiles/rusty_emulator.exe",
                 "args": ["-i", "output/binary_ENTRY.txt", "-o", "output/emulation_output.txt"]
             }
         },

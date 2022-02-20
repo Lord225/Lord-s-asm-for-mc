@@ -1,6 +1,6 @@
 from dis import dis
 from typing import List, Optional
-import Levenshtein as lev
+import Levenshtein
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse as parse
@@ -52,7 +52,7 @@ def match_expr(pattern: profile.patterns.Pattern, line, context: Optional[dict])
 
 
 def soft_word_match(token, expr_token, context):
-    distance = lev.distance(token, expr_token)
+    distance = Levenshtein.distance(token, expr_token)
     return distance
 
     

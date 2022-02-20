@@ -56,7 +56,6 @@ def calculate_bit_cords(index, layout):
         next_level_cords = calculate_bit_cords(next_index, next_level)
 
         return next_level_cords+offset+stride*current_index
-
     elif isinstance(layout, list):
         sizes = [get_size(block) for block in layout]
         cumsize = np.cumsum(sizes) 
@@ -114,8 +113,12 @@ def flatten_instructions(instructions: dict):
 
 def convert_to_bitstream(data: list, context):
     word_size = context["profile"].adressing.bin_len
-    offset = context["schematic_offset"]                                #TODO MAKE IT FOR global 
-    return "0"*offset*word_size+''.join((padbin(word, word_size, False) for word in data)) 
+    try:
+        offset = context["schematic_offset"]
+    except KeyError:
+        raise error.CompilerError(None, "Schematic offset should be defined in #global field.")
+    offseting_words = "0"*offset*word_size                            
+    return offseting_words + ''.join((padbin(word, word_size, False) for word in data)) 
 
 def generate_schematic_from_formatted(program: dict, context: dict):
     profile: Profile = context["profile"]

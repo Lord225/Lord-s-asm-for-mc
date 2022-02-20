@@ -1,0 +1,1291 @@
+{
+    "CPU": {
+        "Name": "PotaDOS",
+        "Arch": "POTDOS",
+        "Author": "Gwiezdny Kartofel - Lord225",
+        "emulator": "potados_emulator",
+        "time_per_cycle": 3.3,
+        "ARGUMENTS": {
+            "variants": {
+                "const16": {
+                    "pdec": {
+                        "size": 2
+                    },
+                    "const": {
+                        "size": 16
+                    },
+                    "dst": {
+                        "size": 4
+                    }
+                },
+                "branch": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "r2": {
+                        "size": 4
+                    },
+                    "offsetHi": {
+                        "size": 5
+                    },
+                    "r1": {
+                        "size": 4
+                    },
+                    "offsetLo": {
+                        "size": 4
+                    }
+                },
+                "aluimm": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "r2": {
+                        "size": 4
+                    },
+                    "I": {
+                        "size": 1
+                    },
+                    "R1": {
+                        "size": 8
+                    },
+                    "dst": {
+                        "size": 4
+                    }
+                },
+                "alufpu": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "r2": {
+                        "size": 4
+                    },
+                    "flags": {
+                        "size": 3
+                    },
+                    "4th": {
+                        "size": 2
+                    },
+                    "r1": {
+                        "size": 4
+                    },
+                    "dst": {
+                        "size": 4
+                    }
+                },
+                "indirectlsh": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "ptr": {
+                        "size": 4
+                    },
+                    "3th": {
+                        "size": 3
+                    },
+                    "lsh": {
+                        "size": 2
+                    },
+                    "offset": {
+                        "size": 4
+                    },
+                    "srcdst": {
+                        "size": 4
+                    }
+                },
+                "indirect": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "ptr": {
+                        "size": 4
+                    },
+                    "3th": {
+                        "size": 3
+                    },
+                    "offset": {
+                        "size": 6
+                    },
+                    "srcdst": {
+                        "size": 4
+                    }
+                },
+                "other": {
+                    "pridec": {
+                        "size": 2
+                    },
+                    "secdec": {
+                        "size": 3
+                    },
+                    "src": {
+                        "size": 4
+                    },
+                    "3th": {
+                        "size": 3
+                    },
+                    "4th": {
+                        "size": 2
+                    },
+                    "pad": {
+                        "size": 4
+                    },
+                    "dst": {
+                        "size": 4
+                    }
+                },
+                "inject": {
+                    "value": {
+                        "size": 22
+                    }
+                }
+            }
+        },
+        "ADRESSING": {
+            "mode": "align",
+            "bin_len": 22,
+            "offset": 0
+        },
+        "DEFINES": [
+            "__POTDOS__"
+        ],
+        "KEYWORDS": [
+            "CORE0"
+        ],
+        "COMMANDS": {
+            "nop": {
+                "pattern": "nop",
+                "command_layout": "const16",
+                "bin": {
+                    "pdec": 0,
+                    "const": 0,
+                    "dst": 0
+                }
+            },
+            "load imm": {
+                "pattern": "mov reg[{dst:num}], {val:num}",
+                "command_layout": "const16",
+                "bin": {
+                    "pdec": 0,
+                    "const": "val",
+                    "dst": "dst"
+                }
+            },
+            "jmp": {
+                "pattern": "jmp {label:label}",
+                "command_layout": "const16",
+                "bin": {
+                    "pdec": 0,
+                    "const": "label",
+                    "dst": 7
+                }
+            },
+            "mov": {
+                "pattern": "mov reg[{dst:num}], {label:label}",
+                "command_layout": "const16",
+                "bin": {
+                    "pdec": 0,
+                    "const": "label",
+                    "dst": "dst"
+                }
+            },
+            "copy": {
+                "pattern": "mov reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "src",
+                    "I": 1,
+                    "R1": 0,
+                    "dst": "dst"
+                }
+            },
+            "call": {
+                "pattern": "call {label:label}",
+                "command_layout": "const16",
+                "bin": {
+                    "pdec": 3,
+                    "const": "label",
+                    "dst": 7
+                }
+            },
+            "ret": {
+                "pattern": "ret",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": 0,
+                    "3th": 5,
+                    "4th": 0,
+                    "pad": 0,
+                    "dst": 7
+                }
+            },
+            "branch jge ": {
+                "pattern": "jge reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jl ": {
+                "pattern": "jl reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 1,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch je ": {
+                "pattern": "je reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jne ": {
+                "pattern": "jne reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 3,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jae ": {
+                "pattern": "jae reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 4,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jb ": {
+                "pattern": "jb reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 5,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg2",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jg imm": {
+                "pattern": "jg reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 1,
+                    "r2": "arg2",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg1",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch ja imm": {
+                "pattern": "ja reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 5,
+                    "r2": "arg2",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg1",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jle imm": {
+                "pattern": "jle reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 0,
+                    "r2": "arg2",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg1",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jbe imm": {
+                "pattern": "jbe reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 4,
+                    "r2": "arg2",
+                    "offsetHi": "offset>>4",
+                    "r1": "arg1",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jge imm": {
+                "pattern": "jge reg[{arg1:num}], {const:num}, {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 6,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "const",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch je imm": {
+                "pattern": "je reg[{arg1:num}], {const:num}, {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 7,
+                    "r2": "arg1",
+                    "offsetHi": "offset>>4",
+                    "r1": "const",
+                    "offsetLo": "offset%16"
+                }
+            },
+            "add": {
+                "pattern": "add reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "add const": {
+                "pattern": "add reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "sub": {
+                "pattern": "sub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 7,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "sub const": {
+                "pattern": "sub reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 7,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "arsh": {
+                "pattern": "arsh reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 6,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "arsh const": {
+                "pattern": "arsh reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 6,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "rsh": {
+                "pattern": "rsh reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 5,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "rsh const": {
+                "pattern": "rsh reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 5,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "lsh": {
+                "pattern": "lsh reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 4,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "lsh const": {
+                "pattern": "lsh reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 4,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "mul": {
+                "pattern": "mul reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "arg1",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "mul const": {
+                "pattern": "mul reg[{dst:num}], reg[{arg1:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "xor": {
+                "pattern": "xor reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "and": {
+                "pattern": "and reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "or": {
+                "pattern": "or reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "fadd": {
+                "pattern": "fadd reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 0,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "fsub": {
+                "pattern": "fsub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "fmul": {
+                "pattern": "fmul reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "fdiv": {
+                "pattern": "fdiv reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "arg1",
+                    "flags": 0,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "xnor": {
+                "pattern": "xnor reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 4,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "nand": {
+                "pattern": "nand reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 4,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "nor": {
+                "pattern": "nor reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "arg1",
+                    "flags": 4,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh None id: 0": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 0*reg[8] + {offset:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 2,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 0 id: 1": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 1*reg[8] + {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 1 id: 2": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 2*reg[8] + {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 1,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 2 id: 3": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 4*reg[8] + {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 2,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 3 id: 4": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 8*reg[8] + {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 3,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 0 id: 5": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 1*reg[8] - {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 1 id: 6": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 2*reg[8] - {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 1,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 2 id: 7": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 4*reg[8] - {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 2,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 3 id: 8": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 8*reg[8] - {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 3,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh None id: 9": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 0*reg[8]]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 2,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh 0 id: 10": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 1*reg[8]]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh 1 id: 11": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 2*reg[8]]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 1,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh 2 id: 12": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 4*reg[8]]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 2,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh 3 id: 13": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + 8*reg[8]]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 3,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh None id: 14": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + {offset:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 2,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh None id: 15": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] - {offset:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 2,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh None id: 16": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}]]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 2,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset False lsh 0 id: 17": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + reg[8]]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": 0,
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 0 id: 18": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + reg[8] + {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": "offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst False offset True lsh 0 id: 19": {
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + reg[8] - {offset:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 1,
+                    "lsh": 0,
+                    "offset": "-offset",
+                    "srcdst": "dst"
+                }
+            },
+            "ptr src/dst True offset True lsh None id: 20": {
+                "pattern": "mov ram[reg[{ptr:num}] + 0*reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 0 id: 21": {
+                "pattern": "mov ram[reg[{ptr:num}] + 1*reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 0,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 1 id: 22": {
+                "pattern": "mov ram[reg[{ptr:num}] + 2*reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 1,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 2 id: 23": {
+                "pattern": "mov ram[reg[{ptr:num}] + 4*reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 2,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 3 id: 24": {
+                "pattern": "mov ram[reg[{ptr:num}] + 8*reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 3,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 0 id: 25": {
+                "pattern": "mov ram[reg[{ptr:num}] + 1*reg[8] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 0,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 1 id: 26": {
+                "pattern": "mov ram[reg[{ptr:num}] + 2*reg[8] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 1,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 2 id: 27": {
+                "pattern": "mov ram[reg[{ptr:num}] + 4*reg[8] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 2,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 3 id: 28": {
+                "pattern": "mov ram[reg[{ptr:num}] + 8*reg[8] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 3,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh None id: 29": {
+                "pattern": "mov ram[reg[{ptr:num}] + 0*reg[8]], reg[{src:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh 0 id: 30": {
+                "pattern": "mov ram[reg[{ptr:num}] + 1*reg[8]], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 0,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh 1 id: 31": {
+                "pattern": "mov ram[reg[{ptr:num}] + 2*reg[8]], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 1,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh 2 id: 32": {
+                "pattern": "mov ram[reg[{ptr:num}] + 4*reg[8]], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 2,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh 3 id: 33": {
+                "pattern": "mov ram[reg[{ptr:num}] + 8*reg[8]], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 4,
+                    "lsh": 3,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh None id: 34": {
+                "pattern": "mov ram[reg[{ptr:num}] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh None id: 35": {
+                "pattern": "mov ram[reg[{ptr:num}] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh None id: 36": {
+                "pattern": "mov ram[reg[{ptr:num}]], reg[{src:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset False lsh 0 id: 37": {
+                "pattern": "mov ram[reg[{ptr:num}] + reg[8]], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "lsh": 0,
+                    "offset": 0,
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 0 id: 38": {
+                "pattern": "mov ram[reg[{ptr:num}] + reg[8] + {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "lsh": 0,
+                    "offset": "offset",
+                    "srcdst": "src"
+                }
+            },
+            "ptr src/dst True offset True lsh 0 id: 39": {
+                "pattern": "mov ram[reg[{ptr:num}] + reg[8] - {offset:num}], reg[{src:num}]",
+                "command_layout": "indirectlsh",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": "ptr",
+                    "3th": 3,
+                    "lsh": 0,
+                    "offset": "-offset",
+                    "srcdst": "src"
+                }
+            },
+            "pop": {
+                "pattern": "pop reg[{dst:num}]",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": 0,
+                    "3th": 5,
+                    "4th": 0,
+                    "pad": 0,
+                    "dst": "dst"
+                }
+            },
+            "push": {
+                "pattern": "push reg[{src:num}]",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": "src",
+                    "3th": 6,
+                    "4th": 0,
+                    "pad": 0,
+                    "dst": 0
+                }
+            },
+            "int": {
+                "pattern": "int {type:num}",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": 0,
+                    "3th": 7,
+                    "4th": 3,
+                    "pad": 0,
+                    "dst": "type"
+                }
+            },
+            "not": {
+                "pattern": "not reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": 0,
+                    "flags": 1,
+                    "4th": 1,
+                    "r1": "src",
+                    "dst": "dst"
+                }
+            },
+            "inject": {
+                "pattern": "inject {value:num}",
+                "command_layout": "inject",
+                "bin": {
+                    "value": "value"
+                }
+            },
+            "inc": {
+                "pattern": "inc reg[{target:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "target",
+                    "I": 1,
+                    "R1": 1,
+                    "dst": "target"
+                }
+            },
+            "dec": {
+                "pattern": "dec reg[{target:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 7,
+                    "r2": "target",
+                    "I": 1,
+                    "R1": 1,
+                    "dst": "target"
+                }
+            },
+            "ftoi": {
+                "pattern": "ftoi reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": "src",
+                    "3th": 7,
+                    "4th": 0,
+                    "pad": 0,
+                    "dst": "dst"
+                }
+            },
+            "itof": {
+                "pattern": "itof reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": "src",
+                    "3th": 7,
+                    "4th": 1,
+                    "pad": 0,
+                    "dst": "dst"
+                }
+            },
+            "utof": {
+                "pattern": "utof reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "other",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "src": "src",
+                    "3th": 7,
+                    "4th": 2,
+                    "pad": 0,
+                    "dst": "dst"
+                }
+            }
+        }
+    }
+}
