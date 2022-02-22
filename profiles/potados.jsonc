@@ -160,7 +160,11 @@
             "offset": 0
         },
         "DEFINES": [
-            "__POTDOS__"
+            "__POTDOS__",
+            ["SP", "15"],
+            ["PC", "7"],
+            ["PT", "1"],
+            ["FL", "8"]
         ],
         "KEYWORDS": [
             "CORE0"

@@ -1,6 +1,6 @@
 #profile potados.jsonc
 
-#global CORE0 CORE0 0 0
+#global CORE0 CORE0 0 0 
 
 #define STACK_BASE 0x0100 
 
@@ -13,25 +13,27 @@ INSERTION_SORT:
     // reg[3] - [Caller]          ptr inner [j]
     // reg[4] - [Caller]          aux
     // reg[5] - [Caller]          buf
-SORT_loop_outer:                           // i = ptr_low..ptr_high 
-    mov reg[3], reg[1]
-    dec reg[3]                             // j = i-1
-    mov reg[4], ram[reg[1]]                // aux = S[i]
-SORT_loop_inner:                           
-    mov reg[5], ram[reg[3]]                // Load S[j]
-    jle reg[5], reg[4], LOOP_break         // if S[j] <= aux, break inner else:
-    mov ram[reg[3]+1], reg[5]              // S[j+1] <= S[j]
-    dec reg[3]                             // j -= 1
-    jne reg[3], reg[2], SORT_loop_inner    // loop inner
-LOOP_break:
-    mov ram[reg[3]+1], reg[4]              // S[j+1], reg[4]
-    inc reg[1]                             // i += 1
-    jne reg[1], reg[2], SORT_loop_outer    // loop outer
-    ret
+    SORT_loop_outer:                             // i = ptr_low..ptr_high 
+        mov reg[3], reg[1]
+        dec reg[3]                               // j = i-1
+        mov reg[4], ram[reg[1]]                  // aux = S[i]
+    SORT_loop_inner:                             // j = (i-1).=0 
+        mov reg[5], ram[reg[3]]                  // Load S[j]
+        jle reg[5], reg[4], SORT_LOOP_break      // if S[j] <= aux, break inner else:
+            mov ram[reg[3]+1], reg[5]            // S[j+1] <= S[j]
+            dec reg[3]                           // j -= 1
+            jne reg[3], reg[2], SORT_loop_inner  // loop inner 
+    SORT_LOOP_break:
+        mov ram[reg[3]+1], reg[4]                // S[j+1], reg[4]
+        inc reg[1]                               // i += 1
+        jne reg[1], reg[2], SORT_loop_outer      // loop outer
+        ret
 
 CORE0:
-    mov reg[1], STACK_BASE      // array start
-    add reg[2], reg[1], 0x0008  // array end 
-    call INSERTION_SORT
+    mov reg[SP], STACK_BASE      // stack init
+    mov reg[1], reg[SP]          // array start
+    add reg[SP], reg[SP], 0x0008 // add 8 elements 
+    mov reg[2], reg[SP]          // array end 
+    call INSERTION_SORT          // call function (add adress to stack)
 
 

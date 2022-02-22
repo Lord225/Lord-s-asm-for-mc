@@ -95,7 +95,8 @@ class Profile:
         self.adressing = AdressingMode(self.profile, self)
     def __build_arguments(self):
         self.arguments: dict[str, dict[str, Any]] = self.profile["ARGUMENTS"]["variants"]
-        self.defs: dict[str, Any] = self.profile["DEFINES"]
+        self.defs: list[str] = [definiton for definiton in self.profile["DEFINES"] if isinstance(definiton, str)]
+        self.consts: dict[str, str] = {definiton[0]: str(definiton[1]) for definiton in self.profile["DEFINES"] if isinstance(definiton, list)}
         self.keywords: dict[str, Any] = self.profile["KEYWORDS"]
         self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
     def __get_schematics(self):

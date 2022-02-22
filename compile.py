@@ -105,13 +105,14 @@ def main():
     config.override_from_dict(vars(parserargs))
     override_debug()
 
+    # Load profile and pass it to context
+    profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
+
     # Second pass reloads file with new settings
-    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {}, progress_bar_name='Reloading')
+    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {'defs': profile.defs, 'consts': profile.consts}, progress_bar_name='Reloading')
     if config.show_warnings:
         show_warnings(context)
 
-    # Load profile and pass it to context
-    profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
     context['profile'] = profile
     
     if config.reassume:

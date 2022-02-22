@@ -177,7 +177,11 @@ base = \
             },
 
             "DEFINES": [
-                "__POTDOS__"
+                "__POTDOS__",
+                ["SP", "15"],  # Stack Ptr
+                ["PC", "7"],   # Program Counter
+                ["PT", "1"],   # Offset Pointer 
+                ["FL", "8"]    # Flags
             ],
             "KEYWORDS": [
                 "CORE0"
