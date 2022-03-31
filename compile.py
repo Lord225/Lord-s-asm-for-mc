@@ -28,9 +28,8 @@ help="""Name of file to compile
 Default: src/program.lor""")
 
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
-parser.add_argument("-s", "--save", choices=["dec", "bin", "py", "raw", "pad", "schem"], type=str, default = None,
-help="""> dec - Build source and save in easy-to-read format
-> pad - Build source and save as binary with padding to bytes
+parser.add_argument("-s", "--save", choices=["bin", "py", "raw", "pad", "schem"], type=str, default = None,
+help="""> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
 > py  - Build source and save as python dict
 > raw - Build source and save as decimal representation of bytes
