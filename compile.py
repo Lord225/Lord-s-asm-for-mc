@@ -8,7 +8,6 @@ from types import ModuleType
 import argparse
 import core.error as error
 import core.config as config
-from core.profile.reasume import reasume
 
 DEBUG_MODE = False
 
