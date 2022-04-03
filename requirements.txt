@@ -2,8 +2,7 @@ click==7.1.2
 jsmin==3.0.0
 NBT==1.5.0
 numpy==1.19.5
-pybytes==1.0.2
-pybytes_Lord225==0.0.8
+git+https://github.com/Lord225/PyBytes.git
 python_Levenshtein==0.12.2
 scikit_learn==1.0.1
 tabulate==0.8.9
