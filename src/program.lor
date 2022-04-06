@@ -1,9 +1,78 @@
-#profile cpu5.jsonc
+#profile anpu1.jsonc
 
 #global ENTRY ENTRY 0 
 
-
 ENTRY:
-    mov 0x4000 to [1]
-    mov 0x4000 to [2]
-    fadd [1] to [2]
+    NFADD r1, r2, r3
+    NFSUB r1, r2, r3
+    NFAND r1, r2, r3
+    NFNOR r1, r2, r3
+    NFXOR r1, r2, r3
+    NXNOR r1, r2, r3
+    NNIMA r1, r2, r3
+    NNIMB r1, r2, r3
+    NFMOV r1, r3
+    NFINC r1, r3
+    NFDEC r1, r3
+    NFRSH r1, r3
+HELLO_WORLD:
+    LDIMM 123, r1
+    FLADD r1, r2, r3
+    FLSUB r1, r2, r3
+    FLAND r1, r2, r3
+    FLNOR r1, r2, r3
+    FLXOR r1, r2, r3
+    FXNOR r1, r2, r3
+    FNIMA r1, r2, r3
+    FNIMB r1, r2, r3
+    FLMOV r1, r2
+    FLMOV r1, r2
+    FLINC r1, r2
+    FLDEC r1, r2
+    FLRSH r1, r2
+
+    BRNCH HELLO_WORLD
+    BRNCH Overflow HELLO_WORLD
+    BRNCH Zero HELLO_WORLD
+    BRNCH Odd HELLO_WORLD
+    BRNCH NotOverflow HELLO_WORLD
+    BRNCH NonZero HELLO_WORLD
+    BRNCH Even HELLO_WORLD
+
+    DIMRD 10, r2
+    DIMUP 10, r3
+    
+    INMRD r2
+    INMRD INC r2
+    INMRD DEC r2
+
+    INMUP r3
+    INMUP INC r3
+    INMUP DEC r3
+
+    PTUPD r1
+    HLTCL
+    INOUT 0, 1, r1, r2
+    OUT 1, r1
+    IN 2, r2
+
+    PCALL HELLO_WORLD
+    PCALL Overflow HELLO_WORLD
+    PCALL Zero HELLO_WORLD
+    PCALL Odd HELLO_WORLD
+    PCALL NotOverflow HELLO_WORLD
+    PCALL NonZero HELLO_WORLD
+    PCALL Even HELLO_WORLD
+
+    PRTRN
+    PRTRN Overflow
+    PRTRN Zero
+    PRTRN Odd
+    PRTRN NotOverflow
+    PRTRN NonZero
+    PRTRN Even
+    
+    DROUT 0, r1, r2
+
+
+    
