@@ -10,7 +10,7 @@
 INSERTION_SORT:
     // reg[1] - [param, Caller]   ptr low   [i]
     // reg[2] - [param]           ptr high 
-    // reg[3] - [Caller]          ptr inner [j]
+    // reg[3] - [Caller]          ptr inner [j]`
     // reg[4] - [Caller]                    [aux]
     // reg[5] - [Caller]                    [buf]
     SORT_loop_outer:                             // i = ptr_low..ptr_high 
