@@ -208,7 +208,7 @@ def emulate(program, context):
         raise error.EmulationError("File with emulator definition should define the 'get_emulator' function")
 
     if machine is None or not isinstance(machine, EmulatorBase):
-        raise error.EmulationError(f"Function get_emulator returned unvalid instance of machine expected: 'EmulatorBase', got '{machine}'")
+        raise error.EmulationError(f"Function get_emulator returned invalid instance of machine expected: 'EmulatorBase', got '{machine}'")
     
     print()
     print("Writing data to device")
