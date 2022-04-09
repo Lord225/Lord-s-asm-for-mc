@@ -1,4 +1,3 @@
-from dis import Instruction
 import core.config as config
 import core.error as error
 import core.emulate.debug_commands as debug
@@ -8,8 +7,9 @@ import abc
 import typing
 import time
 import enum
+import pprint
 
-from core.save.formatter import as_values, padbin, wrap
+from core.save.formatter import as_values
 
 class DataTypes(enum.Enum):
     PROGRAM = 1,
@@ -177,7 +177,7 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
             debug.ram_display(ram, profile.adressing.bin_len, 0, None)
         elif command_str.lower() == 'regs':
             regs = machine.exec_command(None, 'get_regs_ref', [])
-            print(regs)
+            pprint.pprint(regs)
     elif command[0] == 'log':
         pos = machine.get_current_pos(None)
         debug.log(f"{pos}  {' '.join(command[1:])}")

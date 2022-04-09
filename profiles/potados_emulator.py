@@ -140,7 +140,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             self.pc_modified = True
     def modify_pc(self, new_value):
         if self.DEBUG_IGNORE_JUMPS:
-            print(f"Dummy jump to: {new_value}")
+            print(f"Dummy jump: {new_value}")
             return
         self.regs[self.PC] = new_value
         self.pc_modified = True
@@ -404,7 +404,6 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-          
     @emulate.log_disassembly(format='sbc reg[{dst}], reg[{r2}], reg[{r1}]')
     def alu_sbc(self, r1: int, r2: int, dst: int):
         r1_imm = self.regs[r1]
@@ -416,7 +415,6 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-
     @emulate.log_disassembly(format='xor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_xor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
@@ -561,9 +559,19 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.DEBUG_IGNORE_JUMPS = True
     def disable_dummy_jumps(self):
         self.DEBUG_IGNORE_JUMPS = False
+    def enable_dummy_reg_writes(self):
+        self.regs.DEBUG_FREEZE_WRITES = True
+    def disable_dummy_reg_writes(self):
+        self.regs.DEBUG_FREEZE_WRITES = False
+    def get_ram_ref(self):
+        return self.ram.ram
+    def get_regs_ref(self):
+        return self.regs.regs
 
 
 class REGS:
+    DEBUG_FREEZE_WRITES = False
+
     def __init__(self):
         self.regs = [u16(0) for _ in range(0, 16)]
     def __getitem__(self, key: int) -> Binary: 
@@ -571,6 +579,8 @@ class REGS:
             return u16(0)
         return self.regs[key]
     def __setitem__(self, key: int, val: Binary):
+        if self.DEBUG_FREEZE_WRITES:
+            return
         if key == 0:
             return
 
@@ -578,9 +588,13 @@ class REGS:
             val = val.extended_low()
         val = ops.cast(val, 'unsigned')
         self.regs[key] = val
+    def __str__(self) -> str:
+        return str(self.regs)
 
 class RAM:
-    DEBUG_LOG_RAM_MOVMENT = False
+    DEBUG_LOG_RAM_MOVMENT = False 
+    DEBUG_FREEZE_RAM_WRITES = False
+    DEBUG_RISE_ON_OUT_OF_BOUNDS = False
 
     def __init__(self, potados: POTADOS_EMULATOR, ram: np.ndarray) -> None:
         self.cpu = potados
@@ -593,22 +607,36 @@ class RAM:
     
     def __getitem__(self, key: int) -> Binary:
         key = int(key)
+
+        bus = u16(0)
         if key < 0x0100:
-            return self.io_get(key)
+            bus = self.io_get(key)
         if key >= 0x0200:
-            return u16(0)
-            raise error.EmulationError(f"Ram address out of bounds: {key}")
-        return u16(int(self.ram[key-0x0100]))
+            if self.DEBUG_RISE_ON_OUT_OF_BOUNDS:
+                raise error.EmulationError(f"Ram address out of bounds: {key}")
+            bus = u16(0)
+        else:
+            bus = u16(int(self.ram[key-0x0100]))
+        if self.DEBUG_LOG_RAM_MOVMENT:
+            print(f"RAM READ ADDRES: {key} (BUS: {key})")
+        return bus
         
     def __setitem__(self, key: int, val: Binary):
         key = int(key)
         if not isinstance(val, Binary):
             val = Binary(val, bit_lenght=16)
         if key < 0x0100:
+            if self.DEBUG_LOG_RAM_MOVMENT:
+                print(f"RAM WRITE ADDRES: {key} (BUS: {val})")
             self.io_set(key, val)
         if key >= 0x0200:
+            if self.DEBUG_RISE_ON_OUT_OF_BOUNDS:
+                raise error.EmulationError(f"Ram address out of bounds: {key}, trying write value: {val}")
             return
-            raise error.EmulationError(f"Ram address out of bounds: {key}, trying write value: {val}")
+        if self.DEBUG_FREEZE_RAM_WRITES:
+            return
+        if self.DEBUG_LOG_RAM_MOVMENT:
+                print(f"RAM WRITE ADDRES: {key} (BUS: {val.extended_low()})")
         self.ram[key-0x0100] = int(val.extended_low())
 
 

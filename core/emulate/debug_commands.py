@@ -17,7 +17,8 @@ def ram_display(ram, word_size, start, end):
             VALUE_AS = config.debug_ram_values_mode,
             ADD_ASCII_VIEW = config.debug_ram_add_ascii_view,
             start = start,
-            end = end
+            end = end,
+            WORD_SIZE = word_size
         )
     )
 def log(message):

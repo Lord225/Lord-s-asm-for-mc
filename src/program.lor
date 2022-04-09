@@ -95,3 +95,5 @@ TEST:
     itof reg[1], reg[2]
     utof reg[1], reg[2]
     int 0
+    #debug regs
+    #debug ram
