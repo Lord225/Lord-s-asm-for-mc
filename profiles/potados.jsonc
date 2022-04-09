@@ -161,10 +161,22 @@
         },
         "DEFINES": [
             "__POTDOS__",
-            ["SP", "15"],
-            ["PC", "7"],
-            ["PT", "1"],
-            ["FL", "8"]
+            [
+                "SP",
+                "15"
+            ],
+            [
+                "PC",
+                "7"
+            ],
+            [
+                "PT",
+                "1"
+            ],
+            [
+                "FL",
+                "8"
+            ]
         ],
         "KEYWORDS": [
             "CORE0"
@@ -211,9 +223,9 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 0,
                     "r2": "src",
-                    "I": 1,
+                    "I": 0,
                     "R1": 0,
                     "dst": "dst"
                 }
@@ -246,9 +258,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 0,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -258,9 +270,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 1,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -270,9 +282,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 2,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -282,9 +294,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 3,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -294,9 +306,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -306,9 +318,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offsetHi": "offset>>4",
-                    "r1": "arg2",
+                    "r1": "arg1",
                     "offsetLo": "offset%16"
                 }
             },
@@ -318,9 +330,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 1,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offsetHi": "offset>>4",
-                    "r1": "arg1",
+                    "r1": "arg2",
                     "offsetLo": "offset%16"
                 }
             },
@@ -330,9 +342,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offsetHi": "offset>>4",
-                    "r1": "arg1",
+                    "r1": "arg2",
                     "offsetLo": "offset%16"
                 }
             },
@@ -342,9 +354,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 0,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offsetHi": "offset>>4",
-                    "r1": "arg1",
+                    "r1": "arg2",
                     "offsetLo": "offset%16"
                 }
             },
@@ -354,9 +366,9 @@
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offsetHi": "offset>>4",
-                    "r1": "arg1",
+                    "r1": "arg2",
                     "offsetLo": "offset%16"
                 }
             },
@@ -920,7 +932,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "offset": "offset",
                     "srcdst": "src"
                 }
@@ -932,7 +944,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 0,
                     "offset": "offset",
                     "srcdst": "src"
@@ -945,7 +957,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 1,
                     "offset": "offset",
                     "srcdst": "src"
@@ -958,7 +970,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 2,
                     "offset": "offset",
                     "srcdst": "src"
@@ -971,7 +983,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 3,
                     "offset": "offset",
                     "srcdst": "src"
@@ -984,7 +996,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 0,
                     "offset": "-offset",
                     "srcdst": "src"
@@ -997,7 +1009,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 1,
                     "offset": "-offset",
                     "srcdst": "src"
@@ -1010,7 +1022,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 2,
                     "offset": "-offset",
                     "srcdst": "src"
@@ -1023,7 +1035,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 3,
                     "offset": "-offset",
                     "srcdst": "src"
@@ -1036,7 +1048,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "offset": 0,
                     "srcdst": "src"
                 }
@@ -1048,7 +1060,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 0,
                     "offset": 0,
                     "srcdst": "src"
@@ -1061,7 +1073,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 1,
                     "offset": 0,
                     "srcdst": "src"
@@ -1074,7 +1086,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 2,
                     "offset": 0,
                     "srcdst": "src"
@@ -1087,7 +1099,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 3,
                     "lsh": 3,
                     "offset": 0,
                     "srcdst": "src"
@@ -1100,7 +1112,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "offset": "offset",
                     "srcdst": "src"
                 }
@@ -1112,7 +1124,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "offset": "-offset",
                     "srcdst": "src"
                 }
@@ -1124,7 +1136,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "offset": 0,
                     "srcdst": "src"
                 }
@@ -1136,7 +1148,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "lsh": 0,
                     "offset": 0,
                     "srcdst": "src"
@@ -1149,7 +1161,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "lsh": 0,
                     "offset": "offset",
                     "srcdst": "src"
@@ -1162,7 +1174,7 @@
                     "pridec": 1,
                     "secdec": 1,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "lsh": 0,
                     "offset": "-offset",
                     "srcdst": "src"

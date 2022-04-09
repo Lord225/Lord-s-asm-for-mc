@@ -1,5 +1,7 @@
 import json
-
+# TODO FIX:
+# *not
+# *adc, sbc, and, or ect
 base = \
     {
         "CPU":
@@ -238,9 +240,9 @@ cmds = \
         "command_layout": "aluimm",
         "bin": {
             "pridec": 1,
-            "secdec": 2,
+            "secdec": 0,
             "r2": "src",
-            "I": 1,
+            "I": 0,
             "R1": 0,
             "dst": "dst"
         }
@@ -284,9 +286,9 @@ branch ="""
         "bin": {{
             "pridec": 2,
             "secdec": {value},
-            "r2": "{arg1}",
+            "r2": "{arg2}",
             "offsetHi": "offset>>4",
-            "r1": "{arg2}",
+            "r1": "{arg1}",
             "offsetLo": "offset%16"
         }}
     }}
@@ -489,33 +491,33 @@ base["CPU"]["COMMANDS"].update(generate(pattern.format(), 1, 0, True, False, Tru
 
 # writes
 pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 3, None, True, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 4, None, True, True))
 for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 4, i, True, True))
+    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, True, True))
 pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8] - {{offset:num}}], reg[{{src:num}}]"
 for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 4, i, True, True, True))
+    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, True, True, True))
 
 pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 3, None, False, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 4, None, False, True))
 for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 4, i, False, True))
+    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, False, True))
 
 pattern = "mov ram[reg[{{ptr:num}}] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, None, True, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, True, True))
 pattern = "mov ram[reg[{{ptr:num}}] - {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, None, True, True, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, True, True, True))
 
 pattern = "mov ram[reg[{{ptr:num}}]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, None, False, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, False, True))
 
 pattern = "mov ram[reg[{{ptr:num}}] + reg[8]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, 0, False, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, False, True))
 
 pattern = "mov ram[reg[{{ptr:num}}] + reg[8] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, 0, True, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, True, True))
 pattern = "mov ram[reg[{{ptr:num}}] + reg[8] - {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 3, 0, True, True, True))
+base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, True, True, True))
 
 #
 # others

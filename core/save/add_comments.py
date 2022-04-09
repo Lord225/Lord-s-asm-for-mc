@@ -33,7 +33,10 @@ def add_comments(program, context):
             continue
         longest_layout = len(max(program_lines, key=lambda x: len(x.formatted)).formatted)
         for i, line in enumerate(program_lines):
-            line.formatted.extend(['']*(longest_layout-len(line.formatted)))
+
+            formatted_lenght_diffrence = longest_layout-len(line.formatted) 
+
+            line.formatted.extend(['']*formatted_lenght_diffrence)
             line.formatted.append(generate_comment(line))
             line.formatted.append(get_line_labels(labels, i+1))
             if config.show_adresses:

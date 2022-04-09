@@ -1,0 +1,17 @@
+#profile cpu5.jsonc
+
+#global ENTRY ENTRY 0 
+
+ENTRY:
+    kopiuj 0x4000 do [1]
+    kopiuj 0x4000 do [2]
+    dodaj [1] do [2]
+    kopiuj [3]+1 do [4]
+    inkrementuj [3]
+    odejmij [1] od [2]
+    anduj [2] z [3]
+    wyswietl [3]
+    fdodaj [1] do [2]
+    fpodziel [2] przez [4]
+    skocz do ENTRY
+    jesli [2] == [3] skocz do ENTRY

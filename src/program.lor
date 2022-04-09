@@ -1,12 +1,97 @@
-#profile cpu5.jsonc
+#profile potados.jsonc
 
-#global ENTRY ENTRY 0 
+#global CORE0 CORE0 0 0 
 
-#define 0.0 0x0000
-#define 1.0 0x3C00
-#define 2.0 0x4000
+#define STACK_BASE 0x0100 
 
-ENTRY:
-    mov 2.0 to [1]
-    mov 2.0 to [2]
-    fadd [1] to [2]
+#data STACK_BASE "ABCDEFGE"
+
+CORE0:
+    #debug enable_dummy_jumps()
+
+    mov reg[SP], STACK_BASE      
+    mov reg[1], 0x0001       
+    add reg[SP], reg[SP], 0x0008 
+    mov reg[2], 0x0002          
+TEST:
+    call TEST                
+    jmp TEST
+    jge reg[1], reg[2], TEST
+    jle reg[1], reg[2], TEST
+    jl reg[1], reg[2], TEST
+    jg reg[1], reg[2], TEST
+    je reg[1], reg[2], TEST
+    jne reg[1], reg[2], TEST
+
+    add reg[1], reg[2], reg[3]
+    add reg[1], reg[2], -1
+    sub reg[1], reg[2], reg[3]
+    sub reg[1], reg[2], 1 
+    arsh reg [1] , reg [2] , reg[3]
+    arsh reg [1] , reg [2] , 1
+    rsh reg [1] , reg [2] , reg [3]
+    rsh reg [1] , reg [2] , 1
+    lsh reg [1] , reg [2] , reg [3]
+    lsh reg[1], reg[2], 3
+    mul reg[1], reg[2], reg[1]
+    mul reg[1], reg[2], 3
+    xor reg[1], reg[2], reg[3]
+    and reg[1], reg[2], reg[3]
+    or  reg[1], reg[2], reg[3]
+    fadd reg[1], reg[2], reg[3]
+    fsub reg[1], reg[2], reg[3]
+    fmul reg[1], reg[2], reg[3]
+    fdiv reg[1], reg[2], reg[3]
+    xnor reg[1], reg[2], reg[3]
+    nand reg[1], reg[2], reg[3]
+    nor reg[1], reg[2], reg[3]
+    mov reg[2], ram[reg[1] + 0 * reg[8] + 1]
+    mov reg[2], ram[reg[1] + 1 * reg[8] + 1]
+    mov reg[2], ram[reg[1] + 2 * reg[8] + 1]
+    mov reg[2], ram[reg[1] + 4 * reg[8] + 1]
+    mov reg[2], ram[reg[1] + 8 * reg[8] + 1]
+    mov reg[2], ram[reg[1] + 1 * reg[8] - 1]
+    mov reg[2], ram[reg[1] + 2 * reg[8] - 1]
+    mov reg[2], ram[reg[1] + 4 * reg[8] - 1]
+    mov reg[2], ram[reg[1] + 8 * reg[8] - 1]
+    mov reg[2], ram[reg[1] + 0 * reg[8]]
+    mov reg[2], ram[reg[1] + 1 * reg[8]]
+    mov reg[2], ram[reg[1] + 2 * reg[8]]
+    mov reg[2], ram[reg[1] + 4 * reg[8]]
+    mov reg[2], ram[reg[1] + 8 * reg[8]]
+    mov reg[2], ram[reg[1] + 1]
+    mov reg[2], ram[reg[1] - 1]
+    mov reg[2], ram[reg[1]]
+    mov reg[2], ram[reg[1] + reg [8]]
+    mov reg[2], ram[reg[1] + reg [8] + 1]
+    mov reg[2], ram[reg[1] + reg [8] - 1]
+    mov ram[reg[1] + 0 * reg[8] + 5], reg[3]
+    mov ram[reg[1] + 1 * reg[8] + 5], reg[3]
+    mov ram[reg[1] + 2 * reg[8] + 5], reg[3]
+    mov ram[reg[1] + 4 * reg[8] + 5], reg[3]
+    mov ram[reg[1] + 8 * reg[8] + 5], reg[3]
+    mov ram[reg[1] + 1 * reg[8] - 5], reg[3]
+    mov ram[reg[1] + 2 * reg[8] - 5], reg[3]
+    mov ram[reg[1] + 4 * reg[8] - 5], reg[3]
+    mov ram[reg[1] + 8 * reg[8] - 5], reg[3]
+    mov ram[reg[1] + 0 * reg[8]], reg[3]
+    mov ram[reg[1] + 1 * reg[8]], reg[3]
+    mov ram[reg[1] + 2 * reg[8]], reg[3]
+    mov ram[reg[1] + 4 * reg[8]], reg[3]
+    mov ram[reg[1] + 8 * reg[8]], reg[3]
+    mov ram[reg[1] + 1], reg[1]
+    mov ram[reg[1] - 2], reg[2]
+    mov ram[reg[1]], reg[2]
+    mov ram[reg[1] + reg[8]], reg[1]
+    mov ram[reg[1] + reg[8] + 1], reg[1]
+    mov ram[reg[1] + reg[8] - 1], reg[1]
+    pop reg[1]
+    push reg[3]
+    not reg [1] , reg [2]
+    inject 0
+    inc reg [1]
+    dec reg [1]
+    ftoi reg[1], reg[2]
+    itof reg[1], reg[2]
+    utof reg[1], reg[2]
+    int 0

@@ -5,8 +5,6 @@ import os
 from tabulate import tabulate
 import json
 
-from core.save.formatter import padhex
-
 def collect_data(data):
     return [line.formatted for line in data]
 

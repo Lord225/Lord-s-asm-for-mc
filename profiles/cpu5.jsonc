@@ -85,6 +85,17 @@
                     "cu":0
                 }
             },
+            "error PL":
+            {
+                "pattern":"blad",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":0
+                }
+            },
+
             "interupt":
             {
                 "pattern":"int {arg1:num}",
@@ -94,15 +105,35 @@
                     "cu":1
                 }
             },
+            "interupt PL":
+            {
+                "pattern":"przerywanie {arg1:num}",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"arg1",
+                    "cu":1
+                }
+            },
+
             "move a1":
             {
-                "pattern":"mov {const:num} to [acc]",
+                "pattern":"mov short {const:num} to [acc]",
                 "command_layout": "with_a1",
                 "bin":{
                     "a1":"const",
                     "cu":2
                 }
             },
+            "move a1 PL":
+            {
+                "pattern":"kopiuj krotkie {const:num} do [acc]",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"const",
+                    "cu":2
+                }
+            },
+
             "mov r1r2":
             {
                 "pattern":"mov [{rfrom:num}] to [{rto:num}]",
@@ -113,6 +144,18 @@
                     "cu":3
                 }
             },
+            "mov r1r2 PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":3
+                }
+            },
+
+
             "mov n1r2":
             {
                 "pattern":"mov {const:num} to [{rto:num}]",
@@ -124,6 +167,18 @@
                     "n1":"const"
                 }
             },
+            "mov n1r2 PL":
+            {
+                "pattern":"kopiuj {const:num} do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":4,
+                    "n1":"const"
+                }
+            },
+
             "alu short inc":
             {
                 "pattern":"inc [{rto:num}]",
@@ -135,6 +190,18 @@
                     "n1":3
                 }
             },
+            "alu short inc PL":
+            {
+                "pattern":"inkrementuj [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":3
+                }
+            },
+
             "alu short dec":
             {
                 "pattern":"dec [{rto:num}]",
@@ -146,6 +213,18 @@
                     "n1":4
                 }
             },
+            "alu short dec PL":
+            {
+                "pattern":"dekrementuj [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":4
+                }
+            },
+
             "alu short rsh":
             {
                 "pattern":"rsh [{rto:num}]",
@@ -157,6 +236,18 @@
                     "n1":5
                 }
             },
+            "alu short rsh PL":
+            {
+                "pattern":"przesun w prawo [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":5
+                }
+            },
+
             "alu short lsh":
             {
                 "pattern":"lsh [{rto:num}]",
@@ -168,11 +259,21 @@
                     "n1":6
                 }
             },
-            
-
+            "alu short lsh PL":
+            {
+                "pattern":"przesun w lewo [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":6
+                }
+            },
+        
             "alu short with mov inc":
             {
-                "pattern":"inc [{rfrom:num}] to [{rto:num}]",
+                "pattern":"mov [{rfrom:num}]+1 to [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rto",
@@ -181,9 +282,21 @@
                     "n1":3
                 }
             },
+            "alu short with mov inc PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]+1 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":3
+                }
+            },
+
             "alu short with mov dec":
             {
-                "pattern":"dec [{rfrom:num}] to [{rto:num}]",
+                "pattern":"mov [{rfrom:num}]-1 to [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rto",
@@ -192,9 +305,21 @@
                     "n1":4
                 }
             },
+            "alu short with mov dec PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]-1 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":4
+                }
+            },
+
             "alu short with mov rsh":
             {
-                "pattern":"rsh [{rfrom:num}] to [{rto:num}]",
+                "pattern":"mov [{rfrom:num}]/2 to [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rto",
@@ -203,9 +328,32 @@
                     "n1":5
                 }
             },
+            "alu short with mov rsh PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]/2 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":5
+                }
+            },
+
             "alu short with mov lsh":
             {
-                "pattern":"lsh [{rfrom:num}] to [{rto:num}]",
+                "pattern":"mov [{rfrom:num}]*2 to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":6
+                }
+            },
+            "alu short with mov lsh PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]*2 do [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rto",
@@ -226,6 +374,18 @@
                     "n1":0
                 }
             },
+            "alu long add PL":
+            {
+                "pattern":"dodaj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":0
+                }
+            },
+
             "alu long sub":
             {
                 "pattern":"sub [{rfrom:num}] from [{rto:num}]",
@@ -237,6 +397,18 @@
                     "n1":1
                 }
             },
+            "alu long sub PL":
+            {
+                "pattern":"odejmij [{rfrom:num}] od [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":1
+                }
+            },
+
             "alu long xor":
             {
                 "pattern":"xor [{rfrom:num}] with [{rto:num}]",
@@ -248,6 +420,18 @@
                     "n1":7
                 }
             },
+            "alu long xor PL":
+            {
+                "pattern":"zeksoruj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":7
+                }
+            },
+
             "alu long and":
             {
                 "pattern":"and [{rfrom:num}] with [{rto:num}]",
@@ -259,6 +443,18 @@
                     "n1":8
                 }
             },
+            "alu long and PL":
+            {
+                "pattern":"zanduj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":8
+                }
+            },
+
             "alu long or":
             {
                 "pattern":"or [{rfrom:num}] with [{rto:num}]",
@@ -270,6 +466,18 @@
                     "n1":9
                 }
             },
+            "alu long or PL":
+            {
+                "pattern":"zoruj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":9
+                }
+            },
+
             "print r1":
             {
                 "pattern":"print [{val:num}]",
@@ -280,6 +488,17 @@
                     "cu":10
                 }
             },
+            "print r1 PL":
+            {
+                "pattern":"wyswietl [{val:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":"val",
+                    "cu":10
+                }
+            },
+
             "jump r1":
             {
                 "pattern":"jump {address:label}",
@@ -288,34 +507,68 @@
                     "r2":0,
                     "r1":0,
                     "cu":11,
-                    "n1":"label"
+                    "n1":"address"
+                }
+            },
+            "jump r1 PL":
+            {
+                "pattern":"skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":11,
+                    "n1":"address"
                 }
             },
             // Komendy GPU (12)
 
             "jump equal":
             {
-                "pattern":"if [{r1:num}] == [{r2:num}] then jump {address:label}",
+                "pattern":"if [{r1:num}] == [{r2:num}] jump {address:label}",
                 "command_layout": "long",
                 "bin":{
                     "r2":"r2",
                     "r1":"r1",
                     "cu":13,
-                    "n1":"label"
+                    "n1":"address"
+                }
+            },
+            "jump equal PL":
+            {
+                "pattern":"jesli [{r1:num}] == [{r2:num}] skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":13,
+                    "n1":"address"
                 }
             },
 
             "jump greater":
             {
-                "pattern":"if [{r1:num}] > [{r2:num}] then jump {address:label}",
+                "pattern":"if [{r1:num}] > [{r2:num}] jump {address:label}",
                 "command_layout": "long",
                 "bin":{
                     "r2":"r2",
                     "r1":"r1",
                     "cu":14,
-                    "n1":"label"
+                    "n1":"address"
                 }
             },
+            "jump greater PL":
+            {
+                "pattern":"jesli [{r1:num}] > [{r2:num}] skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":14,
+                    "n1":"address"
+                }
+            },
+
             "fpu add":
             {
                 "pattern":"fadd [{rfrom:num}] to [{rto:num}]",
@@ -327,9 +580,21 @@
                     "n1":1
                 }
             },
+            "fpu add PL":
+            {
+                "pattern":"fpuuu dodaj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":1
+                }
+            },
+
             "fpu sub":
             {
-                "pattern":"fsub [{rfrom:num}] from [{rto:num}]",
+                "pattern":"fpuuu odejmij [{rfrom:num}] od [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
@@ -340,7 +605,7 @@
             },
             "fpu mul":
             {
-                "pattern":"fmul [{rfrom:num}] with [{rto:num}]",
+                "pattern":"fmul [{rfrom:num}] by [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
@@ -349,9 +614,32 @@
                     "n1":3
                 }
             },
+            "fpu mul PL":
+            {
+                "pattern":"fpuuu pomnoz [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":3
+                }
+            },
+
             "fpu div":
             {
-                "pattern":"fdiv [{rfrom:num}] with [{rto:num}]",
+                "pattern":"fdiv [{rfrom:num}] by [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":4
+                }
+            },
+            "fpu div PL":
+            {
+                "pattern":"fpuuu podziel [{rfrom:num}] przez [{rto:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
