@@ -2,8 +2,11 @@
 
 #global ENTRY ENTRY 0 
 
+#define 0.0 0x0000
+#define 1.0 0x3C00
+#define 2.0 0x4000
 
 ENTRY:
-    mov 0x4000 to [1]
-    mov 0x4000 to [2]
+    mov 2.0 to [1]
+    mov 2.0 to [2]
     fadd [1] to [2]
