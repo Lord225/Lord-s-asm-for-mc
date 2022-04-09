@@ -582,7 +582,7 @@ class REGS:
 class RAM:
     DEBUG_LOG_RAM_MOVMENT = False
 
-    def __init__(self, potados: POTADOS_EMULATOR, ram: np.ndarray) -> None:
+    def __init__(self, potados: typing.Optional[POTADOS_EMULATOR], ram: typing.Optional[np.ndarray]) -> None:
         self.cpu = potados
         if ram is None:
             self.ram: np.ndarray = np.zeros((256), dtype='uint16')
@@ -614,12 +614,12 @@ class RAM:
 
     def io_set(self, index: int, val: Binary):
         if index > 0x0100:
-            return
+            raise
         
         
     def io_get(self, index: int) -> Binary:
         if index > 0x0100:
-            return
+            raise
         
         return u16()
 
