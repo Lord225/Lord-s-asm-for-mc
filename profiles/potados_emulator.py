@@ -62,13 +62,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             constant = command[4:20] # const 16 bit
 
             if destination == self.PC:
-                self.jump(constant)
+                self.jump(constant)  # type: ignore
             else:
-                self.load_imm(constant, destination)
-
+                self.load_imm(constant, destination) # type: ignore
+ 
         elif pri_decoder == 3: # call
             constant = command[4:20] # const 16 bit
-            self.call(constant)
+            self.call(constant) # type: ignore
 
         elif pri_decoder == 2: # jumps
             sec_decoder = int(command[17:20])
@@ -107,7 +107,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             if sec_decoder in [0, 7, 6, 5, 4, 3]: # alu long
                 self.alu_long(sec_decoder, destination, command)
             elif sec_decoder == 2:                # alu short / fpu
-                self.alu_short(destination, flags, command)
+                self.alu_short(destination, flags, command) # type: ignore
             elif sec_decoder == 1:      # other        
                 if flags == 0:
                     self.fpu(destination, command)
@@ -151,7 +151,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r2_value = int(command[13:17]) # 4 bit
 
         if I:
-            imm = ops.sign_extend(r1_value, 16)
+            imm = ops.sign_extend(r1_value, 16) # type: ignore
             if sec_decoder == 0:
                 self.alu_add_imm(imm, r2_value, destination)
             elif sec_decoder == 7:
@@ -165,7 +165,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             elif sec_decoder == 3:
                 self.alu_mul_imm(imm, r2_value, destination)
         else:
-            r1 = int(r1_value[:4])
+            r1 = int(r1_value[:4]) # type: ignore
             if sec_decoder == 0:
                 self.alu_add_reg(r1, r2_value, destination)
             elif sec_decoder == 7:
@@ -560,7 +560,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def disable_dummy_jumps(self):
         self.DEBUG_IGNORE_JUMPS = False
     def enable_dummy_reg_writes(self):
-        self.regs.DEBUG_FREEZE_WRITES = True
+        self.regs.DEBUG_FREEZE_WRITES = True  # type: ignore
     def disable_dummy_reg_writes(self):
         self.regs.DEBUG_FREEZE_WRITES = False
     def get_ram_ref(self):
@@ -605,7 +605,7 @@ class RAM:
         self.ram = self.ram[:256]
 
     
-    def __getitem__(self, key: int) -> Binary:
+    def __getitem__(self, key: typing.Union[int, Binary]) -> Binary:
         key = int(key)
 
         bus = u16(0)
@@ -621,7 +621,7 @@ class RAM:
             print(f"RAM READ ADDRES: {key} (BUS: {key})")
         return bus
         
-    def __setitem__(self, key: int, val: Binary):
+    def __setitem__(self, key: typing.Union[int, Binary], val: typing.Union[int, Binary]):
         key = int(key)
         if not isinstance(val, Binary):
             val = Binary(val, bit_lenght=16)
@@ -668,7 +668,8 @@ def get_emulator() -> POTADOS_EMULATOR:
 
 
 # To pulloff tests just run 
-# python -m unittest profiles\potados_emulator.py from \Lord-s-asm-for-mc\ 
+# python -m unittest profiles\potados_emulator.py 
+# from \Lord-s-asm-for-mc\ 
 # (or debug this file inside vs code)
 
 class RAM_TESTS(unittest.TestCase):
@@ -748,7 +749,7 @@ class POTADOS_TESTS(unittest.TestCase):
     def call_test(self):
         potados = POTADOS_EMULATOR()
 
-        potados.regs[potados.SP] = 0x0100
+        potados.regs[potados.SP] = 0x0100   # type: ignore
 
         potados.jump(u16(1))
 
@@ -766,28 +767,28 @@ class POTADOS_TESTS(unittest.TestCase):
 
         potados.jge(1, 2, u16(10))
         self.assertEqual(potados.regs[potados.PC], 20)
-        self.assertEqual(operator.regs[potados.FL], u16('01010'))
+        self.assertEqual(potados.regs[potados.FL], u16('01010'))
         
         potados.jge(2, 1, u16(10))
         self.assertEqual(potados.regs[potados.PC], 20)
-        self.assertEqual(operator.regs[potados.FL], u16('10100'))
+        self.assertEqual(potados.regs[potados.FL], u16('10100'))
 
         potados.regs[3] = u16(-1)
         potados.regs[4] = u16(1)
 
         potados.jge(3, 4, i16(-10))
         self.assertEqual(potados.regs[potados.PC], 10)
-        self.assertEqual(operator.regs[potados.FL], u16('01010'))
+        self.assertEqual(potados.regs[potados.FL], u16('01010'))
 
         potados.jl(3, 4, u16(10))
         self.assertEqual(potados.regs[potados.PC], 10)
         
         potados.je(3, 3, u16(10))
         self.assertEqual(potados.regs[potados.PC], 20)
-        self.assertEqual(operator.regs[potados.FL], u16('01101'))
+        self.assertEqual(potados.regs[potados.FL], u16('01101'))
 
         # -1 casted to unsigned (all ones) >= 1 casted to unsigned 
-        potados.jae(3, 4)
+        potados.jae(3, 4, 10)
         self.assertEqual(potados.regs[potados.PC], 30)
 
 
