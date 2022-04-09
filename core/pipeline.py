@@ -153,7 +153,6 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
             try:
                 output = func(data, external)   # Execute stage
             except error.CompilerError as err:
-                err.stage == stage
                 raise err
             except Exception as other_error:
                 raise other_error

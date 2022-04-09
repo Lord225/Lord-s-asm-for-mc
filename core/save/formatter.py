@@ -66,7 +66,7 @@ def get_encoding(layout):
 
     if transform_type == "bin":
         return binary
-    elif transform_type == "rev":
+    elif transform_type == "binrev":
         return reversed_binary
     elif transform_type == "onehot":
         return one_hot
