@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
 from ast import operator
 import typing
-from pybytes import Binary, u16, i16, ops
+from pybytes import Binary, u16, i16, u4, ops
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -59,17 +59,15 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         destination = int(command[0:4])    # dst register 4 bit
 
         if pri_decoder == 0:   # load imm
-            constant = command[4:20] # const 16 bit
+            constant = Binary(command[4:20]) # const 16 bit
 
             if destination == self.PC:
                 self.jump(constant)
             else:
                 self.load_imm(constant, destination)
-
         elif pri_decoder == 3: # call
-            constant = command[4:20] # const 16 bit
+            constant = Binary(command[4:20]) # const 16 bit
             self.call(constant)
-
         elif pri_decoder == 2: # jumps
             sec_decoder = int(command[17:20])
             r2_value = int(command[13:17])
@@ -101,8 +99,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
+            flags = Binary(command[10:13])
+            r1 = Binary(command[13:17])
             sec_decoder = int(command[17:20])
-            flags = command[10:13]
 
             if sec_decoder in [0, 7, 6, 5, 4, 3]: # alu long
                 self.alu_long(sec_decoder, destination, command)
@@ -112,13 +111,19 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                 if flags == 0:
                     self.fpu(destination, command)
                 elif flags == 1:        # load ptr lsh
-                    print("load ptr lsh")
+                    lsh = int(command[8:10])
+                    offset = int(command[4:8])
+                    self.load_ptr_lsh(2**lsh, offset, r1, destination)
                 elif flags == 2:        # load ptr imm
-                    print("load ptr imm")
+                    offset = int(command[4:10])
+                    self.load_ptr_imm(offset, r1, destination)
                 elif flags == 3:        # store ptr lsh
-                    print("store ptr lsh")
+                    lsh = int(command[8:10])
+                    offset = int(command[4:8])
+                    self.store_ptr_lsh(2**lsh, offset, r1, destination)
                 elif flags == 4:        # store ptr imm
-                    print("store ptr imm") 
+                    offset = int(command[4:10])
+                    self.store_ptr_imm(offset, r1, destination)
                 elif flags == 5:        # pop
                     print("pop")
                 elif flags == 6:        # push
@@ -144,11 +149,16 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             return
         self.regs[self.PC] = new_value
         self.pc_modified = True
-        
+    
+    def load(self, address):
+        return self.ram[address]
+    def store(self, address, value):
+        self.ram[address] = value
+
     def alu_long(self, sec_decoder: int, destination: int, command: Binary):
         I = command[12]
-        r1_value = command[4:12]       # 8 bit
-        r2_value = int(command[13:17]) # 4 bit
+        r1_value = Binary(command[4:12])       # 8 bit
+        r2_value = int(command[13:17])         # 4 bit
 
         if I:
             imm = ops.sign_extend(r1_value, 16)
@@ -211,6 +221,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             print("fdiv")
         else:
             raise error.EmulationError("Unreachable")
+    
     ##################
     #    FL update   #
     ##################
@@ -243,6 +254,50 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def halt(self):
         self.is_running_flag = False
 
+
+    @emulate.log_disassembly(format='mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[1] + {offset}]')
+    def load_ptr_lsh(self, lsh, offset, ptr, dst):
+        ptr_val = self.regs[ptr]
+        
+        offset = ops.sign_extend(u4(offset), 16)
+
+        address = self.regs[self.PT]*lsh + offset + ptr_val
+
+        self.regs[dst] = self.load(address)
+
+    @emulate.log_disassembly(format='mov reg[{dst}], ram[reg[{ptr}] + {offset}]')
+    def load_ptr_imm(self, offset, ptr, dst):
+        ptr_val = self.regs[ptr]
+        
+        offset = ops.sign_extend(u4(offset), 16)
+
+        address = offset + ptr_val
+
+        self.regs[dst] = self.load(address)
+
+    @emulate.log_disassembly(format='mov ram[reg[{ptr}] + {lsh}*reg[1] + {offset}], reg[{src}]')
+    def store_ptr_lsh(self, lsh, offset, ptr, src):
+        ptr_val = self.regs[ptr]
+        src_val = self.regs[src]
+
+        offset = ops.sign_extend(u4(offset), 16)
+        
+        address = self.regs[self.PT]*lsh + offset + ptr_val
+
+        self.store(address, src_val)
+    
+    @emulate.log_disassembly(format='mov ram[reg[{ptr}] + {offset}], reg[{src}]')
+    def store_ptr_imm(self, offset, ptr, src):
+        ptr_val = self.regs[ptr]
+        src_val = self.regs[src]
+        
+        offset = ops.sign_extend(u4(offset), 16)
+        
+        address = offset + ptr_val
+
+        self.store(address, src_val)
+
+
     ############
     # ALU LONG #
     ############
@@ -258,7 +313,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='add reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='add reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_add_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -560,9 +615,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def disable_dummy_jumps(self):
         self.DEBUG_IGNORE_JUMPS = False
     def enable_dummy_reg_writes(self):
-        self.regs.DEBUG_FREEZE_WRITES = True
+        self.regs.enable_dummy_reg_writes()
     def disable_dummy_reg_writes(self):
-        self.regs.DEBUG_FREEZE_WRITES = False
+        self.regs.disable_dummy_reg_writes()
     def get_ram_ref(self):
         return self.ram.ram
     def get_regs_ref(self):
@@ -590,13 +645,17 @@ class REGS:
         self.regs[key] = val
     def __str__(self) -> str:
         return str(self.regs)
+    def enable_dummy_reg_writes(self):
+        self.DEBUG_FREEZE_WRITES = True
+    def disable_dummy_reg_writes(self):
+        self.DEBUG_FREEZE_WRITES = False
 
 class RAM:
     DEBUG_LOG_RAM_MOVMENT = False 
     DEBUG_FREEZE_RAM_WRITES = False
     DEBUG_RISE_ON_OUT_OF_BOUNDS = False
 
-    def __init__(self, potados: POTADOS_EMULATOR, ram: np.ndarray) -> None:
+    def __init__(self, potados: POTADOS_EMULATOR, ram: typing.Optional[np.ndarray]) -> None:
         self.cpu = potados
         if ram is None:
             self.ram: np.ndarray = np.zeros((256), dtype='uint16')
@@ -647,7 +706,7 @@ class RAM:
         
     def io_get(self, index: int) -> Binary:
         if index > 0x0100:
-            return
+            return u16()
         
         return u16()
 
