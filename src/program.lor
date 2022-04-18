@@ -1,26 +1,8 @@
-#profile cpu5.jsonc
+#profile potados.jsonc
 
-#global ENTRY ENTRY 15 
+#global CORE0 CORE0 0 0 
 
-// Sine plotter using FPU & Pade's approximation
-//
-// 
-// f(x) = \frac{2710x-22016}{\left(x-16.25\right)x+282.3}+86.94-9.711x
-// 
-// def f(x):
-//     z = 2710 * x
-//     z = z - 22016
-//     
-//     y = x - 16.25
-//     y = y * x
-//     y = y + 282.3
-//     
-//     o = z / y
-//     o = o + 86.94
-// 
-//     e = x * 9.711
-//     o = o - e
-//     return o
+#define STACK_BASE 0x0100 
 
 #data STACK_BASE "BDCEFABCDEFGCAF"
 
