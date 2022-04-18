@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
 from ast import operator
 import typing
-from pybytes import Binary, u16, i16, u4, ops
+from pybytes import Binary, u16, i16, u4, ops, floats
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -14,7 +14,6 @@ import queue
 import unittest
 
 class POTADOS_EMULATOR(emulate.EmulatorBase):
-    DEBUG_IGNORE_JUMPS = False
     DEBUG_HALT_ON_NOP = False
 
     SP = 15
@@ -23,7 +22,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     FL = 8
 
     def __init__(self) -> None:
-        self.regs = REGS()
+        self.regs = REGS(self)
         self.ram = RAM(self, None)
         self.rom = ROM(self, 4096)
         self.is_running_flag = True
@@ -45,13 +44,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         # nop
         if command == 0:
             self.nop()
-            self.increment_pc()
+            self.regs.increment_pc()
             return
 
         # int 0 (early stop)
         if command == 1187584:
             self.halt()
-            self.increment_pc()
+            self.regs.increment_pc()
             return
 
         # parse command
@@ -100,7 +99,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                 raise error.EmulationError("Unreachable")
         else:                      # rest
             flags = Binary(command[10:13])
-            r1 = Binary(command[13:17])
+            r1 = int(command[13:17])
             sec_decoder = int(command[17:20])
 
             if sec_decoder in [0, 7, 6, 5, 4, 3]: # alu long
@@ -125,30 +124,28 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                     offset = int(command[4:10])
                     self.store_ptr_imm(offset, r1, destination)
                 elif flags == 5:        # pop
-                    print("pop")
+                    self.pop(destination)
                 elif flags == 6:        # push
-                    print("push")
+                    self.push(r1)
                 elif flags == 7:        # converts & interupt
-                    print("converts")
+                    third = int(command[8:10])
+                    if third == 0:
+                        pass
+                    elif third == 1:
+                        pass
+                    elif third == 2:
+                        pass
+                    elif third == 3:
+                        pass
+                    else:
+                        raise error.EmulationError("Unrachable")
                 else:
                     raise error.EmulationError("Unrachable")
             else:
                 raise error.EmulationError("Unrachable")
         
-        self.increment_pc()
-        self.pc_modified = False
-        
-    
-    def increment_pc(self):
-        if not self.pc_modified:
-            self.regs[self.PC] += 1
-            self.pc_modified = True
-    def modify_pc(self, new_value):
-        if self.DEBUG_IGNORE_JUMPS:
-            print(f"Dummy jump: {new_value}")
-            return
-        self.regs[self.PC] = new_value
-        self.pc_modified = True
+        self.regs.increment_pc()
+
     
     def load(self, address):
         return self.ram[address]
@@ -188,7 +185,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                 self.alu_rsh_reg(r1, r2_value, destination)
             elif sec_decoder == 3:
                 self.alu_mul_reg(r1, r2_value, destination)
-    def alu_short(self, destination: int, flags:Binary, command: Binary):
+    def alu_short(self, destination: int, flags: Binary, command: Binary):
         tri_dec = int(command[8:10])
         r1 = int(command[4:8])
         r2 = int(command[13:16])
@@ -211,14 +208,17 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             raise error.EmulationError("Unreachable")
     def fpu(self, destination: int, command: Binary):
         tri_dec = int(command[8:10])
+        r1 = int(command[4:8])
+        r2 = int(command[13:16])
+
         if tri_dec == 0:    # fadd
-            print("fadd")
+            self.fadd(r1, r2, destination)
         elif tri_dec == 1:  # fsub
-            print("fsub")
+            self.fsub(r1, r2, destination)
         elif tri_dec == 2:  # fmul
-            print("fmul")
+            self.fmul(r1, r2, destination)
         elif tri_dec == 3:  # fdiv
-            print("fdiv")
+            self.fdiv(r1, r2, destination)
         else:
             raise error.EmulationError("Unreachable")
     
@@ -245,15 +245,100 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.regs[self.FL][2] = flags.is_sign()
         self.regs[self.FL][3] = flags.is_overflow()
 
+    ###############
+    #     nops    #
+    ###############
+
     @emulate.log_disassembly(format='nop')
     def nop(self):
         if self.DEBUG_HALT_ON_NOP:
+            print("Halting on nop")
             self.halt()
 
     @emulate.log_disassembly(format='int 0')   
     def halt(self):
         self.is_running_flag = False
 
+    ########
+    # ints #
+    ########
+
+    @emulate.log_disassembly(format='int {i}')
+    def interupt(self, i):
+        if i == 0:
+            self.is_running_flag = False
+        elif i == 1:
+            pass
+        elif i == 2:
+            pass
+
+
+    #######
+    # FPU #
+    #######
+
+    FP = floats.CustomFloat(preset='fp16')
+    @emulate.log_disassembly(format='fadd reg[{dst}], reg[{r1}], reg[{r2}]')
+    def fadd(self, r1, r2, dst):        
+        a = self.FP.get_float(self.regs[r1])
+        b = self.FP.get_float(self.regs[r2])
+
+        self.regs[dst] = ops.cast(self.FP.get_concat(a+b), 'unsigned')
+
+    @emulate.log_disassembly(format='fsub reg[{dst}], reg[{r1}], reg[{r2}]')
+    def fsub(self, r1, r2, dst):
+        a = self.FP.get_float(self.regs[r1])
+        b = self.FP.get_float(self.regs[r2])
+
+        self.regs[dst] = ops.cast(self.FP.get_concat(b-a), 'unsigned') 
+    
+    @emulate.log_disassembly(format='fmul reg[{dst}], reg[{r1}], reg[{r2}]')
+    def fmul(self, r1, r2, dst):
+        a = self.FP.get_float(self.regs[r1])
+        b = self.FP.get_float(self.regs[r2])
+
+        self.regs[dst] = ops.cast(self.FP.get_concat(a*b), 'unsigned')
+
+    @emulate.log_disassembly(format='fdiv reg[{dst}], reg[{r1}], reg[{r2}]')
+    def fdiv(self, r1, r2, dst):
+        a = self.FP.get_float(self.regs[r1])
+        b = self.FP.get_float(self.regs[r2])
+
+        self.regs[dst] = ops.cast(self.FP.get_concat(a/b), 'unsigned')
+
+    @emulate.log_disassembly(format='ftoi reg[{dst}], reg[{src}]')
+    def ftoi(self, src, dst):
+        self.regs[dst] = u16(int(self.FP.get_float(self.regs[src])))
+
+    @emulate.log_disassembly(format='itof reg[{dst}], reg[{src}]')
+    def itof(self, src, dst):
+        val = ops.cast(self.FP.get_float(self.regs[src]), 'signed')
+
+        self.regs[dst] = u16(int(val))
+    
+    @emulate.log_disassembly(format='utof reg[{dst}], reg[{src}]')
+    def utof(self, src, dst):
+        val = ops.cast(self.FP.get_float(self.regs[src]), 'unsigned')
+
+        self.regs[dst] = u16(int(val))
+
+    #########
+    # stack #
+    #########
+
+    @emulate.log_disassembly(format='pop reg[{dst}]')
+    def pop(self, dst):
+        self.regs[self.SP] = self.regs[self.SP] - 1
+        self.regs[dst] = self.load(int(self.regs[self.SP]))
+
+    @emulate.log_disassembly(format='push reg[{src}]')
+    def push(self, src):
+        self.regs[self.SP] = self.regs[self.SP] + 1
+        self.store(int(self.regs[self.SP]), self.regs[src])
+
+    ###########
+    # ptr ops #
+    ###########
 
     @emulate.log_disassembly(format='mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[1] + {offset}]')
     def load_ptr_lsh(self, lsh, offset, ptr, dst):
@@ -297,13 +382,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         self.store(address, src_val)
 
-
     ############
     # ALU LONG #
     ############
     ######################
     # add implementation #
     ######################
+
     def alu_add(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
@@ -328,16 +413,17 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     ######################
     # sub implementation #
     ######################
+
     def alu_sub(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, flags = ops.flaged_sub(r1, r2)
+        out, flags = ops.flaged_sub(r2, r1)
 
         self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='sub reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='sub reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_sub_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -352,6 +438,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     #######################
     # arsh implementation #
     #######################
+
     def alu_arsh(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
@@ -361,7 +448,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         #self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='arsh reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='arsh reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_arsh_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -376,6 +463,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     ######################
     # rsh implementation #
     ######################
+
     def alu_rsh(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
@@ -385,7 +473,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         #self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='rsh reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='rsh reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_rsh_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -400,6 +488,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     ######################
     # lsh implementation #
     ######################
+
     def alu_lsh(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
@@ -409,7 +498,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         #self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='lsh reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='lsh reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_lsh_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -424,6 +513,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     ######################
     # mul implementation #
     ######################
+
     def alu_mul(self, imm_r1: Binary, imm_r2: Binary, dst: int):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
@@ -433,7 +523,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         #self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
-    @emulate.log_disassembly(format='mul reg[{dst}], reg[{r2_reg}] {r1_imm}')
+    @emulate.log_disassembly(format='mul reg[{dst}], reg[{r2_reg}], {r1_imm}')
     def alu_mul_imm(self, r1_imm: Binary, r2_reg: int, dst: int):
         r2_imm = self.regs[r2_reg]
 
@@ -448,6 +538,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     #############
     # ALU SHORT #
     #############
+    
     @emulate.log_disassembly(format='adc reg[{dst}], reg[{r2}], reg[{r1}]')
     def alu_adc(self, r1: int, r2: int, dst: int):
         r1_imm = self.regs[r1]
@@ -470,6 +561,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_add_sub(flags)
 
         self.regs[dst] = out
+    
     @emulate.log_disassembly(format='xor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_xor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
@@ -500,25 +592,24 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     ######################
     # mov implementation #
     ######################
+
     @emulate.log_disassembly(format='mov reg[{dst}], {const}')
     def load_imm(self, const: Binary, dst: int):
-        if dst == self.PC:
-            self.modify_pc(const)
-        else:
-            self.regs[dst] = const
+        self.regs[dst] = const
     @emulate.log_disassembly(format='jmp {const}')
     def jump(self, const: Binary):
-        self.modify_pc(const)
+        self.regs[self.PC] = const
     @emulate.log_disassembly(format='call {const}')
     def call(self, const: Binary):
-        self.ram[self.regs[self.SP]] = self.regs[self.PC]
+        self.ram[self.regs[self.SP]] = self.regs[self.PC] + 1
         self.regs[self.SP] += 1
-        self.modify_pc(const)
+        self.regs[self.PC] = const
     
 
     ########################
     # cjmps implementation #
     ########################
+    
     @emulate.log_disassembly(format='jge reg[{r1_value}], reg[{r2_value}], {offset}')
     def jge(self, r1_value, r2_value, offset):
         r1 = ops.cast(self.regs[r1_value], 'signed')
@@ -527,7 +618,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 >= r2:
-            self.modify_pc(self.regs[self.PC] + offset)
+            self.regs[self.PC] = self.regs[self.PC] + offset
     @emulate.log_disassembly(format='jl reg[{r1_value}], reg[{r2_value}], {offset}')
     def jl(self, r1_value, r2_value, offset):
         r1 = ops.cast(self.regs[r1_value], 'signed')
@@ -536,7 +627,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 < r2:
-            self.modify_pc(self.regs[self.PC] + offset)
+            self.regs[self.PC] = self.regs[self.PC] + offset
     @emulate.log_disassembly(format='je reg[{r1_value}], reg[{r2_value}], {offset}')
     def je(self, r1_value, r2_value, offset):
         r1 = self.regs[r1_value]
@@ -545,7 +636,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 == r2:
-            self.modify_pc(self.regs[self.PC] + offset) 
+            self.regs[self.PC] = self.regs[self.PC] + offset 
     @emulate.log_disassembly(format='jne reg[{r1_value}], reg[{r2_value}], {offset}')
     def jne(self, r1_value, r2_value, offset):
         r1 = self.regs[r1_value]
@@ -554,7 +645,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 != r2:
-            self.modify_pc(self.regs[self.PC] + offset) 
+            self.regs[self.PC] = self.regs[self.PC] + offset 
     @emulate.log_disassembly(format='jae reg[{r1_value}], reg[{r2_value}], {offset}')
     def jae(self, r1_value, r2_value, offset):
         r1 = self.regs[r1_value]
@@ -563,7 +654,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 >= r2:
-            self.modify_pc(self.regs[self.PC] + offset) 
+            self.regs[self.PC] = self.regs[self.PC] + offset
     @emulate.log_disassembly(format='jb reg[{r1_value}], reg[{r2_value}], {offset}')
     def jb(self, r1_value, r2_value, offset):
         r1 = self.regs[r1_value]
@@ -572,7 +663,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 < r2:
-            self.modify_pc(self.regs[self.PC] + offset) 
+            self.regs[self.PC] = self.regs[self.PC] + offset
     @emulate.log_disassembly(format='jge {r1_value}, reg[{r2_value}], {offset}')
     def jge_imm(self, r1_value, r2_value, offset):
         r1 = ops.cast(ops.sign_extend(r1_value, 16), 'signed')
@@ -581,7 +672,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 >= r2:
-            self.modify_pc(self.regs[self.PC] + offset)
+            self.regs[self.PC] = self.regs[self.PC] + offset
     @emulate.log_disassembly(format='je {r1_value}, reg[{r2_value}], {offset}')
     def je_imm(self, r1_value, r2_value, offset):
         r1 = ops.cast(ops.sign_extend(r1_value, 16), 'signed')
@@ -590,10 +681,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.update_flags_for_jump(r1, r2)
 
         if r1 == r2:
-            self.modify_pc(self.regs[self.PC] + offset)
-    
-
-
+            self.regs[self.PC] = self.regs[self.PC] + offset
 
     def write_memory(self, chunk_name: typing.Optional[str], type: emulate.DataTypes, data: dict):
         if type == emulate.DataTypes.DATA:
@@ -618,6 +706,15 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.regs.enable_dummy_reg_writes()
     def disable_dummy_reg_writes(self):
         self.regs.disable_dummy_reg_writes()
+    def enable_ram_bus_logging(self):
+        self.ram.DEBUG_LOG_RAM_MOVMENT = True
+    def disable_ram_bus_logging(self):
+        self.ram.DEBUG_LOG_RAM_MOVMENT = False
+    def enable_ram_freeze(self):
+        self.ram.DEBUG_FREEZE_RAM_WRITES = True
+    def disable_ram_freeze(self):
+        self.ram.DEBUG_FREEZE_RAM_WRITES = False
+
     def get_ram_ref(self):
         return self.ram.ram
     def get_regs_ref(self):
@@ -627,8 +724,10 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 class REGS:
     DEBUG_FREEZE_WRITES = False
 
-    def __init__(self):
+    def __init__(self, potados: POTADOS_EMULATOR):
+        self.potados = potados
         self.regs = [u16(0) for _ in range(0, 16)]
+        self.pc_modified = False
     def __getitem__(self, key: int) -> Binary: 
         if key == 0:
             return u16(0)
@@ -642,6 +741,10 @@ class REGS:
         if len(val) != 16:
             val = val.extended_low()
         val = ops.cast(val, 'unsigned')
+
+        if key == self.potados.PC:
+            self.pc_modified = True
+
         self.regs[key] = val
     def __str__(self) -> str:
         return str(self.regs)
@@ -649,7 +752,10 @@ class REGS:
         self.DEBUG_FREEZE_WRITES = True
     def disable_dummy_reg_writes(self):
         self.DEBUG_FREEZE_WRITES = False
-
+    def increment_pc(self):
+        if not self.pc_modified:
+            self.regs[self.potados.PC] += 1
+        self.pc_modified = False
 class RAM:
     DEBUG_LOG_RAM_MOVMENT = False 
     DEBUG_FREEZE_RAM_WRITES = False
@@ -676,8 +782,9 @@ class RAM:
             bus = u16(0)
         else:
             bus = u16(int(self.ram[key-0x0100]))
+
         if self.DEBUG_LOG_RAM_MOVMENT:
-            print(f"RAM READ ADDRES: {key} (BUS: {key})")
+            print(f"READ {key} (BUS: {bus.extended_low()})")
         return bus
         
     def __setitem__(self, key: typing.Union[int, Binary], val: typing.Union[int, Binary]):
@@ -686,7 +793,7 @@ class RAM:
             val = Binary(val, bit_lenght=16)
         if key < 0x0100:
             if self.DEBUG_LOG_RAM_MOVMENT:
-                print(f"RAM WRITE ADDRES: {key} (BUS: {val})")
+                print(f"WRITE: {key} (BUS: {val.extended_low()})")
             self.io_set(key, val)
         if key >= 0x0200:
             if self.DEBUG_RISE_ON_OUT_OF_BOUNDS:
@@ -695,7 +802,7 @@ class RAM:
         if self.DEBUG_FREEZE_RAM_WRITES:
             return
         if self.DEBUG_LOG_RAM_MOVMENT:
-                print(f"RAM WRITE ADDRES: {key} (BUS: {val.extended_low()})")
+                print(f"WRITE: {key} (BUS: {val.extended_low()})")
         self.ram[key-0x0100] = int(val.extended_low())
 
 
@@ -709,6 +816,17 @@ class RAM:
             raise
         
         return u16()
+    
+    def enable_ram_bus_logging(self):
+        self.DEBUG_LOG_RAM_MOVMENT = True
+    def disable_ram_bus_logging(self):
+        self.DEBUG_LOG_RAM_MOVMENT = False
+
+    def enable_ram_freeze(self):
+        self.DEBUG_FREEZE_RAM_WRITES = True
+    def disable_ram_freeze(self):
+        self.DEBUG_FREEZE_RAM_WRITES = False
+
 
 class ROM:
     def __init__(self, potados: POTADOS_EMULATOR, ROM_SIZE) -> None: 

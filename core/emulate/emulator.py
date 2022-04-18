@@ -9,6 +9,8 @@ import time
 import enum
 import pprint
 
+from pybytes import Binary
+
 from core.save.formatter import as_values
 
 class DataTypes(enum.Enum):
@@ -125,6 +127,10 @@ def log_disassembly(**kwargs):
             return func(*args, **kwargs)
         return wrapper
 
+    def format_value(value):
+        if isinstance(value, Binary):
+            return f"0x{value.as_hex()}"
+        return value
 
     def params_log_dissasembly(func):
             global GLOBAL_CURR_ADRESS
@@ -133,7 +139,7 @@ def log_disassembly(**kwargs):
 
             def wrapper(*args, **kwargs):
                 global GLOBAL_CURR_ADRESS
-                formated = format.format_map({name: value for name, value in zip(spec, args)})
+                formated = format.format_map({name: format_value(value) for name, value in zip(spec, args)})
                 print(GLOBAL_CURR_ADRESS, formated)
                 return func(*args, **kwargs)
             return wrapper
