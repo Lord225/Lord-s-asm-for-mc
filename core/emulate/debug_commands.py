@@ -50,10 +50,10 @@ def generate_ram_display(RAM, rows = 16, subrows = 1, ADRESS_AS_HEX = True, VALU
             ADRESS = str(val)
         elif MODE == "hex":
             PAD = len(str(hex(2**WORD_SIZE-1)[2:]))+1
-            ADRESS = str(formatter.padhex(val, 2, False))
+            ADRESS = str(formatter.padhex(val, 2))
         elif MODE == "bin":
             PAD = len(str(bin(2**WORD_SIZE-1)[2:]))+1
-            ADRESS = formatter.padbin(val, 8, False)
+            ADRESS = formatter.padbin(val, 8)
         return '{}{}'.format(" "*(PAD-len(ADRESS)), ADRESS)
 
     totalrows = rows

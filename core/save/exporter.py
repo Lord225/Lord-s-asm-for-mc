@@ -118,7 +118,7 @@ def convert_to_bitstream(data: list, context):
     except KeyError:
         raise error.CompilerError(None, "Schematic offset should be defined in #global field.")
     offseting_words = "0"*offset*word_size                            
-    return offseting_words + ''.join((padbin(word, word_size, False) for word in data)) 
+    return offseting_words + ''.join((padbin(word, word_size) for word in data)) 
 
 def generate_schematic_from_formatted(program: dict, context: dict):
     profile: Profile = context["profile"]

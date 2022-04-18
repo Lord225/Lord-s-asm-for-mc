@@ -1,17 +1,98 @@
 #profile cpu5.jsonc
 
-#global ENTRY ENTRY 0 
+#global ENTRY ENTRY 15 
 
-ENTRY:
-    kopiuj 0x4000 do [1]
-    kopiuj 0x4000 do [2]
-    dodaj [1] do [2]
-    kopiuj [3]+1 do [4]
-    inkrementuj [3]
-    odejmij [1] od [2]
-    anduj [2] z [3]
-    wyswietl [3]
-    fdodaj [1] do [2]
-    fpodziel [2] przez [4]
-    skocz do ENTRY
-    jesli [2] == [3] skocz do ENTRY
+// Sine plotter using FPU & Pade's approximation
+//
+// 
+// f(x) = \frac{2710x-22016}{\left(x-16.25\right)x+282.3}+86.94-9.711x
+// 
+// def f(x):
+//     z = 2710 * x
+//     z = z - 22016
+//     
+//     y = x - 16.25
+//     y = y * x
+//     y = y + 282.3
+//     
+//     o = z / y
+//     o = o + 86.94
+// 
+//     e = x * 9.711
+//     o = o - e
+//     return o
+
+// Results using hardware
+//
+// y = \frac{2710x-22016}{\left(x-16.25\right)x+282.3}+86.94-9.711x
+//     
+//  x   cpu5     exac 
+// --- ------  --------
+//  0   8.69    8.95  
+//  1   4.875   4.934 
+//  2   1.813   2.127 
+//  3   0.5     0.557 
+//  4   0.0625  0.192 
+//  5   0.875   0.9332
+//  6   2.5     2.604 
+//  7   4.875   4.961 
+//  8   7.625   7.696 
+//  9   10.44   10.48 
+//  10  13.0    12.96 
+//  11  14.82   14.83 
+//  12  16.0    15.821
+//  13  15.69   15.743
+//  14  14.63   14.48 
+//  15  12.25   11.98 
+
+ENTRY:     
+    kopiuj 0x0000 do [0]
+    kopiuj 0x0000 do [10]
+    kopiuj 0x0010 do [11]
+LOOP_START:
+    kopiuj [0] do [1]
+    fpuuu itof [10] do [1]
+    skocz do FUNCTION                      //% FUNCTION
+RETURN_ADRESS:
+    kopiuj [2] do [3]
+    kopiuj [0] do [2]
+    fpuuu ftoi [3] do [2]
+    wyswietl [2]
+    kopiuj 17 do [0]
+    gpuuu ustaw flage        
+    kopiuj [10] do [0]
+    przesun w lewo [2]
+    przesun w lewo [2]
+    przesun w lewo [2]
+    przesun w lewo [2]
+    zoruj [2] z [0]
+    kopiuj 256 do [9]
+    zoruj [9] z [0]
+    gpuuu ciapnij piksel
+    kopiuj 0 do [0]
+    inkrementuj [10]
+    jesli [11] > [10] skocz do LOOP_START
+    przerywanie 7
+
+FUNCTION:
+    // IN      [1]  fp16
+    // OUT     [2]  fp16
+    // Caller  [10] ----
+    kopiuj 0x694B do [2]         // 2710.0
+    fpuuu pomnoz [2] przez [1]   // z(r2) = 2710 * x(r1)
+    kopiuj 0x7560 do [3]         // 22016
+    fpuuu odejmij [3] od [2]     // z(r2) = z(r2) - 2216
+    kopiuj 0x4C10 do [3]         // 16.25
+    kopiuj [1] do [4]            // x(r4) = x(r1) 
+    fpuuu odejmij [3] od [4]     // y(r4) = x(r4) - 16.25
+    fpuuu pomnoz [4] przez [1]   // y(r4) = y(r4) * x(r1)
+    kopiuj 0x5C69 do [3]         // 282.3                          281,8
+    fpuuu dodaj [3] do [4]       // y(r4) = y(r4) + 282.3
+    fpuuu podziel [2] przez [4]  // o(r2) = z(r2) / y(r4)
+    kopiuj 0x556F do [3]         // 86.94
+    fpuuu dodaj [3] do [2]       // o(r2) = o(r2) + 86.94
+    kopiuj 0x48DD do [3]         // 9.87
+    kopiuj [1] do [4]
+    fpuuu pomnoz [4] przez [3]
+    fpuuu odejmij [4] od [2]    
+    skocz do RETURN_ADRESS

@@ -521,7 +521,52 @@
                     "n1":"address"
                 }
             },
-            // Komendy GPU (12)
+            "GPU setflag PL":
+            {
+                "pattern":"gpuuu ustaw flage",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":0,
+                    "cu":12
+                }
+            },
+            "GPU mem PL":
+            {
+                "pattern":"gpuuu odswiez pamiec",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":1,
+                    "cu":12
+                }
+            },
+            "GPU x PL":
+            {
+                "pattern":"gpuuu wpisz x",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":2,
+                    "cu":12
+                }
+            },
+            "GPU y PL":
+            {
+                "pattern":"gpuuu wpisz y",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":3,
+                    "cu":12
+                }
+            },
+            "GPU setpx PL":
+            {
+                "pattern":"gpuuu ciapnij piksel",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":4,
+                    "cu":12
+                }
+            },
+
 
             "jump equal":
             {
@@ -616,7 +661,7 @@
             },
             "fpu mul PL":
             {
-                "pattern":"fpuuu pomnoz [{rfrom:num}] z [{rto:num}]",
+                "pattern":"fpuuu pomnoz [{rto:num}] przez [{rfrom:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
@@ -628,7 +673,7 @@
 
             "fpu div":
             {
-                "pattern":"fdiv [{rfrom:num}] by [{rto:num}]",
+                "pattern":"fdiv [{rto:num}] by [{rfrom:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
@@ -639,13 +684,46 @@
             },
             "fpu div PL":
             {
-                "pattern":"fpuuu podziel [{rfrom:num}] przez [{rto:num}]",
+                "pattern":"fpuuu podziel [{rto:num}] przez [{rfrom:num}]",
                 "command_layout": "long",
                 "bin":{
                     "r2":"rfrom",
                     "r1":"rto",
                     "cu":16,
                     "n1":4
+                }
+            },
+            "fpu itof PL":
+            {
+                "pattern":"fpuuu itof [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":5
+                }
+            },
+            "fpu utof PL":
+            {
+                "pattern":"fpuuu utof [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":6
+                }
+            },
+            "fpu ftoi PL":
+            {
+                "pattern":"fpuuu ftoi [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":7
                 }
             }
         }
