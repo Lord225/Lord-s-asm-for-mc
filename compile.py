@@ -9,7 +9,7 @@ import argparse
 import core.error as error
 import core.config as config
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
@@ -51,6 +51,7 @@ parser.add_argument('--reassume', dest='reassume', action='store_true', help="Sh
 parser.set_defaults(feature=False)
 
 parserargs = parser.parse_args()
+
 
 def show_warnings(context):
     for warning in context['warnings']:
@@ -108,6 +109,7 @@ def main():
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {'defs': profile.defs, 'consts': profile.consts}, progress_bar_name='Reloading')
+
     if config.show_warnings:
         show_warnings(context)
 
