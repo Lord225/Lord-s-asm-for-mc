@@ -333,8 +333,8 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='push reg[{src}]')
     def push(self, src):
-        self.regs[self.SP] = self.regs[self.SP] + 1
         self.store(int(self.regs[self.SP]), self.regs[src])
+        self.regs[self.SP] = self.regs[self.SP] + 1
 
     ###########
     # ptr ops #
@@ -601,7 +601,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.regs[self.PC] = const
     @emulate.log_disassembly(format='call {const}')
     def call(self, const: Binary):
-        self.ram[self.regs[self.SP]] = self.regs[self.PC] + 1
+        self.store(int(self.regs[self.SP]), self.regs[self.PC] + 1)
         self.regs[self.SP] += 1
         self.regs[self.PC] = const
     

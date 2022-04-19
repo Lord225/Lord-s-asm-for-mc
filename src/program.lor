@@ -8,6 +8,7 @@
 
 CORE0:
     //#debug enable_ram_bus_logging()
+    #debug ram
     mov reg[SP], STACK_BASE      // stack init
     mov reg[1], reg[SP]          // array start 
     add reg[SP], reg[SP], 0x0010 // add 16 elements 
@@ -17,12 +18,13 @@ CORE0:
 
     mov reg[3], reg[SP]          // set dst ptr
     add reg[SP], reg[SP], 0x0010 // add 16 elements
-    
+
     call MEMCPY
+
     call INSERTION_SORT          // call function (add adress to stack)
-    #debug regs
-    #debug ram
+
     int 0
+    #debug ram
 
 INSERTION_SORT:
     // reg[1] - [param, Caller]   ptr low   [i]
@@ -60,7 +62,7 @@ TRANSFORM_ARRAY:
     pop reg[4]
     pop reg[1]
     ret
-        
+    
 MEMCPY:
     // reg[1] - [param]   ptr low   
     // reg[2] - [param]          ptr high
