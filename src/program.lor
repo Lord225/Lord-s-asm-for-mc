@@ -7,77 +7,76 @@
 #data STACK_BASE "BDCEFABCDEFGCAF"
 
 CORE0:
-    //#debug enable_ram_bus_logging()
-    #debug ram
     mov reg[SP], STACK_BASE      // stack init
-    mov reg[1], reg[SP]          // array start 
+    mov reg[2], reg[SP]          // array start 
     add reg[SP], reg[SP], 0x0010 // add 16 elements 
-    mov reg[2], reg[SP]          // array end 
-
-    call TRANSFORM_ARRAY    
-
-    mov reg[3], reg[SP]          // set dst ptr
-    add reg[SP], reg[SP], 0x0010 // add 16 elements
-
-    call MEMCPY
-
-    call INSERTION_SORT          // call function (add adress to stack)
+    mov reg[3], reg[SP]          // array end 
+    dec reg[3]                   // last element (15)
+    
+    #debug ram
+    
+    call QUICK_SORT
 
     int 0
     #debug ram
+    #debug break
 
-INSERTION_SORT:
-    // reg[1] - [param, Caller]   ptr low   [i]
-    // reg[2] - [param]           ptr high 
-    // reg[3] - [Caller]          ptr inner [j]
-    // reg[4] - [Caller]                    [aux]
-    // reg[5] - [Caller]                    [buf]
-    SORT_loop_outer:                             // i = ptr_low..ptr_high 
-        mov reg[3], reg[1]
-        dec reg[3]                               // j = i-1
-        mov reg[4], ram[reg[1]]                  // aux = S[i]
-    SORT_loop_inner:                             // j = (i-1).=0 
-        mov reg[5], ram[reg[3]]                  // Load S[j]
-        jle reg[5], reg[4], SORT_LOOP_break      // if S[j] <= aux, break inner else:
-            mov ram[reg[3]+1], reg[5]            // S[j+1] <= S[j]
-            dec reg[3]                           // j -= 1
-            jne reg[3], reg[2], SORT_loop_inner  // loop inner 
-    SORT_LOOP_break:
-        mov ram[reg[3]+1], reg[4]                // S[j+1], reg[4]
-        inc reg[1]                               // i += 1
-        jne reg[1], reg[2], SORT_loop_outer      // loop outer
-        ret
 
-TRANSFORM_ARRAY:
-    // reg[1] - [param]   ptr low   
-    // reg[2] - [param]   ptr high
-    push reg[1]
-    push reg[4]
-    TRANSFORM_loop:
-        mov reg[4], ram[reg[1]]
-        add reg[4], reg[4], 2
-        mov ram[reg[1]], reg[4]
-        inc reg[1]
-        jne reg[1], reg[2], TRANSFORM_loop
-    pop reg[4]
-    pop reg[1]
-    ret
-    
-MEMCPY:
-    // reg[1] - [param]   ptr low   
-    // reg[2] - [param]          ptr high
-    // reg[3] - [param]          ptr dst
-    // reg[4] - [Caller]
-    
-    push reg[1]
-    push reg[3]
-    MEMCPY_loop:
-        mov reg[4], ram[reg[1]]
-        mov ram[reg[3]], reg[4]
-        inc reg[1]
-        inc reg[3]
-        jne reg[1], reg[2], MEMCPY_loop
-    pop reg[3]
-    pop reg[1]
+QUICK_SORT:
+    // reg[2] - ptr low   
+    // reg[3] - ptr high  (last element)
+    jge reg[2], reg[3], END
+
+        // INLINED PARTION ALGORTIM `
+
+        // PARTITION:
+        // reg[1] caller - output, pivot
+        // reg[2] callee - param,  ptr low
+        // reg[3] callee - param,  ptr high
+        mov reg[4], ram[reg[3]] // pivot = S[high]
+        sub reg[5], reg[2], 1   // i = low - 1
+
+        mov reg[1], reg[2]      // j = low
+
+        PARTITION_LOOP:
+            mov reg[6], ram[reg[1]] // S[j] 
+            jg reg[6], reg[4], SKIP_SWAP // if(S[j] <= pivot)
+                inc reg[5]
+                mov reg[9], ram[reg[5]]  // S[i]
+                
+                //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
+                mov ram[reg[5]], reg[6]
+                mov ram[reg[1]], reg[9]
+            SKIP_SWAP:
+            jne reg[1]++, reg[3], PARTITION_LOOP
+
+            //swap(S[i+1], S[high]); i+1
+            inc reg[5] // i = i+1 
+            mov reg[9], ram[reg[5]] // S[i+1]
+
+            // S[high] = pivot = reg[4] (high = reg[3])
+            // S[i+1] =          reg[9] (i+1  = reg[5])
+            mov ram[reg[5]], reg[4] 
+            mov ram[reg[3]], reg[9]
+        // ret
+        
+        // END OF INLINED PARTION ALGORTIM 
+
+        // quickSort(S, low, pivot - 1);
+
+        push reg[5]           // save pivot
+        push reg[3]           // save ptr high
+        sub reg[3], reg[5], 1 // pivot - 1 
+        
+        call QUICK_SORT
+
+        pop reg[3]            // restore ptr high
+        pop reg[2]            // restore pivot
+        add reg[2], reg[2], 1
+        
+        // quickSort(S, pivot + 1, high);
+
+        call QUICK_SORT
+    END:
     ret
 

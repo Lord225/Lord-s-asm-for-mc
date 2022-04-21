@@ -372,27 +372,51 @@
                     "offsetLo": "offset%16"
                 }
             },
-            "branch jge imm": {
-                "pattern": "jge reg[{arg1:num}], {const:num}, {offset:offset_label}",
+            "branch jge ++": {
+                "pattern": "jge reg[1]++, reg[{reg:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 6,
-                    "r2": "arg1",
+                    "r2": "reg",
                     "offsetHi": "offset>>4",
-                    "r1": "const",
+                    "r1": 1,
                     "offsetLo": "offset%16"
                 }
             },
-            "branch je imm": {
-                "pattern": "je reg[{arg1:num}], {const:num}, {offset:offset_label}",
+            "branch jge --": {
+                "pattern": "jge reg[1]--, reg[{reg:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 6,
+                    "r2": "reg",
+                    "offsetHi": "offset>>4",
+                    "r1": 2,
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jne ++": {
+                "pattern": "jne reg[1]++, reg[{reg:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 7,
-                    "r2": "arg1",
+                    "r2": "reg",
                     "offsetHi": "offset>>4",
-                    "r1": "const",
+                    "r1": 1,
+                    "offsetLo": "offset%16"
+                }
+            },
+            "branch jne --": {
+                "pattern": "jne reg[1]--, reg[{reg:num}], {offset:offset_label}",
+                "command_layout": "branch",
+                "bin": {
+                    "pridec": 2,
+                    "secdec": 7,
+                    "r2": "reg",
+                    "offsetHi": "offset>>4",
+                    "r1": 2,
                     "offsetLo": "offset%16"
                 }
             },

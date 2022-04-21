@@ -319,23 +319,25 @@ for token, value, rev in tokens:
 #
 branchimm ="""
 {{
-    "branch {cmd_name} imm":
+    "branch {cmd_name} {symbol}":
     {{
-        "pattern": "{cmd_name} reg[{{arg1:num}}], {{const:num}}, {{offset:offset_label}}",
+        "pattern": "{cmd_name} reg[1]{symbol}, reg[{{reg:num}}], {{offset:offset_label}}",
         "command_layout": "branch",
         "bin": {{
             "pridec": 2,
             "secdec": {value},
-            "r2": "arg1",
+            "r2": "reg",
             "offsetHi": "offset>>4",
-            "r1": "const",
+            "r1": {decoder},
             "offsetLo": "offset%16"
         }}
     }}
 }}
 """
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6)))
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="je", value=7)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="++", decoder=1)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="--", decoder=2)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="++", decoder=1)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="--", decoder=2)))
 
 #
 # ALU PART 1

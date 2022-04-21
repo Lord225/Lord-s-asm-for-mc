@@ -92,9 +92,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             elif sec_decoder == 5: # jb 
                 self.jb(r1_value, r2_value, offset)
             elif sec_decoder == 6: # jge imm
-                self.jge_imm(r1_value, r2_value, offset)
+                self.jge_inc_dec(r1_value, r2_value, offset)
             elif sec_decoder == 7: # je imm
-                self.jge_imm(r1_value, r2_value, offset)
+                self.jne_inc_dec(r1_value, r2_value, offset)
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
@@ -664,6 +664,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         if r1 < r2:
             self.regs[self.PC] = self.regs[self.PC] + offset
+    
+    # Version 10
+
     @emulate.log_disassembly(format='jge {r1_value}, reg[{r2_value}], {offset}')
     def jge_imm(self, r1_value, r2_value, offset):
         r1 = ops.cast(ops.sign_extend(r1_value, 16), 'signed')
@@ -682,6 +685,38 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         if r1 == r2:
             self.regs[self.PC] = self.regs[self.PC] + offset
+
+    # Version 11
+    def jge_inc_dec(self, r1_value, r2_value, offset):
+        if r1_value == 1:
+            self.regs[1] += 1
+        elif r1_value == 2:
+            self.regs[1] -= 1
+        
+        r1 = ops.cast(self.regs[1], 'signed')
+        r2 = ops.cast(self.regs[r2_value], 'signed')
+
+        self.update_flags_for_jump(r1, r2)
+
+        if r1 >= r2:
+            self.regs[self.PC] = self.regs[self.PC] + offset
+
+    # Version 11
+    def jne_inc_dec(self, r1_value, r2_value, offset):
+        if r1_value == 1:
+            self.regs[1] += 1
+        elif r1_value == 2:
+            self.regs[1] -= 1
+        
+        r1 = ops.cast(self.regs[1], 'signed')
+        r2 = ops.cast(self.regs[r2_value], 'signed')
+
+        self.update_flags_for_jump(r1, r2)
+
+        if r1 != r2:
+            self.regs[self.PC] = self.regs[self.PC] + offset
+
+
 
     def write_memory(self, chunk_name: typing.Optional[str], type: emulate.DataTypes, data: dict):
         if type == emulate.DataTypes.DATA:
