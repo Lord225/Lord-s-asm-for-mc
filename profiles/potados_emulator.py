@@ -92,9 +92,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             elif sec_decoder == 5: # jb 
                 self.jb(r1_value, r2_value, offset)
             elif sec_decoder == 6: # jge imm
-                self.jge_inc_dec(r1_value, r2_value, offset)
+                self.jge_inc_dec("++" if r1_value == 1 else "--", r2_value, offset)
             elif sec_decoder == 7: # je imm
-                self.jne_inc_dec(r1_value, r2_value, offset)
+                self.jne_inc_dec("++" if r1_value == 1 else "--", r2_value, offset)
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
@@ -687,10 +687,11 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             self.regs[self.PC] = self.regs[self.PC] + offset
 
     # Version 11
+    @emulate.log_disassembly(format='jge reg[1]{r1_value}, reg[{r2_value}], {offset}')
     def jge_inc_dec(self, r1_value, r2_value, offset):
-        if r1_value == 1:
+        if r1_value == "++":
             self.regs[1] += 1
-        elif r1_value == 2:
+        elif r1_value == "--":
             self.regs[1] -= 1
         
         r1 = ops.cast(self.regs[1], 'signed')
@@ -700,12 +701,11 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         if r1 >= r2:
             self.regs[self.PC] = self.regs[self.PC] + offset
-
-    # Version 11
+    @emulate.log_disassembly(format='jne reg[1]{r1_value}, reg[{r2_value}], {offset}')
     def jne_inc_dec(self, r1_value, r2_value, offset):
-        if r1_value == 1:
+        if r1_value == "++":
             self.regs[1] += 1
-        elif r1_value == 2:
+        elif r1_value == "--":
             self.regs[1] -= 1
         
         r1 = ops.cast(self.regs[1], 'signed')
