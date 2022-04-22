@@ -4,37 +4,246 @@
 
 #define STACK_BASE 0x0100 
 
-#data STACK_BASE "ABCDEFGE"
+#data STACK_BASE "BIHDLLTNMRAYGYSDDBSZBRDNGXPKJIDANEZOWYNAYNGLPRJDOBPIKZGMSBLTIAGI"
+//BIHDLLTNMRAYGYSDDBSZBRDNGXPKJIDANEZOWYNAYNGLPRJDOBPIKZGMSBLTIAGI - random data
+//BDCEFABCDEFGCAFBDCEFADCDEFGCAFBDCEFABCDEFGCAFBDCEFADCDEFGCAF4321 - not that random
+//REPONMLKJIHGFEDCBAZYXTSREPONMLKJIHGFEDCBAZYXTSREPONMLKJIHGFEDCBA - reversed
+//ABCDEFGHIJKLMNOPERSTXYZABCDEFGHIJKLMNOPERSTXYZABCDEFGHIJKLMNOPER - sorted
+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB - almost all equal
+//BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA - almost all equal reversed
 
+// IS 4  - Machine took: 51 steps, estimated execution time: 15.5s
+// IS 8  - Machine took: 87 steps, estimated execution time: 26.4s
+// IS 16 - Machine took: 299 steps, estimated execution time: 90.6s
+// IS 32 - Machine took: 1239 steps, estimated execution time: 375.5s
+// IS 64 - Machine took: 4375 steps, estimated execution time: 1325.8s
+// 
+// QS 4  - Machine took: 67 steps, estimated execution time: 20.3s
+// QS 8  - Machine took: 232 steps, estimated execution time: 70.3s
+// QS 16 - Machine took: 447 steps, estimated execution time: 135.5s
+// QS 32 - Machine took: 1137 steps, estimated execution time: 344.5s
+// QS 64 - Machine took: 2705 steps, estimated execution time: 819.7s     
+// 
+// QQ1 4  - Machine took: 57 steps, estimated execution time: 17.3s
+// QQ1 8  - Machine took: 93 steps, estimated execution time: 28.2s
+// QQ1 16 - Machine took: 358 steps, estimated execution time: 108.5s
+// QQ1 32 - Machine took: 941 steps, estimated execution time: 285.2s
+// QQ1 64 - Machine took: 2038 steps, estimated execution time: 617.6s
+// 
+// QQ2 4  - Machine took: 57 steps, estimated execution time: 17.3s
+// QQ2 8  - Machine took: 93 steps, estimated execution time: 28.2s
+// QQ2 16 - Machine took: 305 steps, estimated execution time: 92.4s
+// QQ2 32 - Machine took: 944 steps, estimated execution time: 286.1s
+// QQ2 64 - Machine took: 2006 steps, estimated execution time: 607.9s
 
-INSERTION_SORT:
-    // reg[1] - [param, Caller]   ptr low   [i]
-    // reg[2] - [param]           ptr high 
-    // reg[3] - [Caller]          ptr inner [j]`
-    // reg[4] - [Caller]                    [aux]
-    // reg[5] - [Caller]                    [buf]
-    SORT_loop_outer:                             // i = ptr_low..ptr_high 
-        mov reg[3], reg[1]
-        dec reg[3]                               // j = i-1
-        mov reg[4], ram[reg[1]]                  // aux = S[i]
-    SORT_loop_inner:                             // j = (i-1).=0 
-        mov reg[5], ram[reg[3]]                  // Load S[j]
-        jle reg[5], reg[4], SORT_LOOP_break      // if S[j] <= aux, break inner else:
-            mov ram[reg[3]+1], reg[5]            // S[j+1] <= S[j]
-            dec reg[3]                           // j -= 1
-            jne reg[3], reg[2], SORT_loop_inner  // loop inner 
-    SORT_LOOP_break:
-        mov ram[reg[3]+1], reg[4]                // S[j+1], reg[4]
-        inc reg[1]                               // i += 1
-        jne reg[1], reg[2], SORT_loop_outer      // loop outer
-        ret
+#define ARRAY_SIZE 0x0040
+
+#define INSERTION_TRESHOLD 16 // (8/16/32) depend on data
+
+//#define USE_QUICK_SORT
+//#define USE_INSERTION
+#define USE_QUICKER_SORT
 
 CORE0:
-    mov reg[SP], STACK_BASE      // stack init
+    #debug ram
+    mov reg[SP], STACK_BASE          // stack init
+    mov reg[2], reg[SP]              // array start 
+    add reg[SP], reg[SP], ARRAY_SIZE // add 16 elements 
+    mov reg[3], reg[SP]              // array end 
+
+#ifdef USE_QUICK_SORT
+
+    dec reg[3]                       // last element (15)
+    call QUICK_SORT
+
+#else
+#ifdef USE_INSERTION
     
-    mov reg[1], reg[SP]          // array start
-    add reg[SP], reg[SP], 0x0008 // add 8 elements 
-    mov reg[2], reg[SP]          // array end 
-    call INSERTION_SORT          // call function (add adress to stack)
+    call INSERTION_SORT
+#else
+#ifdef USE_QUICKER_SORT
+    
+    dec reg[3]                       // last element (15)
+    mov reg[14], INSERTION_TRESHOLD  // insertion treshold
+    call QUICKER_SORT
+#endif
+#endif
+#endif
+    int 0
+    #debug ram
+
+#ifdef USE_QUICK_SORT
+QUICK_SORT:
+    // reg[2] - ptr low   
+    // reg[3] - ptr high  (last element)
+    jge reg[2], reg[3], END
+
+        // INLINED PARTION ALGORTIM
+
+        // PARTITION:
+        // reg[1] caller - output, pivot
+        // reg[2] callee - param,  ptr low
+        // reg[3] callee - param,  ptr high
+        mov reg[4], ram[reg[3]] // pivot = S[high]
+        
+        sub reg[5], reg[2], 1   // i = low - 1
+
+        mov reg[1], reg[2]      // j = low
+
+        PARTITION_LOOP:
+            mov reg[6], ram[reg[1]] // S[j] 
+            jg reg[6], reg[4], SKIP_SWAP // if(S[j] <= pivot)
+                inc reg[5]
+                mov reg[9], ram[reg[5]]  // S[i]
+                
+                //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
+                mov ram[reg[5]], reg[6]
+                mov ram[reg[1]], reg[9]
+            SKIP_SWAP:
+            jne reg[1]++, reg[3], PARTITION_LOOP
+
+            //swap(S[i+1], S[high]); i+1
+            inc reg[5] // i = i+1 
+            mov reg[9], ram[reg[5]] // S[i+1]
+
+            // S[high] = pivot = reg[4] (high = reg[3])
+            // S[i+1] =          reg[9] (i+1  = reg[5])
+            mov ram[reg[5]], reg[4] 
+            mov ram[reg[3]], reg[9]
+        // ret
+        
+        // END OF INLINED PARTION ALGORTIM 
+
+        // quickSort(S, low, pivot - 1);
+
+        push reg[5]           // save pivot
+        push reg[3]           // save ptr high
+        sub reg[3], reg[5], 1 // pivot - 1 
+        
+        call QUICK_SORT
+
+        pop reg[3]            // restore ptr high
+        pop reg[2]            // restore pivot
+        add reg[2], reg[2], 1
+        
+        // quickSort(S, pivot + 1, high);
+
+        call QUICK_SORT
+    END:
+    ret
+#endif
+#ifdef USE_INSERTION
+INSERTION_SORT:
+    // reg[2] - [param, Caller]   ptr low  
+    // reg[3] - [param]           ptr high 
+    SORT_loop_outer:
+        mov reg[1], reg[2]
+        dec reg[1]
+        mov reg[4], ram[reg[2]]
+    SORT_loop_inner:
+        mov reg[5], ram[reg[1]]
+        jle reg[5], reg[4], SORT_LOOP_break
+            mov ram[reg[1]+1], reg[5]
+            jne reg[1]--, reg[2], SORT_loop_inner
+    SORT_LOOP_break:
+        mov ram[reg[1]+1], reg[4]
+        inc reg[2]
+        jne reg[2], reg[3], SORT_loop_outer
+        ret
+#endif
+#ifdef USE_QUICKER_SORT
+QUICKER_SORT:
+    // reg[2] - ptr low   
+    // reg[3] - ptr high  (last element)
+
+    jge reg[2], reg[3], END2
+        sub reg[5], reg[3], reg[2]
+        jge reg[5], reg[14], USE_QUICK_SORT
+            inc reg[3]
+
+            //INLINED INSERTION
+                //INSERTION_SORT:
+                    // reg[2] - [param, Caller]   ptr low  
+                    // reg[3] - [param]           ptr high 
+                    SORT_loop_outer3:
+                        mov reg[1], reg[2]
+                        dec reg[1]
+                        mov reg[4], ram[reg[2]]
+                    SORT_loop_inner3:
+                        mov reg[5], ram[reg[1]]
+                        jle reg[5], reg[4], SORT_LOOP_break3
+                            mov ram[reg[1]+1], reg[5]
+                            jne reg[1]--, reg[2], SORT_loop_inner3
+                    SORT_LOOP_break3:
+                        mov ram[reg[1]+1], reg[4]
+                        inc reg[2]
+                        jne reg[2], reg[3], SORT_loop_outer3
+                        //ret
+            // END OF INLINED INSERION
+            ret
+
+        USE_QUICK_SORT: 
+
+        // INLINED PARTION ALGORTIM `
+
+        // PARTITION:
+        // reg[1] caller - output, pivot
+        // reg[2] callee - param,  ptr low
+        // reg[3] callee - param,  ptr high
+        // get pivot
+        
+
+        //mov reg[4], reg[3]
+        //add reg[4], reg[4], reg[2]
+        //rsh reg[4], reg[4], 1
+        //mov reg[4], ram[reg[4]] // pivot = S[(high+lo)/2]
+
+        mov reg[4], ram[reg[3]] // pivot = S[high]
 
 
+        sub reg[5], reg[2], 1   // i = low - 1
+
+        mov reg[1], reg[2]      // j = low
+
+        PARTITION_LOOP2:
+            mov reg[6], ram[reg[1]] // S[j] 
+            jge reg[6], reg[4], SKIP_SWAP2 // if(S[j] <= pivot)
+                inc reg[5]
+                mov reg[9], ram[reg[5]]  // S[i]
+                
+                //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
+                mov ram[reg[5]], reg[6]
+                mov ram[reg[1]], reg[9]
+            SKIP_SWAP2:
+            jne reg[1]++, reg[3], PARTITION_LOOP2
+
+            //swap(S[i+1], S[high]); i+1
+            inc reg[5] // i = i+1 
+            mov reg[9], ram[reg[5]] // S[i+1]
+
+            // S[high] = pivot = reg[4] (high = reg[3])
+            // S[i+1] =          reg[9] (i+1  = reg[5])
+            mov ram[reg[5]], reg[4] 
+            mov ram[reg[3]], reg[9]
+        // ret
+        
+        // END OF INLINED PARTION ALGORTIM 
+
+        // quickSort(S, low, pivot - 1);
+
+        push reg[5]           // save pivot
+        push reg[3]           // save ptr high
+        sub reg[3], reg[5], 1 // pivot - 1 
+        
+        call QUICKER_SORT
+
+        pop reg[3]            // restore ptr high
+        pop reg[2]            // restore pivot
+        add reg[2], reg[2], 1
+        
+        // quickSort(S, pivot + 1, high);
+
+        call QUICKER_SORT
+    END2:
+    ret
+#endif
