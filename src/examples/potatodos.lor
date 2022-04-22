@@ -12,6 +12,8 @@
 //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB - almost all equal
 //BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA - almost all equal reversed
 
+// for BIHDLLTNMRAYGYSDDBSZBRDNGXPKJIDANEZOWYNAYNGLPRJDOBPIKZGMSBLTIAGI
+//
 // IS 4  - Machine took: 51 steps, estimated execution time: 15.5s
 // IS 8  - Machine took: 87 steps, estimated execution time: 26.4s
 // IS 16 - Machine took: 299 steps, estimated execution time: 90.6s
@@ -24,21 +26,30 @@
 // QS 32 - Machine took: 1137 steps, estimated execution time: 344.5s
 // QS 64 - Machine took: 2705 steps, estimated execution time: 819.7s     
 // 
+// 8
 // QQ1 4  - Machine took: 57 steps, estimated execution time: 17.3s
 // QQ1 8  - Machine took: 93 steps, estimated execution time: 28.2s
 // QQ1 16 - Machine took: 358 steps, estimated execution time: 108.5s
 // QQ1 32 - Machine took: 941 steps, estimated execution time: 285.2s
 // QQ1 64 - Machine took: 2038 steps, estimated execution time: 617.6s
 // 
+// 16
 // QQ2 4  - Machine took: 57 steps, estimated execution time: 17.3s
 // QQ2 8  - Machine took: 93 steps, estimated execution time: 28.2s
 // QQ2 16 - Machine took: 305 steps, estimated execution time: 92.4s
 // QQ2 32 - Machine took: 944 steps, estimated execution time: 286.1s
 // QQ2 64 - Machine took: 2006 steps, estimated execution time: 607.9s
+//
+// 14
+// QQ3 4  - Machine took: 57 steps, estimated execution time: 17.3s
+// QQ3 8  - Machine took: 93 steps, estimated execution time: 28.2s
+// QQ3 16 - Machine took: 338 steps, estimated execution time: 102.4s
+// QQ3 32 - Machine took: 944 steps, estimated execution time: 286.1s
+// QQ3 64 - Machine took: 1863 steps, estimated execution time: 564.5s
 
 #define ARRAY_SIZE 0x0040
 
-#define INSERTION_TRESHOLD 16 // (8/16/32) depend on data
+#define INSERTION_TRESHOLD 14 // (8/16/32) depend on data
 
 //#define USE_QUICK_SORT
 //#define USE_INSERTION
