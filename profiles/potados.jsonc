@@ -1325,6 +1325,126 @@
                     "pad": 0,
                     "dst": "dst"
                 }
+            },
+            "print": {
+                "pattern": "print reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 5,
+                    "srcdst": "srcdst"
+                }
+            },
+            "dbg": {
+                "pattern": "dbg reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 6,
+                    "srcdst": "srcdst"
+                }
+            },
+            "clk set": {
+                "pattern": "clk set reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 1,
+                    "srcdst": "srcdst"
+                }
+            },
+            "clk get": {
+                "pattern": "clk get reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 4,
+                    "offset": 1,
+                    "srcdst": "srcdst"
+                }
+            },
+            "tim set": {
+                "pattern": "tim set reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 2,
+                    "srcdst": "srcdst"
+                }
+            },
+            "tim get": {
+                "pattern": "tim get reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 4,
+                    "offset": 2,
+                    "srcdst": "srcdst"
+                }
+            },
+            "tim state set": {
+                "pattern": "tim state set reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 3,
+                    "srcdst": "srcdst"
+                }
+            },
+            "tim state get": {
+                "pattern": "tim state get reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 4,
+                    "offset": 3,
+                    "srcdst": "srcdst"
+                }
+            },
+            "gpu status": {
+                "pattern": "gpu status reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 1,
+                    "offset": 12,
+                    "srcdst": "srcdst"
+                }
+            },
+            "gpu invoke": {
+                "pattern": "gpu invoke reg[{srcdst:num}]",
+                "command_layout": "indirect",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "ptr": 0,
+                    "3th": 4,
+                    "offset": 13,
+                    "srcdst": "srcdst"
+                }
             }
         }
     }

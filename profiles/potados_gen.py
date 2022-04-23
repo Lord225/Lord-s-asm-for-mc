@@ -643,5 +643,37 @@ base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="ftoi", src="s
 base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="itof", src="src", val=1, dst="dst")))
 base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="utof", src="src", val=2, dst="dst")))
 
+IOSCHEM="""
+{{
+    "{name}":{{
+        "pattern": "{name} reg[{{srcdst:num}}]",
+        "command_layout":"indirect",
+        "bin": {{
+            "pridec": 1,
+            "secdec": 1,
+            "ptr": 0,
+            "3th": {ls},
+            "offset": {address},
+            "srcdst": "srcdst"
+        }}
+    }}
+}}
+"""
+
+def add_io(name, is_load, address):
+    formated = decoder.decode(IOSCHEM.format(name=name, ls = 1 if is_load else 4, address=address))
+    base["CPU"]["COMMANDS"].update(formated)
+
+add_io("print", True, 0x0005)
+add_io("dbg", True, 0x0006)
+add_io("clk set", True, 0x0001)
+add_io("clk get", False, 0x0001)
+add_io("tim set", True, 0x0002)
+add_io("tim get", False, 0x0002)
+add_io("tim state set", True, 0x0003)
+add_io("tim state get", False, 0x0003)
+add_io("gpu status", True, 0x000c)
+add_io("gpu invoke", False, 0x000d)
+
 with open('profiles/potados.jsonc', 'w') as f:
     json.dump(base, f, indent=4)

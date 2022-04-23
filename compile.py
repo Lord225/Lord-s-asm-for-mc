@@ -9,7 +9,7 @@ import argparse
 import core.error as error
 import core.config as config
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
@@ -65,7 +65,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = True,
-            save = "pad",
+            save = "raw",
             comments = True,
             onerror = 'None',
             debug = True,
