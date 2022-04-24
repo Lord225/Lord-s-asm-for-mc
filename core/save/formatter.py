@@ -135,7 +135,7 @@ def get_raw(program, context):
     """Returns program written in hex padded to bytes"""
     values = get_pad(program, context)
 
-    return [padhex(int(val, base=2), 2) for val in values]
+    return [padhex(int(val, base=2), 8) for val in values]
 
 
 def format_output(program, context):

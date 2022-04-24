@@ -468,7 +468,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_rsh(r1, r2)
+        out, _ = ops.flaged_rsh(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -493,7 +493,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_lsh(r1, r2)
+        out, _ = ops.flaged_lsh(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -518,7 +518,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_mul(r1, r2)
+        out, _ = ops.flaged_mul(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -545,7 +545,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r2_imm = self.regs[r2]
         carry = self.regs[self.FL][1]
         
-        out, flags = ops.flaged_add(r1_imm, r2_imm + 1 if carry else 0)
+        out, flags = ops.flaged_add(r2_imm, r1_imm + 1 if carry else 0)
         
         self.update_flags_for_add_sub(flags)
 
@@ -556,7 +556,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r2_imm = self.regs[r2]
         carry = self.regs[self.FL][1]
         
-        out, flags = ops.flaged_sub(r1_imm, r2_imm + 1 if carry else 0)
+        out, flags = ops.flaged_sub(r2_imm, r1_imm + 1 if carry else 0)
         
         self.update_flags_for_add_sub(flags)
 
@@ -567,26 +567,26 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_xor(r1_imm, r2_imm)
+        self.regs[dst] = ops.bitwise_xor(r2_imm, r1_imm)
     @emulate.log_disassembly(format='xnor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_xnor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_xnor(r1_imm, r2_imm)
+        self.regs[dst] = ops.bitwise_xnor(r2_imm, r1_imm)
 
     @emulate.log_disassembly(format='or reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_or(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_or(r1_imm, r2_imm)
+        self.regs[dst] = ops.bitwise_or(r2_imm, r1_imm)
     @emulate.log_disassembly(format='nor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_nor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_nor(r1_imm, r2_imm)
+        self.regs[dst] = ops.bitwise_nor(r2_imm, r1_imm)
     
     
     ######################

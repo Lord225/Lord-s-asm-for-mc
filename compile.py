@@ -65,7 +65,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = True,
-            save = "pad",
+            save = "raw",
             comments = True,
             onerror = 'None',
             debug = True,
