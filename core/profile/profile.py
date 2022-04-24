@@ -100,7 +100,10 @@ class Profile:
         self.keywords: dict[str, Any] = self.profile["KEYWORDS"]
         self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
     def __get_schematics(self):
-        self.schematic = SchematicInfo(self.profile) if "SCHEMATIC" in self.profile else None
+        if "SCHEMATIC" in self.profile and self.profile["SCHEMATIC"] is not None:
+            self.schematic = SchematicInfo(self.profile)
+        else:
+            self.schematic = None
 
     def __selfcheck(self):
         assert self.info is not None
