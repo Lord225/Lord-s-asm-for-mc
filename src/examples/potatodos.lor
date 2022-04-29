@@ -127,7 +127,7 @@ QUICK_SORT:
         // END OF INLINED PARTION ALGORTIM 
 
         // quickSort(S, low, pivot - 1);
-
+.this_is_offseted 100
         push reg[5]           // save pivot
         push reg[3]           // save ptr high
         sub reg[3], reg[5], 1 // pivot - 1 

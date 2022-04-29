@@ -2,7 +2,7 @@ import chunk
 from nbt import nbt
 from typing import List, Iterable
 import numpy as np
-from core.profile.profile import Profile
+from core.profile.profile import AdressingMode, Profile
 from core.save.formatter import padbin
 from core.emulate.emulator import gather_instructions 
 import numpy as np
@@ -90,8 +90,7 @@ def generate_block_data(data, layout, blank, high_id, low_id):
         x, y, z = calculate_bit_cords(i, layout)
         
         try:
-            blocks[flatten(x, y, z)] = get_state(bit)
-            
+            blocks[flatten(x, y, z)] = get_state(bit)  
         except IndexError:
             print(f"Error: Writing to cell outside rom volume. ([{x}, {y}, {z}])")
             return blocks
@@ -111,51 +110,61 @@ def flatten_instructions(instructions: dict):
 
     return space 
 
-def convert_to_bitstream(data: list, context):
-    word_size = context["profile"].adressing.bin_len
-    try:
-        offset = context["schematic_offset"]
-    except KeyError:
-        raise error.CompilerError(None, "Schematic offset should be defined in #global field.")
+def convert_to_bitstream(data: list, offset, adressing: AdressingMode):
+    word_size = adressing.bin_len
     offseting_words = "0"*offset*word_size                            
     return offseting_words + ''.join((padbin(word, word_size) for word in data)) 
 
 def generate_schematic_from_formatted(program: dict, context: dict):
     profile: Profile = context["profile"]
-    
 
     if profile.schematic is None:
         print("Schematic export is not suporrted. (Missing definition in profile) Skipping.")
         return
+    
+    #TODO
+    try:
+        offset = 0
+    except KeyError:
+        raise error.CompilerError(None, "Schematic offset should be defined in #global field.")
+    
+    # Prepare output filenames
+    outfile = config.output
+    dirname = os.path.dirname(outfile)
+    filename, _ = os.path.splitext(os.path.basename(outfile))
 
-    # Unpack schematic settings
+    filenames = generate_schematic_from(profile, program, 0, dirname, filename)
+
+    context['outfiles'] = filenames
+
+def generate_schematic_from(profile: Profile, program, offset, dirname, filename):
     schem_settings = profile.schematic
+    filenames = list()
+
+    if schem_settings is None:
+        raise
+
     blank_name = schem_settings.blank_name
     layout = schem_settings.layout
     high_state = schem_settings.high_state
     low_state = schem_settings.low_state
     
-    # Prepare output filenames
-    context['outfiles'] = dict()
-    outfile = config.output
-    dirname = os.path.dirname(outfile)
-    filename, _ = os.path.splitext(os.path.basename(outfile))
-    filenames = {}
+    adressing: AdressingMode = profile.adressing
+    
+    new_filename = os.path.join(dirname, f"{filename}.schem")
+    
+    # Transform data
+    data, _ = gather_instructions(program, adressing)
+    data = flatten_instructions(data)
+    data = convert_to_bitstream(data, offset, adressing)
 
-    for chunk_name, instructions_objs in program.items():
-        new_filename = os.path.join(dirname, f"{filename}_{chunk_name}.schem")
-        
-        # Transform data
-        data, _ = gather_instructions(instructions_objs, context)
-        data = flatten_instructions(data)
-        data = convert_to_bitstream(data, context)
+    # Generate and save schematic
+    file = generate_schematic(data, layout, blank_name, low_state, high_state)
+    file.write_file(new_filename)
 
-        # Generate and save schematic
-        generate_schematic(data, layout, blank_name, new_filename, low_state, high_state)
+    filenames.append(new_filename)
 
-        filenames[chunk_name] = new_filename
-
-    context['outfiles'] = filenames
+    return filenames
 
 def generate_palette(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile, low_state: str, high_state: str):
     blankpalette = {k:v.value for k, v in blankschem["Palette"].items()}
@@ -193,7 +202,7 @@ def generate_meta(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile):
     nbtfile.tags.append(metadata)
     return nbtfile
 
-def generate_schematic(data, layout, blank_name, name, low_state, high_state) -> None:
+def generate_schematic(data, layout, blank_name, low_state, high_state):
     blankschem = nbt.NBTFile(blank_name, "rb")
     nbtfile = nbt.NBTFile()
 
@@ -216,4 +225,4 @@ def generate_schematic(data, layout, blank_name, name, low_state, high_state) ->
     nbtfile.tags.append(nbt.TAG_Byte_Array(name="BlockData"))
     nbtfile["BlockData"].value = generate_block_data(data, layout, blankschem, high_id, low_id)
 
-    nbtfile.write_file(name)
+    return nbtfile

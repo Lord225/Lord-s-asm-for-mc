@@ -19,6 +19,7 @@ def generate(program, context):
         cmd = cmds[name]
         bin_map = cmd['bin']
         layout = layouts[cmd['command_layout']]
+        
         for arg_name in layout.keys():
             if arg_name not in bin_map:
                 output_line[arg_name] = 0
@@ -36,9 +37,5 @@ def generate(program, context):
                 if not isinstance(output_line[arg_name], int):
                     raise error.ProfileLoadError(f"Evaluator: `{process_request}` returned None-integer value: {output_line[arg_name]} for args: {args}")
         line_obj.parsed_command = {cmd['command_layout']: output_line}
-    return program, context
-
-def generate_chunked(program, context):
-    for _, program_chunk in program.items():
-        program_chunk, _ = generate(program_chunk, context)
+    
     return program, context

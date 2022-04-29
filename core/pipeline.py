@@ -40,7 +40,10 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
             ('find macros', preprocesor.macros.find_macros),
             ('apply macros', preprocesor.macros.apply_all_macros),
             ('find meta', preprocesor.meta.get_metadata),
-            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions)
+            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions),
+            
+            #('tokenize lines', parse.tokenize.tokenize)
+
         ]
     return pipeline
 
@@ -69,14 +72,15 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     pipeline = \
         [
             ('tokenize lines', parse.tokenize.tokenize),
+            ('find sections', parse.jumps.find_sections),
             ('find labels', parse.jumps.find_labels),
             ('find commands', parse.match_commands.find_commands),
             ('add debug data', parse.debug_heades.add_debug_metadata),
             ('generate values', parse.generate.generate),
             ('add debug logs', parse.debug_heades.add_debug_command_logging),
-            ('split into chunks', parse.split_into_chunks.split_into_chunks),
-            ('find commands with physical addresses', parse.match_commands.find_comands_chunked),
-            ('generate values', parse.generate.generate_chunked),
+            ('test', parse.solve_sections.solve_sections),
+            ('find commands with physical addresses', parse.match_commands.find_commands),
+            ('generate values', parse.generate.generate),
         ]
     return pipeline
 
@@ -95,6 +99,7 @@ def make_save_pipeline()  -> List[Tuple[str, Callable]]:
     """
     pipeline = \
         [
+            ('fill addresses', save.fill.fill_empty_addresses),
             ('format', save.formatter.format_output),
             ('add comments', save.add_comments.add_comments),
             ('save', save.saver.save),
@@ -166,9 +171,6 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
             if config.pipeline_debug_asserts:
                 if isinstance(data, list):
                     check_types(data, stage)
-                elif isinstance(data, dict):
-                    for _, lines in data.items():
-                        check_types(lines, stage)
                 else:
                     raise Exception(f"Stage {stage} returned wrong datatype.")
             if config.show_pipeline_steges == "simple":

@@ -109,7 +109,7 @@ def get_py(program, context):
         for name, val in args.items():
             encoded.append(encode_argument(layout, name, val))
     value = as_values(encoded, profile.adressing.bin_len)
-    return {'data':parsed, 'meta':meta, 'adress':program['physical_adress'], 'encoded':encoded, 'value':value}
+    return {'data':parsed, 'meta':meta, 'adress': program['physical_adress'], 'encoded': encoded, 'value':value}
 
 
 def get_bin(program, context):
@@ -139,25 +139,22 @@ def get_raw(program, context):
 
 
 def format_output(program, context):
-    if config.save == 'py':
-        formatter_function, req_tabulate = get_py, False
+    if config.save == 'pip':
+        formatter_function = get_py
     elif config.save == 'bin':
-        formatter_function, req_tabulate = get_bin, True
+        formatter_function = get_bin
     elif config.save == 'pad' or config.save == "schem":
-        formatter_function, req_tabulate = get_pad, True
+        formatter_function = get_pad
     elif config.save == 'raw':
-        formatter_function, req_tabulate = get_raw, True
+        formatter_function = get_raw
     else: 
         raise 
 
-    for _, program_lines in program.items():
-        for line in program_lines:
-            try:
-                line.formatted = formatter_function(line, context)
-            except error.ParserError as err:
-                raise error.ParserError(line.line_index_in_file, err.info)
-
-    context['tabulate'] = req_tabulate
-
+    for line in program:
+        try:
+            line.formatted = formatter_function(line, context)
+        except error.ParserError as err:
+            raise error.ParserError(line.line_index_in_file, err.info)
+                
     return program, context
     

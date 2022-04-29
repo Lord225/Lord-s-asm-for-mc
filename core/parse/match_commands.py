@@ -32,12 +32,6 @@ def find_commands(program, context):
     return program, context
 
 
-def find_comands_chunked(program, context):
-    for _, program_chunk in program.items():
-        program_chunk, _ = find_commands(program_chunk, context)
-    return program, context
-
-
 def summarise_best_fit(best_fit, context):
     cpu_profile: profile.Profile = context['profile']
     best_cmd = cpu_profile.commands_definitions[best_fit[0]]

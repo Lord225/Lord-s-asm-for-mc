@@ -8,6 +8,8 @@ from types import ModuleType
 import argparse
 import core.error as error
 import core.config as config
+import sys
+import os
 
 DEBUG_MODE = False
 
@@ -27,13 +29,13 @@ help="""Name of file to compile
 Default: src/program.lor""")
 
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
-parser.add_argument("-s", "--save", choices=["bin", "py", "raw", "pad", "schem"], type=str, default = None,
+parser.add_argument("-s", "--save", choices=["bin", "pip", "raw", "pad", "schem"], type=str, default = 'pip',
 help="""> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
-> py  - Build source and save as python dict
+> pip - Build source and dump json to stdout (for pipelining)
 > raw - Build source and save as decimal representation of bytes
 > schem - Build source and save as schematic
-Default: None (will not save)""")
+Default: pip (will not save)""")
 
 parser.add_argument('-c','--comments', dest='comments', action='store_true', help="Add debug information on the end of every line in output files")
 parser.set_defaults(feature=False)
@@ -59,27 +61,35 @@ def show_warnings(context):
 def show_outfiles(context):
     print("Output files:")
     SPACE = " "*4
-    for chunk, filename in context['outfiles'].items():
-        print(SPACE, chunk, filename)
+    if 'outfiles' in context:
+        for filename in context['outfiles']:
+            print(SPACE, filename)
+    else:
+        print("None")
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = True,
-            save = "raw",
+            run = False,
+            save = "schem",
             comments = True,
             onerror = 'None',
             debug = True,
             logmode = True,
             why_error=True
         )
-        
 
 if config.init is not None:
     config.override_from_file(config.init)
 config.override_from_dict(vars(parserargs))
 override_debug()
 
+
+if config.save == "pip":
+    # redirect output to void
+    sys.stdout = open(os.devnull, 'w')
+
 def main():
+    
     print(f"Lord's Compiler Redux is working on '{config.input}'")
 
     load_preproces_pipeline = core.pipeline.make_preproces_pipeline() # Load & Preprocess
@@ -105,7 +115,7 @@ def main():
     override_debug()
 
     # Load profile and pass it to context
-    profile = core.profile.profile.load_profile_from_file(context['profile_name'], True)
+    profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}/{context['profile_name']}", True)
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {'defs': profile.defs, 'consts': profile.consts}, progress_bar_name='Reloading')
@@ -127,7 +137,7 @@ def main():
         show_warnings(context)
 
     # Compile and Save
-    if config.save in ['bin', 'py', 'raw', 'pad', "schem"]:
+    if config.save in ['bin', 'pip', 'raw', 'pad', "schem"]:
         if config.save == 'schem':
             config.override_from_dict(comments = 'False')
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')

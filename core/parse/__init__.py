@@ -5,6 +5,7 @@ from . import jumps as jumps
 from . import debug_heades as debug_heades
 from . import split_into_chunks as split_into_chunks
 from . import generate as generate
+from . import solve_sections as solve_sections
 
 def parse_number(token):
     try:

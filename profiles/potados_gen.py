@@ -237,13 +237,14 @@ cmds = \
     },
     "copy": {
         "pattern": "mov reg[{dst:num}], reg[{src:num}]", 
-        "command_layout": "aluimm",
+        "command_layout": "alufpu",
         "bin": {
             "pridec": 1,
-            "secdec": 0,
+            "secdec": 2,
             "r2": "src",
-            "I": 0,
-            "R1": 0,
+            "flags": 0,
+            "4th": 3,
+            "r1": 0,
             "dst": "dst"
         }
     },

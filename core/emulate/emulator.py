@@ -149,10 +149,9 @@ def log_disassembly(**kwargs):
         return params_ignore
 
 
-def gather_instructions(program, context):
+def gather_instructions(program, adressing: AdressingMode):
     if config.save != 'bin' and config.save != 'schem':
         raise Exception("Logic Error. Invalid configuration for gathering instructions")
-    adressing: AdressingMode = context['profile'].adressing
     
     output = dict()
     debug = dict()
@@ -258,15 +257,16 @@ def emulate(program, context):
 
 def __write_program(program, context, machine):
     debug_instructions = dict()
+    adressing: AdressingMode = context['profile'].adressing
 
-    for chunk, chunked_program in program.items():
-        instructuons, debug = gather_instructions(chunked_program, context)
-        packed_instructions = pack_adresses(instructuons)
+    instructuons, debug = gather_instructions(program, adressing)
+    packed_instructions = pack_adresses(instructuons)
 
-        machine.write_memory(chunk, DataTypes.PROGRAM, packed_instructions)
+    machine.write_memory('default', DataTypes.PROGRAM, packed_instructions)
 
-        for adress, val in debug.items():
-            debug_instructions[adress] = val
+    for adress, val in debug.items():
+        debug_instructions[adress] = val
+    
     context['debug_instructions'] = debug_instructions
 
 def __write_data(program, context, machine):

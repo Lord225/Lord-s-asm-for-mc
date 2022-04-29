@@ -4,6 +4,7 @@ import core.save.exporter as exporter
 import os
 from tabulate import tabulate
 import json
+import sys
 
 def collect_data(data):
     return [line.formatted for line in data]
@@ -16,17 +17,20 @@ def save(program, context):
     if config.save == 'schem':
         exporter.generate_schematic_from_formatted(program, context)
         return program, context
+        
+    if config.save == "pip":        
+        data_to_dump = { 'profile_name': context["profile_name"], "data": dict() }
 
-    for chunk, data in program.items():
-        new_filename = os.path.join(dirname, f"{filename}_{chunk}{ext}")
-        filenames[chunk] = new_filename
+        data_to_dump["data"] = collect_data(program)
+        
+        json.dump(data_to_dump, sys.__stdout__)
+        
+    else:
+        new_filename = os.path.join(dirname, f"{filename}{ext}")
+        filenames['default'] = new_filename
         with open(new_filename, 'w') as file:
-            if context['tabulate']:
-                collected = [line.formatted for line in data]
-                file.write(tabulate(collected, tablefmt = config.tablefmt))
-            else:
-                output_structure = {'entry': chunk, 'program': collect_data(data)}
-                json.dump(output_structure, file, indent=config.json_output_indent)
-    context['outfiles'] = filenames
+            collected = [line.formatted for line in program]
+            file.write(tabulate(collected, tablefmt = config.tablefmt))
+        context['outfiles'] = filenames
 
     return program, context

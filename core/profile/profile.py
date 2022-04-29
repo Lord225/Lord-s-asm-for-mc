@@ -116,8 +116,8 @@ class Profile:
 
 
     
-def load_profile_from_file(NAME, ignore_emulator_on_fail = False) -> Profile:
-    profile = load_json_profile('{}/{}'.format(config.default_json_profile_path, NAME))
+def load_profile_from_file(path, ignore_emulator_on_fail = False) -> Profile:
+    profile = load_json_profile(path)
     try:
         emulator = get_emulator(config.default_emuletor_path, profile)
     except ModuleNotFoundError as err:
@@ -128,6 +128,6 @@ def load_profile_from_file(NAME, ignore_emulator_on_fail = False) -> Profile:
     try:
         return Profile(profile, emulator)
     except KeyError as err:
-        raise error.ProfileLoadError(f"Cannot find field: {err} in profile '{NAME}'")
+        raise error.ProfileLoadError(f"Cannot find field: {err} in profile '{path}'")
 
 

@@ -11,7 +11,7 @@ def get_metadata(program, context):
             profile_name = ''.join(args)
             if profile_name:
                 if 'profile_name' in context:
-                    raise
+                    raise error.PreprocesorError(None, "Multiple profiles defitions")
                 context["profile_name"] = profile_name
             else:
                 raise

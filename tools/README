@@ -1,0 +1,47 @@
+These tools are piped with compile.py to output very specific binary.
+
+
+"data": [
+        {
+            // parsed arguments
+            "data": { 
+                "long": {
+                    "CU": 1,
+                    "r2": 0,
+                    "r1": 1,
+                    "n1": 255
+                }
+            },
+            // Mached command and debug data
+            "meta": {
+                "mached": [
+                    "mov imm reg",
+                    {
+                        "arg1": 255,
+                        "arg2": 1
+                    }
+                ],
+                "debug": [
+                    {
+                        "pre": [
+                            "ram"
+                        ]
+                    }
+                ]
+            },
+            // Address of the command
+            "adress": 0,
+            "encoded": [
+                "0001",
+                "00",
+                "01",
+                "11111111"
+            ],
+            
+            "value": [
+                17,
+                255
+            ]
+        }
+]
+

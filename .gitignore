@@ -1,5 +1,7 @@
 .vscode
 __pycache__
 output/*.txt
+output/*.schem
 *.pyc
 output.txt
+core/cache
