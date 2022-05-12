@@ -156,8 +156,8 @@
                     "op3":"dst"
                 }
             },
-            "nfxor":{
-                "pattern":"NFNOR {srca:num}, {srcb:num}, {dst:num}",
+            "nxnor":{
+                "pattern":"NXNOR {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":2,
