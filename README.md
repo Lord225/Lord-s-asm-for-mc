@@ -4,22 +4,28 @@ Program kompilujący całkowicie customowy assembler, przyjmując schemat komend
 ## Możliwości
 ### Syntax
 Program daje dużo swobody w formie i wyglądzie komend.
-Przykładowo można określić dowolną składnie, nawet specyficzną dla danej architektury
+Kilka przykładowych składni które są do uzyskania przy użyciu tego programu
+
+Proste argumenty oddzielane przecinkami
 ```
 mov 1, reg[1]
 add reg[1], reg[2], reg[3]
 ```
+Zapis "Matematyczny"
 ```
 reg[1] = 1
 ram[reg[2]] = reg[1] 
 ```
+Opis symbolami
 ```
 if r1 > r2 jump to LABEL
 ```
+DSP's (Wielopotokowy, bardzo specyficzny assembler)
 ```
 AD2 MOV MC1, X MOV MUL, P MOV MC0, Y CLR A      MOV ALH, MC3
 AD2 MOV MC1, X MOV MUL, P MOV MC0, Y MOV ALU, A MOV #0, CT1
 ```
+Sega Mega Drive
 ```
 loop:
     move.b (a1), (a0)
