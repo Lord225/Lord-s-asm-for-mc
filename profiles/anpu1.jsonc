@@ -96,7 +96,7 @@
         ],
         "COMMANDS":{
             "chill":{
-                "pattern":"chill",
+                "pattern":"CHILL",
                 "command_layout": "default",
                 "bin":{
                 }
@@ -156,8 +156,8 @@
                     "op3":"dst"
                 }
             },
-            "nxxor":{
-                "pattern":"NXNOR {srca:num}, {srcb:num}, {dst:num}",
+            "nfxor":{
+                "pattern":"NFNOR {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":2,
@@ -167,8 +167,8 @@
                     "op3":"dst"
                 }
             },
-            "nnima":{
-                "pattern":"NNIMA {srca:num}, {srcb:num}, {dst:num}",
+            "nfpca":{
+                "pattern":"NFPCA {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":2,
@@ -178,8 +178,8 @@
                     "op3":"dst"
                 }
             },
-            "nnimb":{
-                "pattern":"NNIMB {srca:num}, {srcb:num}, {dst:num}",
+            "nfpcs":{
+                "pattern":"NFPCS {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":2,
@@ -309,8 +309,8 @@
                     "op3":"dst"
                 }
             },
-            "FNIMA":{
-                "pattern":"FNIMA {srca:num}, {srcb:num}, {dst:num}",
+            "FNPCA":{
+                "pattern":"FNPCA {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":6,
@@ -320,8 +320,8 @@
                     "op3":"dst"
                 }
             },
-            "FNIMB":{
-                "pattern":"FNIMB {srca:num}, {srcb:num}, {dst:num}",
+            "FNPCS":{
+                "pattern":"FNPCS {srca:num}, {srcb:num}, {dst:num}",
                 "command_layout": "default",
                 "bin":{
                     "opcode":6,
@@ -375,6 +375,7 @@
                     "op3":"dst"
                 }
             },
+
             "BRNCH True":{
                 "pattern":"BRNCH {address:label}",
                 "command_layout": "jumps",
@@ -385,7 +386,7 @@
                 }
             },
             "BRNCH Overflow":{
-                "pattern":"BRNCH Overflow {address:label}",
+                "pattern":"BRNCH {address:label} Overflow",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
@@ -394,16 +395,16 @@
                 }
             },
             "BRNCH Zero":{
-                "pattern":"BRNCH Zero {address:label}",
+                "pattern":"BRNCH {address:label} Zero",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
                     "imm":"address",
-                    "op3":3
+                    "op3":6
                 }
             },
             "BRNCH Odd":{
-                "pattern":"BRNCH Odd {address:label}",
+                "pattern":"BRNCH {address:label} Odd",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
@@ -412,7 +413,7 @@
                 }
             },
             "BRNCH NotOverflow":{
-                "pattern":"BRNCH NotOverflow {address:label}",
+                "pattern":"BRNCH {address:label} NotOverflow",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
@@ -421,16 +422,16 @@
                 }
             },
             "BRNCH NonZero":{
-                "pattern":"BRNCH NonZero {address:label}",
+                "pattern":"BRNCH {address:label} NonZero",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
                     "imm":"address",
-                    "op3":6
+                    "op3":3
                 }
             },
             "BRNCH Even":{
-                "pattern":"BRNCH Even {address:label}",
+                "pattern":"BRNCH {address:label} Even",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":8,
@@ -478,7 +479,7 @@
                 "command_layout": "default",
                 "bin":{
                     "opcode":11,
-                    "ext":3,
+                    "ext":2,
                     "op1":0,
                     "op2":0,
                     "op3":"dst"
@@ -489,7 +490,7 @@
                 "command_layout": "default",
                 "bin":{
                     "opcode":11,
-                    "ext":2,
+                    "ext":3,
                     "op1":0,
                     "op2":0,
                     "op3":"dst"
@@ -511,7 +512,7 @@
                 "command_layout": "default",
                 "bin":{
                     "opcode":12,
-                    "ext":3,
+                    "ext":2,
                     "op1":0,
                     "op2":"src",
                     "op3":0
@@ -522,7 +523,7 @@
                 "command_layout": "default",
                 "bin":{
                     "opcode":12,
-                    "ext":2,
+                    "ext":3,
                     "op1":0,
                     "op2":"src",
                     "op3":0
@@ -579,6 +580,7 @@
                     "op3":0
                 }
             },
+
             "PCALL True":{
                 "pattern":"PCALL {address:label}",
                 "command_layout": "jumps",
@@ -589,7 +591,7 @@
                 }
             },
             "PCALL Overflow":{
-                "pattern":"PCALL Overflow {address:label}",
+                "pattern":"PCALL {address:label} Overflow",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
@@ -598,16 +600,16 @@
                 }
             },
             "PCALL Zero":{
-                "pattern":"PCALL Zero {address:label}",
+                "pattern":"PCALL {address:label} Zero",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
                     "imm":"address",
-                    "op3":3
+                    "op3":6
                 }
             },
             "PCALL Odd":{
-                "pattern":"PCALL Odd {address:label}",
+                "pattern":"PCALL {address:label} Odd",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
@@ -616,7 +618,7 @@
                 }
             },
             "PCALL NotOverflow":{
-                "pattern":"PCALL NotOverflow {address:label}",
+                "pattern":"PCALL {address:label} NotOverflow",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
@@ -625,16 +627,16 @@
                 }
             },
             "PCALL NonZero":{
-                "pattern":"PCALL NonZero {address:label}",
+                "pattern":"PCALL {address:label} NonZero",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
                     "imm":"address",
-                    "op3":6
+                    "op3":3
                 }
             },
             "PCALL Even":{
-                "pattern":"PCALL Even {address:label}",
+                "pattern":"PCALL {address:label} Even",
                 "command_layout": "jumps",
                 "bin":{
                     "opcode":16,
@@ -642,7 +644,7 @@
                     "op3":7
                 }
             },
-            
+            //1 2 6 4 5 3 7
             "PRTRN":{
                 "pattern":"PRTRN",
                 "command_layout": "jumps",
@@ -667,7 +669,7 @@
                 "bin":{
                     "opcode":17,
                     "imm":0,
-                    "op3":3
+                    "op3":6
                 }
             },
             "PRTRN Odd":{
@@ -694,7 +696,7 @@
                 "bin":{
                     "opcode":17,
                     "imm":0,
-                    "op3":6
+                    "op3":3
                 }
             },
             "PRTRN Even":{

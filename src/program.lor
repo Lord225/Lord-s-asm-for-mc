@@ -1,62 +1,79 @@
-#profile pm1.jsonc
+#profile anpu1.jsonc
 
-#global CORE0 CORE0 0
-#global CORE1 CORE1 0
 
-#data 0xF0 "BDCEFABCDEFGCAF"
+.ENTRY
+    LDIMM 0, r3
+    LDIMM 0, r0
+    FLADD r0, r1, r0
+LOOP:
+    BRNCH ADR_5 Odd
+    BRNCH ADR_6
+ADR_5:
+    NFADD r3, r2, r3
+ADR_6:
+    NFADD r2, r2, r2
+    FLRSH r1, r1
+    BRNCH LOOP NonZero
+    HLTCL
 
-#define DATA_START 0xF0
-#define ARR_END 0xA0
-#define ARR_DEC_END 0xA1
-#define OUTER_COUNTER 0xA2
-#define COUTER_LIMIT 0xA3
-
-CORE0:
-#debug ram
-    mov 0xFF, reg[1]       //end
-    mov reg[1], ram[ARR_END]
-    mov 0xFE, reg[1]       //end-1
-    mov reg[1], ram[ARR_DEC_END]
-    mov 0, reg[1]          //outer counter
-    mov reg[1], ram[OUTER_COUNTER]
-
-OUTER:
-    mov ram[OUTER_COUNTER], reg[1]
-    mov ram[ARR_END], reg[3]
-    sub reg[2], reg[3]
-
-    mov DATA_START, reg[0] //reset inner
-
-    //[inner, -, -, END_OUTER_LOOP_PTR]k
-    INNER:
-        mov ram[reg[0]], reg[1]
-        mov 1, reg[2]
-        add reg[2], reg[0]
-        mov ram[reg[0]], reg[2]
-        //[i+1, ram[i], ram[i+1], END_OUTER_LOOP_PTR]
-
-        jg reg[2], reg[1], SKIP_SWAP
-            mov reg[1], ram[reg[0]]
-            mov 1, reg[1]
-            sub reg[1], reg[0]
-            mov reg[2], ram[reg[0]]
-            add reg[1], reg[0]
-        SKIP_SWAP:
-
-        //[i+1, -, -, END_OUTER_LOOP_PTR]
-        mov ram[ARR_END], reg[2]
-        //[i+1, -, ARR_END, END_OUTER_LOOP_PTR]
-        jg reg[3], reg[0], INNER
-    mov 1, reg[1]
-    mov ram[OUTER_COUNTER], reg[2]
-    add reg[1], reg[2]
-    mov reg[2],  ram[OUTER_COUNTER]
-    mov 15, reg[3]
-
-    //[i+1, 1, OUTER_COUNTER, 15]
-    jg reg[3], reg[2], OUTER
-
-    shut
-    #debug ram
-    #debug break
-CORE1:
+ADDRES:
+    CHILL
+    NFADD r0, r1, r3
+    NFSUB r0, r1, r3
+    NFAND r0, r1, r3
+    NFNOR r0, r1, r3
+    NFNOR r0, r1, r3
+    NFPCA r0, r1, r3
+    NFPCS r0, r1, r3
+    NFMOV r1, r2
+    NFINC r1, r2
+    NFDEC r1, r2
+    NFRSH r1, r2
+    LDIMM 10, r2
+    FLADD r0, r1, r3
+    FLSUB r0, r1, r3
+    FLAND r0, r1, r3
+    FLNOR r0, r1, r3
+    FLXOR r0, r1, r3
+    FXNOR r0, r1, r3
+    FNPCA r0, r1, r3
+    FNPCS r0, r1, r3
+    FLMOV r1, r2
+    FLINC r1, r2
+    FLDEC r1, r2
+    FLRSH r1, r2
+    BRNCH ADDRES
+    BRNCH ADDRES Overflow
+    BRNCH ADDRES Zero
+    BRNCH ADDRES Odd
+    BRNCH ADDRES NotOverflow
+    BRNCH ADDRES NonZero
+    BRNCH ADDRES Even
+    DIMRD r2, r3
+    DIMUP r2, r3
+    INMRD r2
+    INMRD INC r3
+    INMRD DEC r3
+    INMUP r3
+    INMUP INC r3
+    INMUP DEC r3
+    PTUPD r3
+    HLTCL
+    INOUT 1, 1, r2, r3
+    IN 1 , r3
+    OUT 1 , r2
+    PCALL ADDRES
+    PCALL ADDRES Overflow
+    PCALL ADDRES Zero
+    PCALL ADDRES Odd
+    PCALL ADDRES NotOverflow
+    PCALL ADDRES NonZero
+    PCALL ADDRES Even
+    PRTRN
+    PRTRN Overflow
+    PRTRN Zero
+    PRTRN Odd
+    PRTRN NotOverflow
+    PRTRN NonZero
+    PRTRN Even
+    DROUT 1, r2, r3
