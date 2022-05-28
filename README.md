@@ -1,9 +1,53 @@
 # Lord-s-asm-for-mc
-Program służący do kompilacji i emulacji customowego assemblera.
-Na [wiki](../../wiki) opisana jest składnia.
+Program kompilujący całkowicie customowy assembler, przyjmując schemat komend w pliku `json`
+
+## Możliwości
+### Syntax
+Program daje dużo swobody w formie i wyglądzie komend.
+Kilka przykładowych składni które są do uzyskania przy użyciu tego programu
+
+Proste argumenty oddzielane przecinkami
+```
+mov 1, reg[1]
+add reg[1], reg[2], reg[3]
+```
+Zapis "Matematyczny"
+```
+reg[1] = 1
+ram[reg[2]] = reg[1] 
+```
+Opis symbolami
+```
+if r1 > r2 jump to LABEL
+```
+DSP's (Wielopotokowy, bardzo specyficzny assembler)
+```
+AD2 MOV MC1, X MOV MUL, P MOV MC0, Y CLR A      MOV ALH, MC3
+AD2 MOV MC1, X MOV MUL, P MOV MC0, Y MOV ALU, A MOV #0, CT1
+```
+Sega Mega Drive
+```
+loop:
+    move.b (a1), (a0)
+    add.l #1, a0
+    add.l #1, a1
+    abra d1, loop
+```
+
+### Preprocesor
+Kompilaor posiada podstawowy preprocesor, insporowany tym z C. Obsługuje `#define`, `#ifdef`.
+Posiada swoje makra i możliwość dodawania symboli debugowania dla emulatora.
+
+### Emulator
+Kompilator można zlinkować z emulatorem, aby automatycznie wpisywał i wykonywał podany program. Posiada podstawowe narzędzia do debugowania. 
+* `disassembly` - wyświetla dezasemblacja 
+* `#debug` - Pozwala dodawać symbole do debugowania które są interpretowane przez kompilator
+  * `#debug ram` - Wyświetla zawartość rejestrów gdy trafi na ten symbol
+  * `#debug break` - Zatrzymuje emulator gdy trafi na ten symbol
+  * Dowolne customowe symbole w emulatorze. 
+
 ## Przykłady
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
-
 
 Uruchom i zapisz.
 ```
