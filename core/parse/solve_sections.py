@@ -51,7 +51,7 @@ def find_key_by_value(dict: dict, value):
             output.append(key)
     return output
 
-def calculate_addresses(chunks, sections: Dict[str, SectionMeta], profile: Profile, labels: dict):
+def calculate_addresses(chunks: dict, sections: Dict[str, SectionMeta], profile: Profile, labels: dict):
     used_addresses = dict()
     chunk_labels_physical_adresses = dict()
     chunk_labels = dict()

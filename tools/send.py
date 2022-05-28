@@ -78,6 +78,7 @@ if __name__ == "__main__":
     files = {
         'fileToUpload': open(full_path, "br")
     }
+
     response = requests.post('https://redstonefun.pl/schem-upload/index.php', data=data, files=files)
 
     message = process_response(response).strip()

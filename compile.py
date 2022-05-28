@@ -70,7 +70,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = False,
-            save = "schem",
+            save = "pip",
             comments = True,
             onerror = 'None',
             debug = True,
@@ -86,7 +86,8 @@ override_debug()
 
 if config.save == "pip":
     # redirect output to void
-    sys.stdout = open(os.devnull, 'w')
+    if not DEBUG_MODE:
+        sys.stdout = open(os.devnull, 'w')
 
 def main():
     

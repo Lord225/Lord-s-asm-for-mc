@@ -11,7 +11,7 @@
 #define OUTER_COUNTER 0xA2
 #define COUTER_LIMIT 0xA3
 
-CORE0:
+.CORE0
 #debug ram
     mov 0xFF, reg[1]       //end
     mov reg[1], ram[ARR_END]
@@ -59,4 +59,3 @@ OUTER:
     shut
     #debug ram
     #debug break
-CORE1:
