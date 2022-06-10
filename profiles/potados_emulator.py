@@ -312,13 +312,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='itof reg[{dst}], reg[{src}]')
     def itof(self, src, dst):
-        val = ops.cast(self.FP.get_float(self.regs[src]), 'signed')
+        val = self.FP.get_concat(ops.cast(self.regs[src], 'signed'))
 
         self.regs[dst] = u16(int(val))
     
     @emulate.log_disassembly(format='utof reg[{dst}], reg[{src}]')
     def utof(self, src, dst):
-        val = ops.cast(self.FP.get_float(self.regs[src]), 'unsigned')
+        val = self.FP.get_concat(ops.cast(self.regs[src], 'unsigned'))
 
         self.regs[dst] = u16(int(val))
 
