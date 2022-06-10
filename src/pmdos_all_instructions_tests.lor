@@ -128,3 +128,4 @@ TEST:
 // sekcje pozwalają na maskowanie komend (np dana komenda jest dostępna tylko w określonej sekcji)
 // uzupełnia zerami braki
 
+// procedural macros as commands 
