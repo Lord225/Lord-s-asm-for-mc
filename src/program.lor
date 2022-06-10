@@ -1,79 +1,46 @@
-#profile anpu1.jsonc
+#profile dupa.jsonc
 
+#define STACK_BASE 0
+#define ARRAY_SIZE 16
+
+#define SP 14
+#define PC 15
 
 .ENTRY
-    LDIMM 0, r3
-    LDIMM 0, r0
-    FLADD r0, r1, r0
-LOOP:
-    BRNCH ADR_5 Odd
-    BRNCH ADR_6
-ADR_5:
-    NFADD r3, r2, r3
-ADR_6:
-    NFADD r2, r2, r2
-    FLRSH r1, r1
-    BRNCH LOOP NonZero
-    HLTCL
+    mov reg[SP], STACK_BASE          // stack init
+    mov reg[2], reg[SP]              // array start 
+    add reg[SP], reg[SP], ARRAY_SIZE // add 16 elements 
+    mov reg[3], reg[SP]              // array end
 
-ADDRES:
-    CHILL
-    NFADD r0, r1, r3
-    NFSUB r0, r1, r3
-    NFAND r0, r1, r3
-    NFNOR r0, r1, r3
-    NFNOR r0, r1, r3
-    NFPCA r0, r1, r3
-    NFPCS r0, r1, r3
-    NFMOV r1, r2
-    NFINC r1, r2
-    NFDEC r1, r2
-    NFRSH r1, r2
-    LDIMM 10, r2
-    FLADD r0, r1, r3
-    FLSUB r0, r1, r3
-    FLAND r0, r1, r3
-    FLNOR r0, r1, r3
-    FLXOR r0, r1, r3
-    FXNOR r0, r1, r3
-    FNPCA r0, r1, r3
-    FNPCS r0, r1, r3
-    FLMOV r1, r2
-    FLINC r1, r2
-    FLDEC r1, r2
-    FLRSH r1, r2
-    BRNCH ADDRES
-    BRNCH ADDRES Overflow
-    BRNCH ADDRES Zero
-    BRNCH ADDRES Odd
-    BRNCH ADDRES NotOverflow
-    BRNCH ADDRES NonZero
-    BRNCH ADDRES Even
-    DIMRD r2, r3
-    DIMUP r2, r3
-    INMRD r2
-    INMRD INC r3
-    INMRD DEC r3
-    INMUP r3
-    INMUP INC r3
-    INMUP DEC r3
-    PTUPD r3
-    HLTCL
-    INOUT 1, 1, r2, r3
-    IN 1 , r3
-    OUT 1 , r2
-    PCALL ADDRES
-    PCALL ADDRES Overflow
-    PCALL ADDRES Zero
-    PCALL ADDRES Odd
-    PCALL ADDRES NotOverflow
-    PCALL ADDRES NonZero
-    PCALL ADDRES Even
-    PRTRN
-    PRTRN Overflow
-    PRTRN Zero
-    PRTRN Odd
-    PRTRN NotOverflow
-    PRTRN NonZero
-    PRTRN Even
-    DROUT 1, r2, r3
+    call INSERTION_SORT
+
+    halt
+
+INSERTION_SORT:
+// reg[2] - [param, Caller]   ptr low  
+// reg[3] - [param]           ptr high 
+SORT_loop_outer:
+    mov reg[1], reg[2]
+    sub reg[1], reg[1], 1
+    mov reg[4], ram[reg[2]]
+SORT_loop_inner:
+    mov reg[5], ram[reg[1]]
+    sub reg[0], reg[5], reg[4] // reg[0] <= reg[5] -> reg[0]-reg[5] <= 0, sets flag s, c and 
+    js SORT_LOOP_break
+        add reg[6], reg[1], 1 
+        mov ram[reg[6]], reg[5]
+        
+        // jump if reg[1]-1 < reg[2] -> reg[6] < reg[2] -> reg[6]-reg[2] < 0
+        sub reg[6], reg[1], 1
+        sub reg[0], reg[6], reg[2]
+        js SORT_loop_inner
+SORT_LOOP_break:
+    add reg[6], reg[1], 1
+    mov ram[reg[6]], reg[4]
+    add reg[2], reg[2], 1
+
+    // reg[2] != reg[3] -> reg[2]-reg[3] != 0
+    sub reg[0], reg[2], reg[3]
+    
+    jz SORT_loop_outer
+    ret

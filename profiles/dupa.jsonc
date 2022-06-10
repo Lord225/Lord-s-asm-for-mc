@@ -1,0 +1,411 @@
+{
+    "CPU":
+    {
+        "Name": "Dual Unified Processor Architecture",
+        "Arch": "DUPA",
+        "Author": "Maciej - Kinga",
+        "emulator": null,
+        "time_per_cycle":100.0,
+        
+        "ARGUMENTS":{
+            "variants":{
+                "default":{
+                    "const":{
+                        "size":1
+                    },
+                    "cu":{
+                        "size":7
+                    },
+                    "argA":{
+                        "size":4
+                    },
+                    "dst":{
+                        "size":4
+                    },
+                    "argB":{
+                        "size":16
+                    }
+                }
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"align",
+            "bin_len":32,
+            "offset":0
+        },
+
+        "DEFINES":[
+            "__DUPA__"
+        ],
+        "KEYWORDS":[
+            "ENTRY"
+        ],
+
+        "COMMANDS":{
+            "mov const":{
+                "pattern": "mov reg[{dst:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":1,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+            "mov":{
+                "pattern": "mov reg[{dst:num}], reg[{src:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":1,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB":"src"
+                }
+            },
+            "add":{
+                "pattern": "add reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":2,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "add const":{
+                "pattern": "add reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":2,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+            
+            "sub":{
+                "pattern": "sub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":3,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "sub const":{
+                "pattern": "sub reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":3,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+            
+            "or":{
+                "pattern": "or reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":4,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "or const":{
+                "pattern": "or reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":4,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+
+            "and":{
+                "pattern": "and reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":5,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "and const":{
+                "pattern": "and reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":5,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+
+            "not":{
+                "pattern": "not reg[{dst:num}], reg[{arg1:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":6,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+
+            "shl":{
+                "pattern": "shl reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":7,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "shl const":{
+                "pattern": "shl reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":7,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+
+            "shr":{
+                "pattern": "and reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":8,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "shr const":{
+                "pattern": "and reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":8,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+
+            "mul":{
+                "pattern": "mul reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":9,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"arg2"
+                }
+            },
+            "mul const":{
+                "pattern": "mul reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":9,
+                    "argA":"arg1",
+                    "dst":"dst",
+                    "argB":"imm"
+                }
+            },
+
+            "mov ptr read":{
+                "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}]]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":10,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB":"ptr"
+                }
+            },
+            
+            "mov ptr read const":{
+                "pattern": "mov reg[{dst:num}], ram[{ptr:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":10,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB":"ptr"
+                }
+            },
+            "mov ptr write":{
+                "pattern": "mov ram[reg[{ptr:num}]], reg[{src:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":11,
+                    "argA":"src",
+                    "dst":0,
+                    "argB":"ptr"
+                }
+            },
+            "mov ptr write const":{
+                "pattern": "mov ram[{ptr:num}], reg[{src:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":11,
+                    "argA":"src",
+                    "dst":0,
+                    "argB":"ptr"
+                }
+            },
+            "push":{
+                "pattern": "push reg[{src:num}]]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":12,
+                    "argA":"src",
+                    "dst":0,
+                    "argB": 0
+                }
+            },
+            "pop":{
+                "pattern": "pop reg[{dst:num}]]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":13,
+                    "argA":0,
+                    "dst":"dst",
+                    "argB": 0
+                }
+            },
+            "ret":{
+                "pattern": "ret",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":13,
+                    "argA":0,
+                    "dst":15,
+                    "argB": 0
+                }
+            },
+            "call":{
+                "pattern": "call {address:label}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":14,
+                    "argA":0,
+                    "dst": 0,
+                    "argB": "address"
+                }
+            },
+            "jmp":{
+                "pattern": "jmp {address:label}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":1,
+                    "argA":0,
+                    "dst": 15,
+                    "argB": "address"
+                }
+            },
+            "js":{
+                "pattern": "js {address:label}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":19,
+                    "argA":0,
+                    "dst": 15,
+                    "argB": "address"
+                }
+            },
+            "jz":{
+                "pattern": "jz {address:label}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":15,
+                    "argA":0,
+                    "dst": 15,
+                    "argB": "address"
+                }
+            },
+            "jc":{
+                "pattern": "jc {address:label}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":18,
+                    "argA":0,
+                    "dst": 15,
+                    "argB": "address"
+                }
+            },
+
+            "in":{
+                "pattern": "in reg[{dst:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":16,
+                    "argA":0,
+                    "dst": "dst",
+                    "argB": 0
+                }
+            },
+            "out":{
+                "pattern": "out reg[{dst:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":16,
+                    "argA":0,
+                    "dst": "dst",
+                    "argB": 0
+                }
+            },
+            "halt":{
+                "pattern": "halt",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":18,
+                    "argA":0,
+                    "dst": 0,
+                    "argB": 0
+                }
+            }
+            
+        }
+    }
+}
