@@ -38,7 +38,7 @@ def join_sign_expressions(line):
     line.tokenized = output
     return line
 
-def join_quote_str(line):
+def join_string(line):
     """
     Joins tokens between euotes:
     `['a', 'b', '"', ' ', "c". '"'] => ['a', 'b', '" c"']
@@ -65,5 +65,5 @@ def join_quote_str(line):
     
 def tokenize(program, context):
     for line_obj in program:
-        line_obj = remove_meaningless_tokens(join_sign_expressions(join_quote_str(tokienize_line(line_obj))))
+        line_obj = remove_meaningless_tokens(join_sign_expressions(join_string(tokienize_line(line_obj))))
     return program, context

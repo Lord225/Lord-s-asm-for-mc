@@ -16,7 +16,7 @@ def parse_argument_token(context, pattern_token, expr_token, line):
         parsed_token = parse.parse_number(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
         parsed_token = parse.parse_label(expr_token, context)
-    elif pattern_token[2] == patterns.ArgumentTypes.ANY_STR:
+    elif pattern_token[2] == patterns.ArgumentTypes.TOKEN:
         parsed_token = expr_token
     elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
         parsed_token = parse.parse_offset_label(expr_token, context, line)
@@ -26,8 +26,8 @@ def parse_argument_token(context, pattern_token, expr_token, line):
         parsed_token = parse.parse_bin(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
         parsed_token = parse.parse_dec(expr_token)
-    elif pattern_token[2] == patterns.ArgumentTypes.QUOTE_STR:
-        parsed_token = parse.parse_quote_str(expr_token, context)
+    elif pattern_token[2] == patterns.ArgumentTypes.STRING:
+        parsed_token = parse.parse_string(expr_token, context)
     else:
         raise
     return parsed_token

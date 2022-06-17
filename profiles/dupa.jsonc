@@ -87,6 +87,17 @@
                     "argB":"imm"
                 }
             },
+            "inc":{
+                "pattern": "inc reg[{dst:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":2,
+                    "argA":"dst",
+                    "dst":"dst",
+                    "argB":1
+                }
+            },
             
             "sub":{
                 "pattern": "sub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
@@ -99,6 +110,42 @@
                     "argB":"arg2"
                 }
             },
+            "dec":{
+                "pattern": "dec reg[{dst:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":3,
+                    "argA":"dst",
+                    "dst":"dst",
+                    "argB":1
+                }
+            },
+
+            "cmp const":{
+                "pattern": "cmp reg[{arg1:num}], {imm:num}",
+                "command_layout": "default",
+                "bin": {
+                    "const":1,
+                    "cu":3,
+                    "argA":"arg1",
+                    "dst":0,
+                    "argB":"imm"
+                }
+            },
+
+            "cmp":{
+                "pattern": "cmp reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "default",
+                "bin": {
+                    "const":0,
+                    "cu":3,
+                    "argA":"arg1",
+                    "dst":0,
+                    "argB":"arg2"
+                }
+            },
+
             "sub const":{
                 "pattern": "sub reg[{dst:num}], reg[{arg1:num}], {imm:num}",
                 "command_layout": "default",
@@ -284,7 +331,7 @@
                 }
             },
             "push":{
-                "pattern": "push reg[{src:num}]]",
+                "pattern": "push reg[{src:num}]",
                 "command_layout": "default",
                 "bin": {
                     "const":0,
@@ -405,7 +452,37 @@
                     "argB": 0
                 }
             }
-            
+        },
+        "MACROS":{
+            "jne macro":{
+                "pattern": "jne reg[{src:token}], reg[{dst:token}], {jmp:token}",
+                "process":{
+                },
+                "expansion":[
+                    "cmp reg[{src}], reg[{dst}]",
+                    "jz {jmp}"
+                ]
+            },
+            "swap macro":{
+                "pattern": "swap reg[{t1:token}], reg[{t2:token}]",
+                "process":{
+                },
+                "expansion":[
+                    "push reg[{t1}]",
+                    "mov reg[{t1}], reg[{t2}]",
+                    "pop reg[{t2}]"
+                ]
+            },
+            "mov displ":{
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}]+{offset:token}]",
+                "process":{
+                },
+                "expansion":[
+                    "push reg[1]",
+                    "add reg[1], reg[{ptr}], {offset}",
+                    "mov reg[{dst}], ram[reg[1]]"
+                ]
+            }
         }
     }
 }

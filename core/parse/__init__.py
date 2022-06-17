@@ -6,6 +6,7 @@ from . import debug_heades as debug_heades
 from . import split_into_chunks as split_into_chunks
 from . import generate as generate
 from . import solve_sections as solve_sections
+from . import macros as macros
 
 def parse_number(token):
     try:
@@ -40,7 +41,7 @@ def parse_label(token, context):
         return None
     return labels[token]
 
-def parse_quote_str(token, context):
+def parse_string(token, context):
     if token[0] == '"' and token[-1] == '"':
         return token[1:-1]
     return None

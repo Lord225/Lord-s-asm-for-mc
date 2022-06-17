@@ -4,9 +4,9 @@ import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr
 
 class SectionMeta:
-    find_section = patterns.Pattern(".{label:any_str}")
-    find_section_with_offset = patterns.Pattern(".{label:any_str} {offset:num}")
-    find_section_with_offset_with_outoffset = patterns.Pattern(".{label:any_str} {offset:num} {write:num}")
+    find_section = patterns.Pattern(".{label:token}")
+    find_section_with_offset = patterns.Pattern(".{label:token} {offset:num}")
+    find_section_with_offset_with_outoffset = patterns.Pattern(".{label:token} {offset:num} {write:num}")
 
     def __init__(self, name, offset, write):
         self.name = name
@@ -28,7 +28,7 @@ def check_for_new_section(line_obj):
     return None  
 
 def find_labels(program, context):
-    find_labels = patterns.Pattern("{label:any_str}:")
+    find_labels = patterns.Pattern("{label:token}:")
     labels = {}
     output = list()
     for line_obj in program:

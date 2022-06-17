@@ -6,6 +6,25 @@
 #define SP 14
 #define PC 15
 
+#define USE_CARRY_AS_STOP
+
+.ENTRY
+    mov reg[1], ram[reg[2]+2]
+    
+    mov reg[1], 0
+    mov reg[2], 1
+    mov reg[3], 15
+    jne reg[1], reg[2], LOOP
+LOOP:
+    add reg[1], reg[1], reg[2]
+    out reg[1]
+    add reg[2], reg[2], reg[1]
+    out reg[2]
+    dec reg[3]
+    
+    jz LOOP
+    halt
+
 .ENTRY
     mov reg[SP], STACK_BASE          // stack init
     mov reg[2], reg[SP]              // array start 
@@ -25,22 +44,23 @@ SORT_loop_outer:
     mov reg[4], ram[reg[2]]
 SORT_loop_inner:
     mov reg[5], ram[reg[1]]
-    sub reg[0], reg[5], reg[4] // reg[0] <= reg[5] -> reg[0]-reg[5] <= 0, sets flag s, c and 
+    
+    // reg[0] <= reg[5] -> reg[0]-reg[5] <= 0, sets flag s, c and 
+    cmp reg[5], reg[4] 
     js SORT_LOOP_break
         add reg[6], reg[1], 1 
         mov ram[reg[6]], reg[5]
         
         // jump if reg[1]-1 < reg[2] -> reg[6] < reg[2] -> reg[6]-reg[2] < 0
         sub reg[6], reg[1], 1
-        sub reg[0], reg[6], reg[2]
+        cmp reg[6], reg[2]
         js SORT_loop_inner
 SORT_LOOP_break:
     add reg[6], reg[1], 1
     mov ram[reg[6]], reg[4]
     add reg[2], reg[2], 1
 
-    // reg[2] != reg[3] -> reg[2]-reg[3] != 0
-    sub reg[0], reg[2], reg[3]
-    
+    cmp reg[2], reg[3]   // reg[2] != reg[3] -> reg[2]-reg[3] != 0
     jz SORT_loop_outer
+
     ret

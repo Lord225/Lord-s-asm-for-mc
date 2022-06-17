@@ -11,12 +11,12 @@ class TokenTypes(Enum):
 class ArgumentTypes(Enum):
     NUM = auto()
     LABEL = auto()
-    ANY_STR = auto()
+    TOKEN = auto()
     OFFSET_LABEL = auto()
     HEX_NUM = auto()
     BIN_NUM = auto()
     DEC_NUM = auto()
-    QUOTE_STR = auto()
+    STRING = auto()
 
 class Pattern:
     ARGUMENT_START_SYMBOL = '{'
