@@ -9,8 +9,8 @@
 #define USE_CARRY_AS_STOP
 
 .ENTRY
-    mov reg[1], ram[reg[2]+2]
-    
+    mov reg[1], ram[reg[1]+2]
+
     mov reg[1], 0
     mov reg[2], 1
     mov reg[3], 15

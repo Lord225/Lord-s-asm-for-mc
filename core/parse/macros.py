@@ -3,6 +3,7 @@ import core.error as error
 from core.load.base import Line
 from core.parse import match_expr
 from core.parse.generate import eval_space
+from core.parse.tokenize import tokenize
 from core.profile import patterns
 from core.profile.profile import Profile
 
@@ -18,10 +19,9 @@ def serach_for_macros(line_obj, profile: Profile, context):
         return None
 
 def __process(process: dict, args: dict):
-    output = dict()
     for key, val in process.items():
-        output[key] = eval_space(args, val)
-    return output
+        args[key] = eval_space(args, val)
+    return args
 
 def __subtitue(match, profile: Profile):
     name: str = match[0]
@@ -46,10 +46,15 @@ def __subtitue(match, profile: Profile):
 def wrap_line(newline, line):
     return Line(newline, line_index_in_file=line.line_index_in_file, is_macro_expanded=True)
 
-def expand_macros(program, context):
+def expand_macros_recurent(program, context, limit):
+    if limit == 0:
+        raise error.ParserError(None, "Macro recursion limit exeeded.")
+
     profile: Profile = context['profile']
 
     new_program = list()
+
+    modified = False
 
     for line in program:
         matched_macro = serach_for_macros(line, profile, context)
@@ -58,8 +63,28 @@ def expand_macros(program, context):
             new_program.append(line)
             continue
 
-        expanded = __subtitue(matched_macro, profile)
+        expanded = [wrap_line(exp, line) for exp in __subtitue(matched_macro, profile)]
 
-        new_program.extend([wrap_line(exp, line) for exp in expanded])
+        expanded, context = tokenize(expanded, context)
+
+        expanded = [l for l in expanded if len(l.tokenized) != 0]
+
+        new_program.extend(expanded)
+        
+        modified = True
+    
+
+    if modified:
+        return expand_macros_recurent(new_program, context, limit-1)
+    else:
+        return new_program
+
+
+def expand_macros(program, context):
+    profile: Profile = context['profile']
+    if profile.macro_definitions is None:
+        return program, context
+
+    new_program = expand_macros_recurent(program, context, config.macro_recursion_limit)
     
     return new_program, context

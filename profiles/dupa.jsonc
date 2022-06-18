@@ -240,7 +240,7 @@
             },
 
             "shr":{
-                "pattern": "and reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "pattern": "shr reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "default",
                 "bin": {
                     "const":0,
@@ -251,7 +251,7 @@
                 }
             },
             "shr const":{
-                "pattern": "and reg[{dst:num}], reg[{arg1:num}], {imm:num}",
+                "pattern": "shr reg[{dst:num}], reg[{arg1:num}], {imm:num}",
                 "command_layout": "default",
                 "bin": {
                     "const":1,
@@ -342,7 +342,7 @@
                 }
             },
             "pop":{
-                "pattern": "pop reg[{dst:num}]]",
+                "pattern": "pop reg[{dst:num}]",
                 "command_layout": "default",
                 "bin": {
                     "const":0,
@@ -476,11 +476,24 @@
             "mov displ":{
                 "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}]+{offset:token}]",
                 "process":{
+                    "buf":"list(set(range(14))-{int(dst), int(ptr), 0})[0]" // Any register that is not equal to dst, ptr and 0
                 },
                 "expansion":[
-                    "push reg[1]",
-                    "add reg[1], reg[{ptr}], {offset}",
-                    "mov reg[{dst}], ram[reg[1]]"
+                    "push reg[{buf}]",
+                    "add reg[{buf}], reg[{ptr}], {offset}",
+                    "mov reg[{dst}], ram[reg[{buf}]]",
+                    "pop reg[{buf}]"
+                ]
+            },
+            "rec rsh":{
+                "pattern": "rsh reg[{target:token}], {offset:token}",
+                "process":{
+                    "offset_next":"int(offset)-1 if int(offset) > 1 else None",
+                    "command": "f'rsh reg[{target}], {offset_next}' if offset_next is not None else ''"
+                },
+                "expansion":[
+                    "shr reg[{target}], reg[{target}], 1",
+                    "{command}"
                 ]
             }
         }

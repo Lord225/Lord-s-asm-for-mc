@@ -1,3 +1,4 @@
+from typing import List
 import core.error as error
 import core.config as config
 import core.parse.base as parser_base
@@ -6,7 +7,7 @@ import re
 TOKENIZE_PATTERN = re.compile(r"(\W|\s)")
 USELSESS = ' '
 
-def tokienize_str(string):
+def tokienize_str(string) -> List[str]:
     return re.split(TOKENIZE_PATTERN, string)
 
 def tokienize_line(line):
@@ -19,6 +20,7 @@ def remove_meaningless_tokens_list(tokens_list):
 def remove_meaningless_tokens(line):
     line.tokenized = remove_meaningless_tokens_list(line.tokenized)
     return line
+
 
 def join_sign_expressions(line):
     tokens = line.tokenized
