@@ -7,18 +7,22 @@ import core.error as error
 import importlib
 import core.parse as parser
 import core.profile.patterns as patterns
+import path
 
 REQUIRED_FIELDS = ["pattern", "command_layout", "bin"]
 OPTIONAL_FIELDS = []
 
-def load_json_profile(path):
-    with open(path, "r") as file:
-        try:
-            file = jsmin(file.read())
-            profile = json.loads(file)
-        except Exception as err:
-            raise error.ProfileLoadError(f"Cannot Load json: {err}")
-    return profile
+def load_json(file):
+    try:
+        file = jsmin(file.read())
+        return json.loads(file)
+    except Exception as err:
+        raise error.ProfileLoadError(f"Cannot Load json: {err}") 
+
+def load_json_profile(profile_path):
+    
+    with open(profile_path, "r") as file:
+        return load_json(file)
 
 def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
     emul: dict = CPU_PROFILE["CPU"]["emulator"]
