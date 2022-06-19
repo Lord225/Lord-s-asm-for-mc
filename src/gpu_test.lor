@@ -177,7 +177,7 @@ DRAW_LOOP:
     par eq vram[3], 1
     par cadd vram[2], vram[2], vram[0]
     par lsh vram[0], vram[0]
-    par rsh vram[1], vram[1]
+    par rsh vram[1], vram[1]A
 
     // iter 3
     par and vram[3], vram[1], 1
