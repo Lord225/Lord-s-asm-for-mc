@@ -102,6 +102,7 @@ class EmulatorBase(abc.ABC):
         return method(*args)
 
 GLOBAL_CURR_ADRESS = 0
+GLOBAL_CMD_HISTORY = list()
 
 def log_disassembly(**kwargs):
     """
@@ -141,6 +142,8 @@ def log_disassembly(**kwargs):
                 global GLOBAL_CURR_ADRESS
                 formated = format.format_map({name: format_value(value) for name, value in zip(spec, args)})
                 print(GLOBAL_CURR_ADRESS, formated)
+                if config.log_history:
+                    GLOBAL_CMD_HISTORY.append(func.__name__)
                 return func(*args, **kwargs)
             return wrapper
     if config.use_disassembly_as_logs and config.logmode:
@@ -201,6 +204,41 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
         else:
             machine.exec_command(None, cmd, args)
 
+def telemetry_display(program, context):
+    print(f"Displaing collected telemetry data... ({len(GLOBAL_CMD_HISTORY)} points) You can turn this annying thing with log_history set to False in settings (default.ini file)")
+    import matplotlib.pyplot as plt
+    import pandas
+    from collections import Counter
+    from sklearn.preprocessing import OneHotEncoder
+    from scipy.interpolate import interp1d
+    import numpy as np
+
+    df = pandas.DataFrame(GLOBAL_CMD_HISTORY, columns=['history'])
+    hist = pandas.DataFrame.from_dict(Counter(GLOBAL_CMD_HISTORY), orient='index')
+    
+    encoder = OneHotEncoder(handle_unknown='ignore')
+    
+    encoder_df = pandas.DataFrame(encoder.fit_transform(df[['history']]).toarray(), columns=encoder.categories_)
+
+    rolling = encoder_df.rolling(int(config.telemetry_window_size), min_periods=1).mean().interpolate(method='cubic', limit_direction='both')
+    rollinginterp = interp1d(rolling.index, rolling.T, kind='cubic')
+
+    hist.plot(kind='bar')
+    plt.xticks(rotation=45)
+    plt.ylabel("Count")
+    plt.xlabel("Ops")
+    plt.title("Command Usage Histogram")
+    plt.show()
+
+    if config.telemetry_interpolate:
+        freqs = rollinginterp(np.linspace(0, len(rolling.index)-1, int(config.telemetry_interpolate_points))).T
+    else:
+        freqs = rolling
+
+    plt.plot(freqs, label=rolling.columns)
+    plt.legend()
+    plt.show()
+
 def emulate(program, context):
     global GLOBAL_CURR_ADRESS
 
@@ -254,6 +292,9 @@ def emulate(program, context):
     except:
         print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}us")
     print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/float(profile.info.speed):0.1f}s")
+    
+    if config.log_history:
+        telemetry_display(program, context)
 
 def __write_program(program, context, machine):
     debug_instructions = dict()

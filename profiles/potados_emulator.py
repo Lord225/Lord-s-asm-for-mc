@@ -188,7 +188,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def alu_short(self, destination: int, flags: Binary, command: Binary):
         tri_dec = int(command[8:10])
         r1 = int(command[4:8])
-        r2 = int(command[13:16])
+        r2 = int(command[13:17])
 
         if tri_dec == 0:    # adc
             self.alu_adc(r1, r2, destination)
@@ -278,6 +278,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     #######
 
     FP = floats.CustomFloat(preset='fp16')
+
     @emulate.log_disassembly(format='fadd reg[{dst}], reg[{r1}], reg[{r2}]')
     def fadd(self, r1, r2, dst):        
         a = self.FP.get_float(self.regs[r1])
