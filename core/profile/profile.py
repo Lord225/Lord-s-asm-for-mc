@@ -50,6 +50,12 @@ def process_commands(commands: dict):
         cmd['pattern'] = patterns.Pattern(cmd['pattern'])
     return commands
 
+def process_macros(macros: dict):
+    warnings = dict()
+    for cmd_id, cmd in macros.items():
+        cmd['pattern'] = patterns.Pattern(cmd['pattern'])
+    return macros
+
 class ProfileInfo:
     def __init__(self, kwargs: dict):
         self.name: str = kwargs["Name"]
@@ -87,6 +93,7 @@ class Profile:
     
     def build_profile(self):
         self.__build_commands()
+        self.__build_macros()
         self.__build_arguments()
         self.__build_info()
         self.__get_schematics()
@@ -94,6 +101,13 @@ class Profile:
     def __build_commands(self):
         raw_commandset = self.profile["COMMANDS"]
         self.commands_definitions = process_commands(raw_commandset)
+    def __build_macros(self):
+        raw_macros = self.profile["MACROS"] if "MACROS" in self.profile else None
+
+        if raw_macros is None:
+            self.macro_definitions = dict()
+        else:
+            self.macro_definitions = process_macros(raw_macros)
     def __build_info(self):
         self.info = ProfileInfo(self.profile)
         self.adressing = AdressingMode(self.profile, self)

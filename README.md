@@ -45,7 +45,29 @@ Kompilator można zlinkować z emulatorem, aby automatycznie wpisywał i wykonyw
   * `#debug ram` - Wyświetla zawartość rejestrów gdy trafi na ten symbol
   * `#debug break` - Zatrzymuje emulator gdy trafi na ten symbol
   * Dowolne customowe symbole w emulatorze. 
+### Makra
+Kompilator pozwala na definiowanie proceduralnych makr, które wyglądają jak komendy. Pozwala to rozwinąć jedno makro  na wiele komend.
+```
+jne reg[1], reg[2], JUMP          // Marka pozwalają dodać abstrakcję do powtarzalnego kodu
+mov reg[1], ram[reg[2] + 2]       // Makra można skryptować z użyciem pythona aby generować bardzo specyficzny, ogólny kod
+rsh reg[2], 3                     // Makra mogą wywoływać się rekurencyjne
+```
+```
+// jne reg[1], reg[2], JUMP
+cmp reg[1], reg[2]     // Wykonało podstawienie
+jz JUMP
 
+// mov reg[1], ram[reg[2] + 2]
+push reg[3]    // Skrypt w pythonie wybrał rejestr 3 bo to pierwsza wartość różna od 0, 1, 2
+add reg[3], reg[2], 2
+mov reg[1], ram[reg[3]]
+pop reg[3]
+
+// rsh reg[2], 3
+rsh reg[2] // Maro rozwineło się trzy razy, za każdym razem podstawiając siebie z innymi parametrami 
+rsh reg[2]
+rsh reg[2]
+```
 ## Przykłady
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
 
