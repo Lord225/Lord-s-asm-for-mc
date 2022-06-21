@@ -1,5 +1,6 @@
 from typing import Dict, List
 import core.config as config
+from core.context import Context
 import core.error as error
 from core.parse.jumps import SectionMeta
 
@@ -110,20 +111,20 @@ def stick_chunks(chunks, used_addresses, chunk_labels):
 
     return program
 
-def solve_sections(program, context):
-    labels: dict = context['labels']
-    profile: Profile = context['profile']
-    sections: Dict[str,SectionMeta] = context["sections"]
+def solve_sections(program, context: Context):
+    labels = context.labels
+    profile: Profile = context.get_profile()
+    sections: Dict[str,SectionMeta] = context.sections
 
     chunks = gather_instructions_by_section(program, sections)
 
     used_addresses, chunk_labels_physical_adresses, chunk_labels = calculate_addresses(chunks, sections, profile, labels)
     
-    context['physical_adresses'] = {key:val for key, val in chunk_labels_physical_adresses.items()}
-    context['chunk_adreses'] = chunk_labels
-    context['used_addresses'] = used_addresses
-    context['namespace'] = None
-    context['use_phisical_adresses'] = True
+    context.physical_adresses = {key:val for key, val in chunk_labels_physical_adresses.items()}
+    context.chunk_adreses = chunk_labels
+    context.used_addresses = used_addresses
+    context.namespace = None
+    context.use_phisical_adresses = True
 
     program = stick_chunks(chunks, used_addresses, chunk_labels)
 

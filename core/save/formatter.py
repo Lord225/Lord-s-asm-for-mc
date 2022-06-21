@@ -1,3 +1,4 @@
+from core.context import Context
 import core.error as error
 import core.config as config
 from core.profile.profile import Profile
@@ -94,11 +95,11 @@ def encode_argument(layout, name, val):
     except error.ParserError as err:
         raise error.ParserError(None, f"{err.info}, Encoding: {encoding.__name__}, Argument: {name}")
 
-def get_py(program, context):
+def get_py(program, context: Context):
     """Returns program line as dict"""
     parsed = program['parsed_command']
     meta = {'mached': program['mached_command']}
-    profile: Profile = context['profile']
+    profile: Profile = context.get_profile()
     layouts = profile.arguments
 
     if 'debug' in program:
@@ -112,9 +113,9 @@ def get_py(program, context):
     return {'data':parsed, 'meta':meta, 'adress': program['physical_adress'], 'encoded': encoded, 'value':value}
 
 
-def get_bin(program, context):
+def get_bin(program, context: Context):
     """Returns program written in binary (padded on arguments)"""
-    profile: Profile = context['profile']
+    profile: Profile = context.get_profile()
     layouts = profile.arguments
 
     parsed = program['parsed_command']
@@ -125,20 +126,20 @@ def get_bin(program, context):
             line.append(encode_argument(layout, name, val))
     return line
 
-def get_pad(program, context):
+def get_pad(program, context: Context):
     """Returns program written in binary padded to byte"""
     line = get_bin(program, context)
     
     return wrap(''.join(line), 8)
 
-def get_raw(program, context):
+def get_raw(program, context: Context):
     """Returns program written in hex padded to bytes"""
     values = get_pad(program, context)
 
     return [padhex(int(val, base=2), 8) for val in values]
 
 
-def format_output(program, context):
+def format_output(program, context: Context):
     if config.save == 'pip':
         formatter_function = get_py
     elif config.save == 'bin':

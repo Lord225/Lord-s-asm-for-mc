@@ -8,6 +8,7 @@ from types import ModuleType
 import argparse
 import core.error as error
 import core.config as config
+import core.context as contextlib
 import sys
 import os
 
@@ -55,14 +56,14 @@ parser.set_defaults(feature=False)
 parserargs = parser.parse_args()
 
 
-def show_warnings(context):
-    for warning in context['warnings']:
+def show_warnings(context: contextlib.Context):
+    for warning in context.warnings:
         print(f"Warning: {warning}")
-def show_outfiles(context):
+def show_outfiles(context: contextlib.Context):
     print("Output files:")
     SPACE = " "*4
-    if 'outfiles' in context:
-        for filename in context['outfiles']:
+    if context.outfiles:
+        for filename in context.outfiles:
             print(SPACE, filename)
     else:
         print("None")
@@ -101,30 +102,28 @@ def main():
     start_file = config.input
 
     # First pass, loads settings and profiles into context
-    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, progress_bar_name='Loading')
+    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, contextlib.Context(None), progress_bar_name='Loading')
     if config.show_warnings:
         show_warnings(context)
 
     # Update configs
-    if 'profile_name' in context:
-        config.override_from_dict(profile=context['profile_name'])
+    if context.profile_name:
+        config.override_from_dict(profile=context.profile_name)
     if config.init is not None:
         config.override_from_file(config.init)
-    if 'init' in context:
-        config.override_from_file(context['init'])
+    if context.init:
+        config.override_from_file(context.init)
     config.override_from_dict(vars(parserargs))
     override_debug()
 
     # Load profile and pass it to context
-    profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}/{context['profile_name']}", True)
+    profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}/{context.profile_name}", True)
 
     # Second pass reloads file with new settings
-    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, {'defs': profile.defs, 'consts': profile.consts}, progress_bar_name='Reloading')
+    output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, contextlib.Context(profile), progress_bar_name='Reloading')
 
     if config.show_warnings:
         show_warnings(context)
-
-    context['profile'] = profile
     
     if config.reassume:
         from core.profile.reasume import reasume
@@ -133,7 +132,7 @@ def main():
         
 
     # Process data using ouput from second pass.
-    output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context,  progress_bar_name='Parsing')
+    output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context, progress_bar_name='Parsing')
     if config.show_warnings:
         show_warnings(context)
 
@@ -149,13 +148,13 @@ def main():
 
     # Emulation
     if config.run:
-        if context['profile'].emul is None:
+        if context.get_profile().emul is None:
             print("Emulation is not avalible")
             return
-        if isinstance(context['profile'].emul, dict):
+        if isinstance(context.get_profile().emul, dict):
             core.emulator.custom_emulator.emulate(output, context)
             return
-        if isinstance(context['profile'].emul, ModuleType):
+        if isinstance(context.get_profile().emul, ModuleType):
             config.override_from_dict(save = 'bin', comments = 'False')
             output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
             core.emulator.emulate(output, context)

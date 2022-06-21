@@ -1,3 +1,4 @@
+from core.context import Context
 import core.error as error
 import core.config as config
 
@@ -21,11 +22,11 @@ def get_line_labels(labels, index):
     return f"({','.join(founded_labels)})"
     
 
-def add_comments(program, context):
+def add_comments(program, context: Context):
     if not config.comments or config.save == 'pip':
         return program, context
-    profile: Profile = context['profile']
-    labels = context['chunk_adreses']
+    profile: Profile = context.get_profile()
+    labels = context.chunk_adreses
 
     longest_layout = len(max(program, key=lambda x: len(x.formatted)).formatted)
     

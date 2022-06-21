@@ -1,3 +1,4 @@
+from core.context import Context
 import core.error as error
 import core.config as config
 from core.profile.profile import Profile
@@ -8,8 +9,8 @@ def eval_space(args, evaluation):
 
     return eval(evaluation)
 
-def generate(program, context):
-    profile: Profile = context['profile']
+def generate(program, context: Context):
+    profile: Profile = context.get_profile()
     layouts = profile.arguments
     cmds = profile.commands_definitions
     

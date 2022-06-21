@@ -2,6 +2,7 @@ import chunk
 from nbt import nbt
 from typing import List, Iterable
 import numpy as np
+from core.context import Context
 from core.profile.profile import AdressingMode, Profile
 from core.save.formatter import padbin
 from core.emulate.emulator import gather_instructions 
@@ -115,8 +116,8 @@ def convert_to_bitstream(data: list, offset, adressing: AdressingMode):
     offseting_words = "0"*offset*word_size                            
     return offseting_words + ''.join((padbin(word, word_size) for word in data)) 
 
-def generate_schematic_from_formatted(program: dict, context: dict):
-    profile: Profile = context["profile"]
+def generate_schematic_from_formatted(program: dict, context: Context):
+    profile: Profile = context.get_profile()
 
     if profile.schematic is None:
         print("Schematic export is not suporrted. (Missing definition in profile) Skipping.")
@@ -135,7 +136,7 @@ def generate_schematic_from_formatted(program: dict, context: dict):
 
     filenames = generate_schematic_from(profile, program, 0, dirname, filename)
 
-    context['outfiles'] = filenames
+    context.outfiles.extend(filenames)
 
 def generate_schematic_from(profile: Profile, program, offset, dirname, filename):
     schem_settings = profile.schematic

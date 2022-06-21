@@ -1,11 +1,11 @@
+from core.context import Context
 import core.error as error
 import core.config as config
 from core.load.base import Line
 import core.parse.base as parser_base
 
-def find_macros(program, context):
+def find_macros(program, context: Context):
     line_iter = iter(program)
-    macros = dict()
     new_program = []
     try:
         while line_iter:
@@ -39,20 +39,16 @@ def find_macros(program, context):
                                 line = next(line_iter)
                             except StopIteration:
                                 raise error.PreprocesorError(line.line_index_in_file, "he macro definition hasn't been ended (found '#macro' without '#endmacro')")
-                        macros[name] = (len(parametres), DATA)
+                        context.macros[name] = (len(parametres), DATA)
                 else:
                     new_program.append(line)
     except StopIteration:
-        context['macros'] = macros
         return new_program, context
 
-def apply_all_macros(program, context):
-    macros =  context["macros"] if "macros" in context else dict()
-    
-    new_program = program
-    for name, macro in macros.items():
-        new_program = apply_macro(new_program, name, macro)
-    return new_program, context
+def apply_all_macros(program, context: Context):    
+    for name, macro in context.macros.items():
+        program = apply_macro(program, name, macro)
+    return program, context
 
 def apply_macro(program, name, macro):
     new_program = list()

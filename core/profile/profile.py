@@ -1,13 +1,10 @@
-from enum import Enum, auto
+from .patterns import Pattern
 import json
-from typing import Any, List, Literal, Optional
+from typing import Any, Literal
 from jsmin import jsmin
 import core.config as config
 import core.error as error
 import importlib
-import core.parse as parser
-import core.profile.patterns as patterns
-import path
 
 REQUIRED_FIELDS = ["pattern", "command_layout", "bin"]
 OPTIONAL_FIELDS = []
@@ -47,13 +44,13 @@ def process_commands(commands: dict):
         if len(missing) != 0:
             warnings[cmd_id] = missing
     
-        cmd['pattern'] = patterns.Pattern(cmd['pattern'])
+        cmd['pattern'] = Pattern(cmd['pattern'])
     return commands
 
 def process_macros(macros: dict):
     warnings = dict()
     for cmd_id, cmd in macros.items():
-        cmd['pattern'] = patterns.Pattern(cmd['pattern'])
+        cmd['pattern'] = Pattern(cmd['pattern'])
     return macros
 
 class ProfileInfo:

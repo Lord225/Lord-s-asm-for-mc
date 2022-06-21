@@ -1,12 +1,13 @@
 import core.config as config
+from core.context import Context
 import core.error as error
 import core.parse as parser
 import pprint
 
 
-def reasume(context):
-    profile_name = context['profile_name']
-    profile = context['profile']
+def reasume(context: Context):
+    profile_name = context.profile_name
+    profile = context.get_profile()
     
     print(f"Profile: '{profile_name}'")
     print(f"Info: {str(profile.info)}")

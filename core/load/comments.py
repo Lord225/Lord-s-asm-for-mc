@@ -1,9 +1,10 @@
-from typing import List, Dict
+from typing import List
+from core.context import Context
 from .base import *
 import core.error as error
 import core.config as config
 
-def remove_comments(lines: List[Line], context: Dict):
+def remove_comments(lines: List[Line], context: Context):
     for line in lines:
         if "//" in line.line:
             if config.save_comments_after_lines:

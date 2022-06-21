@@ -1,4 +1,5 @@
 from typing import List
+from core.context import Context
 import core.error as error
 import core.config as config
 import core.parse.base as parser_base
@@ -65,7 +66,7 @@ def join_string(line):
     line.tokenized = output
     return line
     
-def tokenize(program, context):
+def tokenize(program, context: Context):
     for line_obj in program:
         line_obj = remove_meaningless_tokens(join_sign_expressions(join_string(tokienize_line(line_obj))))
     return program, context

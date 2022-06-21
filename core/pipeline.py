@@ -5,6 +5,7 @@ from . import save
 from typing import List, Tuple, Callable, Any
 import core.config as config
 import core.error as error
+import core.context as context
 from click import progressbar
 
 import pprint
@@ -72,7 +73,7 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     pipeline = \
         [
             ('tokenize lines', parse.tokenize.tokenize),
-            ('expand macros', parse.macros.expand_macros),
+            ('expand macros', parse.macros.expand_procedural_macros),
             ('find sections', parse.jumps.find_sections),
             ('find labels', parse.jumps.find_labels),
             ('find commands', parse.match_commands.find_commands),
@@ -80,7 +81,7 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
             ('generate values', parse.generate.generate),
             ('add debug logs', parse.debug_heades.add_debug_command_logging),
             ('test', parse.solve_sections.solve_sections),
-            ('find commands with physical addresses', parse.match_commands.find_commands),
+            ('find commands', parse.match_commands.find_commands),
             ('generate values', parse.generate.generate),
         ]
     return pipeline
@@ -127,11 +128,8 @@ def make_format_pipeline()  -> List[Tuple[str, Callable]]:
 def check_types(lines, stage):
     for line in lines:
         assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
-def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {}, progress_bar_name = None):
+def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external: context.Context, progress_bar_name = None):
     data = start
-
-    if 'warnings' not in external:
-        external['warnings'] = list()
 
     def format_function(x):
         return str(x[1][0]) if x is not None else ''
@@ -150,7 +148,6 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
         bar = progressbar
 
     with bar(enumerate(pipeline), item_show_func=format_function, label=progress_bar_name) as pipeline_iterator:
-
         for st in pipeline_iterator:
             if isinstance(st, int):
                 raise
@@ -164,8 +161,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external = {
                 raise other_error
 
             if isinstance(output, tuple):
-                data, other = output
-                external.update(other)
+                data, _ = output
             else:
                 data = output
 

@@ -1,6 +1,7 @@
 from dis import dis
 from typing import List, Optional
 import Levenshtein
+from core.context import Context
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse as parse
@@ -10,16 +11,17 @@ def match_word(pattern_token, expr_token):
     return pattern_token[1] != expr_token
 
 
-def parse_argument_token(context, pattern_token, expr_token, line):
+def parse_argument_token(context: Optional[Context], pattern_token, expr_token, line):
     parsed_token = None
+    labels = context.get_addresses() if context is not None else dict()
     if pattern_token[2] == patterns.ArgumentTypes.NUM:
         parsed_token = parse.parse_number(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.LABEL:
-        parsed_token = parse.parse_label(expr_token, context)
+        parsed_token = parse.parse_label(expr_token, labels)
     elif pattern_token[2] == patterns.ArgumentTypes.TOKEN:
         parsed_token = expr_token
     elif pattern_token[2] == patterns.ArgumentTypes.OFFSET_LABEL:
-        parsed_token = parse.parse_offset_label(expr_token, context, line)
+        parsed_token = parse.parse_offset_label(expr_token, labels, line)
     elif pattern_token[2] == patterns.ArgumentTypes.HEX_NUM:
         parsed_token = parse.parse_hex(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.BIN_NUM:
@@ -27,13 +29,13 @@ def parse_argument_token(context, pattern_token, expr_token, line):
     elif pattern_token[2] == patterns.ArgumentTypes.DEC_NUM:
         parsed_token = parse.parse_dec(expr_token)
     elif pattern_token[2] == patterns.ArgumentTypes.STRING:
-        parsed_token = parse.parse_string(expr_token, context)
+        parsed_token = parse.parse_string(expr_token)
     else:
         raise
     return parsed_token
 
 
-def match_expr(pattern: profile.patterns.Pattern, line, context: Optional[dict]):
+def match_expr(pattern: patterns.Pattern, line, context: Optional[Context]):
     args = dict()
     expr = line.tokenized
 
@@ -51,12 +53,12 @@ def match_expr(pattern: profile.patterns.Pattern, line, context: Optional[dict])
     return args
 
 
-def soft_word_match(token, expr_token, context):
+def soft_word_match(token, expr_token, context: Context):
     distance = Levenshtein.distance(token, expr_token)
     return distance
 
     
-def soft_match_expr(pattern:profile.patterns.Pattern, line, context: dict):
+def soft_match_expr(pattern: patterns.Pattern, line, context: Context):
     expr = line.tokenized
 
     output = list()

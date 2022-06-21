@@ -1,8 +1,5 @@
-import core.config as config
-import core.error as error
-import core.parse as parse
+import core.parse.tokenize as tokenize
 from enum import Enum, auto
-from typing import List
 
 class TokenTypes(Enum):
     LITERAL_WORD = auto()
@@ -25,7 +22,7 @@ class Pattern:
     
     def __init__(self, pattern: str):
         self.arguments = dict()
-        self.tokens = parse.tokenize.remove_meaningless_tokens_list(parse.tokenize.tokienize_str(pattern))
+        self.tokens = tokenize.remove_meaningless_tokens_list(tokenize.tokienize_str(pattern))
         self.tokens = self.__parse_tokens()
         
     def __get_token_str(self, id: int):

@@ -1,10 +1,11 @@
+from core.context import Context
 import core.profile.profile as profile
 import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr
 import core.config as config
 import core.error as error
 
-def serach_for_command(line_obj, profile: profile.Profile, context):
+def serach_for_command(line_obj, profile: profile.Profile, context: Context):
     for name, pattern in profile.commands_definitions.items():
         pattern_instance: patterns.Pattern = pattern['pattern']
         
@@ -15,8 +16,8 @@ def serach_for_command(line_obj, profile: profile.Profile, context):
         return None
 
 
-def find_commands(program, context):
-    cpu_profile: profile.Profile = context['profile']
+def find_commands(program, context: Context):
+    cpu_profile: profile.Profile = context.get_profile()
     
     for line_obj in program:
         founded = serach_for_command(line_obj, cpu_profile, context)
@@ -32,8 +33,8 @@ def find_commands(program, context):
     return program, context
 
 
-def summarise_best_fit(best_fit, context):
-    cpu_profile: profile.Profile = context['profile']
+def summarise_best_fit(best_fit, context: Context):
+    cpu_profile: profile.Profile = context.get_profile()
     best_cmd = cpu_profile.commands_definitions[best_fit[0]]
     new_line = "\n *  "
     missmaches = best_fit[1]['missmaches'][:1]
@@ -41,7 +42,7 @@ def summarise_best_fit(best_fit, context):
     return message
 
 
-def serach_harder_for_command(line_obj, profile: profile.Profile, context):
+def serach_harder_for_command(line_obj, profile: profile.Profile, context: Context):
     output = dict()
     for name, pattern in profile.commands_definitions.items():
         pattern_instance: patterns.Pattern = pattern['pattern']

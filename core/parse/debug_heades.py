@@ -1,3 +1,4 @@
+from core.context import Context
 import core.parse.tokenize as tokenize
 import core.error as error
 import core.config as config
@@ -13,8 +14,8 @@ def tokenize_debug_comman(debug):
     return args
 
 
-def add_debug_metadata(program, context):
-    debug = context['debug']
+def add_debug_metadata(program, context: Context):
+    debug = context.debug
     for debug_command in debug:
         index, distance = find_closest_command(program, debug_command)
         best_command = program[index]
@@ -31,7 +32,7 @@ def generate_debug_command(line_obj):
     return ['log', line_obj.line]
 
 
-def add_debug_command_logging(program, context):
+def add_debug_command_logging(program, context: Context):
     if not config.logmode or config.use_disassembly_as_logs:
         return program, context
 

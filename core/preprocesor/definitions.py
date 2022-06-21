@@ -1,15 +1,16 @@
 from typing import Dict, List, Tuple
+from core.context import Context
 import core.error as error
 import core.config as config
 import core.parse.base as parser_base
 
-def definition_solver(program, context):
+def definition_solver(program, context: Context):
     recursion = [True]
     else_watchman = [0]
     new_program = []
 
-    definition = [] if "defs" not in context else context["defs"]
-    consts = {} if "consts" not in context else context["consts"]
+    definition = context.defs
+    consts = context.const
     
     if config.DEFINITION_DEBUG:
         print("line", "app", "depth",sep="\t; ")
@@ -43,8 +44,6 @@ def definition_solver(program, context):
                     definition.extend(new_defs)
     if len(recursion) != 1:
         raise error.PreprocesorError(None, "Expected #endif")
-    context["defs"] = definition
-    context["consts"] = consts
     return new_program, context
 def add_definition(line: str, i) -> Tuple[List[str], Dict[str, str]]:
     components = line.split(" ")
@@ -56,12 +55,11 @@ def add_definition(line: str, i) -> Tuple[List[str], Dict[str, str]]:
         return [components[1]], {}
     else:
         raise error.PreprocesorError(i, "Can't inteprete #define expression: '{}'".format(line))
-def apply_consts(program, context):
-    consts = {} if "consts" not in context else context["consts"]
+def apply_consts(program, context: Context):
     for i, _ in enumerate(program):
-        for const, value in consts.items():
+        for const, value in context.const.items():
             program[i].line = parser_base.smart_replace(program[i].line, const, value)
     return program, context
-def remove_definitions(program, context):
+def remove_definitions(program, context: Context):
     return [x for x in program if not x.line.startswith("#define")], context
 

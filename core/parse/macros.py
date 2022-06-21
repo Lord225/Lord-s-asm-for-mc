@@ -1,14 +1,15 @@
 import core.config as config
+from core.context import Context
 import core.error as error
 from core.load.base import Line
-from core.parse import match_expr
+from core.parse.match_commands import match_expr
 from core.parse.generate import eval_space
 from core.parse.tokenize import tokenize
 from core.profile import patterns
 from core.profile.profile import Profile
 
 
-def serach_for_macros(line_obj, profile: Profile, context):
+def serach_for_macros(line_obj, profile: Profile, context: Context):
     for name, pattern in profile.macro_definitions.items():
         pattern_instance: patterns.Pattern = pattern['pattern']
         
@@ -46,11 +47,11 @@ def __subtitue(match, profile: Profile):
 def wrap_line(newline, line):
     return Line(newline, line_index_in_file=line.line_index_in_file, is_macro_expanded=True)
 
-def expand_macros_recurent(program, context, limit):
+def expand_macros_recurent(program, context: Context, limit):
     if limit == 0:
         raise error.ParserError(None, "Macro recursion limit exeeded.")
 
-    profile: Profile = context['profile']
+    profile: Profile = context.get_profile()
 
     new_program = list()
 
@@ -73,15 +74,13 @@ def expand_macros_recurent(program, context, limit):
         
         modified = True
     
-
     if modified:
         return expand_macros_recurent(new_program, context, limit-1)
     else:
         return new_program
 
-
-def expand_macros(program, context):
-    profile: Profile = context['profile']
+def expand_procedural_macros(program, context: Context):
+    profile: Profile = context.get_profile()
     if profile.macro_definitions is None:
         return program, context
 
