@@ -1,8 +1,5 @@
 #profile pm1_sv.jsonc
 
-#global CORE0 CORE0 0
-#global CORE1 CORE1 0
-
 #data 0xF0 "BDCEFABCDEFGCAF"
 
 #define DATA_START 0xF0
@@ -11,7 +8,7 @@
 #define OUTER_COUNTER 0xA2
 #define COUTER_LIMIT 0xA3
 
-CORE0: 
+.CORE0
 #debug ram
     reg[1] = 0xFF  //end
     ram[ARR_END] = reg[1]
@@ -57,4 +54,3 @@ OUTER:
     shut
     #debug ram
     #debug break
-CORE1:

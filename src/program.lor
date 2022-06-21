@@ -54,7 +54,7 @@
 //#define USE_INSERTION
 #define USE_QUICKER_SORT
 
-CORE0:
+.CORE0
     #debug ram
     mov reg[SP], STACK_BASE          // stack init
     mov reg[2], reg[SP]              // array start 

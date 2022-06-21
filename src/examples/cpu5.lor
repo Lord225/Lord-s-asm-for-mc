@@ -1,6 +1,5 @@
 #profile cpu5.jsonc
 
-#global ENTRY ENTRY 15 
 
 // Sine plotter using FPU & Pade's approximation
 //
@@ -45,7 +44,7 @@
 //  14  14.63   14.48 
 //  15  12.25   11.98 
 
-ENTRY:     
+.ENTRY    
     kopiuj 0x0000 do [0]
     kopiuj 0x0000 do [10]
     kopiuj 0x0010 do [11]

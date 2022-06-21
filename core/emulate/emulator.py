@@ -1,4 +1,5 @@
 import core.config as config
+from core.context import Context
 import core.error as error
 import core.emulate.debug_commands as debug
 from core.profile.profile import AdressingMode, Profile
@@ -204,7 +205,7 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
         else:
             machine.exec_command(None, cmd, args)
 
-def telemetry_display(program, context):
+def telemetry_display(program, context: Context):
     print(f"Displaing collected telemetry data... ({len(GLOBAL_CMD_HISTORY)} points) You can turn this annying thing with log_history set to False in settings (default.ini file)")
     import matplotlib.pyplot as plt
     import pandas
@@ -239,10 +240,10 @@ def telemetry_display(program, context):
     plt.legend()
     plt.show()
 
-def emulate(program, context):
+def emulate(program, context: Context):
     global GLOBAL_CURR_ADRESS
 
-    profile: Profile = context["profile"]
+    profile: Profile = context.get_profile()
     emulator = profile.emul
 
     try:
@@ -256,10 +257,9 @@ def emulate(program, context):
     print()
     print("Writing data to device")
 
-    __write_program(program, context, machine)
+    debug_instructions = __write_program(program, context, machine)
     __write_data(program, context, machine)
 
-    debug_instructions = context["debug_instructions"]
 
     print("Starting Emulation")
     
@@ -296,9 +296,9 @@ def emulate(program, context):
     if config.log_history:
         telemetry_display(program, context)
 
-def __write_program(program, context, machine):
+def __write_program(program, context: Context, machine):
     debug_instructions = dict()
-    adressing: AdressingMode = context['profile'].adressing
+    adressing: AdressingMode = context.get_profile().adressing
 
     instructuons, debug = gather_instructions(program, adressing)
     packed_instructions = pack_adresses(instructuons)
@@ -308,9 +308,9 @@ def __write_program(program, context, machine):
     for adress, val in debug.items():
         debug_instructions[adress] = val
     
-    context['debug_instructions'] = debug_instructions
+    return debug_instructions
 
-def __write_data(program, context, machine):
-    data: dict = context['data']
+def __write_data(program, context: Context, machine):
+    data: dict = context.data
 
     machine.write_memory(None, DataTypes.DATA, data)

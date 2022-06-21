@@ -1,7 +1,5 @@
 #profile potados.jsonc
 
-#global CORE0 CORE0 0 0 
-
 #define STACK_BASE 0x0100 
 
 #data STACK_BASE "BDCEFABCDEFGCAF"
@@ -48,6 +46,8 @@
 // QQ3 32 - Machine took: 944 steps, estimated execution time: 286.1s
 // QQ3 64 - Machine took: 1863 steps, estimated execution time: 564.5s
 
+
+// Sorting settings
 #define ARRAY_SIZE 0x0010
 
 #define INSERTION_TRESHOLD 14 // (8/16/32) depend on data
@@ -56,7 +56,7 @@
 //#define USE_INSERTION
 #define USE_QUICKER_SORT
 
-CORE0:
+.CORE0
     #debug ram
     mov reg[SP], STACK_BASE          // stack init
     mov reg[2], reg[SP]              // array start 
@@ -64,197 +64,193 @@ CORE0:
     mov reg[3], reg[SP]              // array end 
 
 #ifdef USE_QUICK_SORT
-
     dec reg[3]                       // last element (15)
     call QUICK_SORT
-
 #else
-#ifdef USE_INSERTION
-    
-    call INSERTION_SORT
-#else
-#ifdef USE_QUICKER_SORT
-    
-    dec reg[3]                       // last element (15)
-    mov reg[14], INSERTION_TRESHOLD  // insertion treshold
-    call QUICKER_SORT
-#endif
-#endif
+    #ifdef USE_INSERTION
+        call INSERTION_SORT
+    #else
+        #ifdef USE_QUICKER_SORT
+            dec reg[3]                       // last element (15)
+            mov reg[14], INSERTION_TRESHOLD  // insertion treshold
+            call QUICKER_SORT
+        #endif
+    #endif
 #endif
     int 0
     #debug ram
 
 #ifdef USE_QUICK_SORT
-QUICK_SORT:
-    // reg[2] - ptr low   
-    // reg[3] - ptr high  (last element)
-    jge reg[2], reg[3], END
+    QUICK_SORT:
+        // reg[2] - ptr low   
+        // reg[3] - ptr high  (last element)
+        jge reg[2], reg[3], END
 
-        // INLINED PARTION ALGORTIM
+            // INLINED PARTION ALGORTIM
 
-        // PARTITION:
-        // reg[1] caller - output, pivot
-        // reg[2] callee - param,  ptr low
-        // reg[3] callee - param,  ptr high
-        mov reg[4], ram[reg[3]] // pivot = S[high]
-        
-        sub reg[5], reg[2], 1   // i = low - 1
+            // PARTITION:
+            // reg[1] caller - output, pivot
+            // reg[2] callee - param,  ptr low
+            // reg[3] callee - param,  ptr high
+            mov reg[4], ram[reg[3]] // pivot = S[high]
+            
+            sub reg[5], reg[2], 1   // i = low - 1
 
-        mov reg[1], reg[2]      // j = low
+            mov reg[1], reg[2]      // j = low
 
-        PARTITION_LOOP:
-            mov reg[6], ram[reg[1]] // S[j] 
-            jg reg[6], reg[4], SKIP_SWAP // if(S[j] <= pivot)
-                inc reg[5]
-                mov reg[9], ram[reg[5]]  // S[i]
-                
-                //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
-                mov ram[reg[5]], reg[6]
-                mov ram[reg[1]], reg[9]
-            SKIP_SWAP:
-            jne reg[1]++, reg[3], PARTITION_LOOP
+            PARTITION_LOOP:
+                mov reg[6], ram[reg[1]] // S[j] 
+                jg reg[6], reg[4], SKIP_SWAP // if(S[j] <= pivot)
+                    inc reg[5]
+                    mov reg[9], ram[reg[5]]  // S[i]
+                    
+                    //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
+                    mov ram[reg[5]], reg[6]
+                    mov ram[reg[1]], reg[9]
+                SKIP_SWAP:
+                jne reg[1]++, reg[3], PARTITION_LOOP
 
-            //swap(S[i+1], S[high]); i+1
-            inc reg[5] // i = i+1 
-            mov reg[9], ram[reg[5]] // S[i+1]
+                //swap(S[i+1], S[high]); i+1
+                inc reg[5] // i = i+1 
+                mov reg[9], ram[reg[5]] // S[i+1]
 
-            // S[high] = pivot = reg[4] (high = reg[3])
-            // S[i+1] =          reg[9] (i+1  = reg[5])
-            mov ram[reg[5]], reg[4] 
-            mov ram[reg[3]], reg[9]
-        // ret
-        
-        // END OF INLINED PARTION ALGORTIM 
+                // S[high] = pivot = reg[4] (high = reg[3])
+                // S[i+1] =          reg[9] (i+1  = reg[5])
+                mov ram[reg[5]], reg[4] 
+                mov ram[reg[3]], reg[9]
+            // ret
+            
+            // END OF INLINED PARTION ALGORTIM 
 
-        // quickSort(S, low, pivot - 1);
-        push reg[5]           // save pivot
-        push reg[3]           // save ptr high
-        sub reg[3], reg[5], 1 // pivot - 1 
-        
-        call QUICK_SORT
+            // quickSort(S, low, pivot - 1);
+            push reg[5]           // save pivot
+            push reg[3]           // save ptr high
+            sub reg[3], reg[5], 1 // pivot - 1 
+            
+            call QUICK_SORT
 
-        pop reg[3]            // restore ptr high
-        pop reg[2]            // restore pivot
-        add reg[2], reg[2], 1
-        
-        // quickSort(S, pivot + 1, high);
+            pop reg[3]            // restore ptr high
+            pop reg[2]            // restore pivot
+            add reg[2], reg[2], 1
+            
+            // quickSort(S, pivot + 1, high);
 
-        call QUICK_SORT
-    END:
-    ret
-#endif
-#ifdef USE_INSERTION
-INSERTION_SORT:
-    // reg[2] - [param, Caller]   ptr low  
-    // reg[3] - [param]           ptr high 
-    SORT_loop_outer:
-        mov reg[1], reg[2]
-        dec reg[1]
-        mov reg[4], ram[reg[2]]
-    SORT_loop_inner:
-        mov reg[5], ram[reg[1]]
-        jle reg[5], reg[4], SORT_LOOP_break
-            mov ram[reg[1]+1], reg[5]
-            jne reg[1]--, reg[2], SORT_loop_inner
-    SORT_LOOP_break:
-        mov ram[reg[1]+1], reg[4]
-        inc reg[2]
-        jne reg[2], reg[3], SORT_loop_outer
+            call QUICK_SORT
+        END:
         ret
 #endif
-#ifdef USE_QUICKER_SORT
-QUICKER_SORT:
-    // reg[2] - ptr low   
-    // reg[3] - ptr high  (last element)
-
-    jge reg[2], reg[3], END2
-        sub reg[5], reg[3], reg[2]
-        jge reg[5], reg[14], USE_QUICK_SORT
-            inc reg[3]
-
-            //INLINED INSERTION
-                //INSERTION_SORT:
-                    // reg[2] - [param, Caller]   ptr low  
-                    // reg[3] - [param]           ptr high 
-                    SORT_loop_outer3:
-                        mov reg[1], reg[2]
-                        dec reg[1]
-                        mov reg[4], ram[reg[2]]
-                    SORT_loop_inner3:
-                        mov reg[5], ram[reg[1]]
-                        jle reg[5], reg[4], SORT_LOOP_break3
-                            mov ram[reg[1]+1], reg[5]
-                            jne reg[1]--, reg[2], SORT_loop_inner3
-                    SORT_LOOP_break3:
-                        mov ram[reg[1]+1], reg[4]
-                        inc reg[2]
-                        jne reg[2], reg[3], SORT_loop_outer3
-                        //ret
-            // END OF INLINED INSERION
+#ifdef USE_INSERTION
+    INSERTION_SORT:
+        // reg[2] - [param, Caller]   ptr low  
+        // reg[3] - [param]           ptr high 
+        SORT_loop_outer:
+            mov reg[1], reg[2]
+            dec reg[1]
+            mov reg[4], ram[reg[2]]
+        SORT_loop_inner:
+            mov reg[5], ram[reg[1]]
+            jle reg[5], reg[4], SORT_LOOP_break
+                mov ram[reg[1]+1], reg[5]
+                jne reg[1]--, reg[2], SORT_loop_inner
+        SORT_LOOP_break:
+            mov ram[reg[1]+1], reg[4]
+            inc reg[2]
+            jne reg[2], reg[3], SORT_loop_outer
             ret
+#endif
+#ifdef USE_QUICKER_SORT
+    QUICKER_SORT:
+        // reg[2] - ptr low   
+        // reg[3] - ptr high  (last element)
 
-        USE_QUICK_SORT: 
+        jge reg[2], reg[3], END2
+            sub reg[5], reg[3], reg[2]
+            jge reg[5], reg[14], USE_QUICK_SORT
+                inc reg[3]
 
-        // INLINED PARTION ALGORTIM `
+                //INLINED INSERTION
+                    //INSERTION_SORT:
+                        // reg[2] - [param, Caller]   ptr low  
+                        // reg[3] - [param]           ptr high 
+                        SORT_loop_outer3:
+                            mov reg[1], reg[2]
+                            dec reg[1]
+                            mov reg[4], ram[reg[2]]
+                        SORT_loop_inner3:
+                            mov reg[5], ram[reg[1]]
+                            jle reg[5], reg[4], SORT_LOOP_break3
+                                mov ram[reg[1]+1], reg[5]
+                                jne reg[1]--, reg[2], SORT_loop_inner3
+                        SORT_LOOP_break3:
+                            mov ram[reg[1]+1], reg[4]
+                            inc reg[2]
+                            jne reg[2], reg[3], SORT_loop_outer3
+                            //ret
+                // END OF INLINED INSERION
+                ret
 
-        // PARTITION:
-        // reg[1] caller - output, pivot
-        // reg[2] callee - param,  ptr low
-        // reg[3] callee - param,  ptr high
-        // get pivot
-        
+            USE_QUICK_SORT: 
 
-        //mov reg[4], reg[3]
-        //add reg[4], reg[4], reg[2]
-        //rsh reg[4], reg[4], 1
-        //mov reg[4], ram[reg[4]] // pivot = S[(high+lo)/2]
+            // INLINED PARTION ALGORTIM `
 
-        mov reg[4], ram[reg[3]] // pivot = S[high]
+            // PARTITION:
+            // reg[1] caller - output, pivot
+            // reg[2] callee - param,  ptr low
+            // reg[3] callee - param,  ptr high
+            // get pivot
+            
+
+            //mov reg[4], reg[3]
+            //add reg[4], reg[4], reg[2]
+            //rsh reg[4], reg[4], 1
+            //mov reg[4], ram[reg[4]] // pivot = S[(high+lo)/2]
+
+            mov reg[4], ram[reg[3]] // pivot = S[high]
 
 
-        sub reg[5], reg[2], 1   // i = low - 1
+            sub reg[5], reg[2], 1   // i = low - 1
 
-        mov reg[1], reg[2]      // j = low
+            mov reg[1], reg[2]      // j = low
 
-        PARTITION_LOOP2:
-            mov reg[6], ram[reg[1]] // S[j] 
-            jge reg[6], reg[4], SKIP_SWAP2 // if(S[j] <= pivot)
-                inc reg[5]
-                mov reg[9], ram[reg[5]]  // S[i]
-                
-                //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
-                mov ram[reg[5]], reg[6]
-                mov ram[reg[1]], reg[9]
-            SKIP_SWAP2:
-            jne reg[1]++, reg[3], PARTITION_LOOP2
+            PARTITION_LOOP2:
+                mov reg[6], ram[reg[1]] // S[j] 
+                jge reg[6], reg[4], SKIP_SWAP2 // if(S[j] <= pivot)
+                    inc reg[5]
+                    mov reg[9], ram[reg[5]]  // S[i]
+                    
+                    //swap(S[i], S[j]); S[j] - reg[6], s[i] - reg[9]
+                    mov ram[reg[5]], reg[6]
+                    mov ram[reg[1]], reg[9]
+                SKIP_SWAP2:
+                jne reg[1]++, reg[3], PARTITION_LOOP2
 
-            //swap(S[i+1], S[high]); i+1
-            inc reg[5] // i = i+1 
-            mov reg[9], ram[reg[5]] // S[i+1]
+                //swap(S[i+1], S[high]); i+1
+                inc reg[5] // i = i+1 
+                mov reg[9], ram[reg[5]] // S[i+1]
 
-            // S[high] = pivot = reg[4] (high = reg[3])
-            // S[i+1] =          reg[9] (i+1  = reg[5])
-            mov ram[reg[5]], reg[4] 
-            mov ram[reg[3]], reg[9]
-        // ret
-        
-        // END OF INLINED PARTION ALGORTIM 
+                // S[high] = pivot = reg[4] (high = reg[3])
+                // S[i+1] =          reg[9] (i+1  = reg[5])
+                mov ram[reg[5]], reg[4] 
+                mov ram[reg[3]], reg[9]
+            // ret
+            
+            // END OF INLINED PARTION ALGORTIM 
 
-        // quickSort(S, low, pivot - 1);
+            // quickSort(S, low, pivot - 1);
 
-        push reg[5]           // save pivot
-        push reg[3]           // save ptr high
-        sub reg[3], reg[5], 1 // pivot - 1 
-        
-        call QUICKER_SORT
+            push reg[5]           // save pivot
+            push reg[3]           // save ptr high
+            sub reg[3], reg[5], 1 // pivot - 1 
+            
+            call QUICKER_SORT
 
-        pop reg[3]            // restore ptr high
-        pop reg[2]            // restore pivot
-        add reg[2], reg[2], 1
-        
-        // quickSort(S, pivot + 1, high);
+            pop reg[3]            // restore ptr high
+            pop reg[2]            // restore pivot
+            add reg[2], reg[2], 1
+            
+            // quickSort(S, pivot + 1, high);
 
-        call QUICKER_SORT
-    END2:
-    ret
+            call QUICKER_SORT
+        END2:
+        ret
 #endif

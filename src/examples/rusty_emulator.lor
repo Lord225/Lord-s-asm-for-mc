@@ -1,8 +1,6 @@
 #profile rusty_emulator.jsonc
 
-#global ENTRY ENTRY 0
-
-ENTRY:
+.ENTRY
     imm 16384
     mov acc -> 2
     imm 1
