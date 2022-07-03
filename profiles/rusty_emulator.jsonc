@@ -8,7 +8,7 @@
             "output":
             {
                 "save":{
-                    "save":"raw",
+                    "save":"hex",
                     "comments":"False",
                     "output":"output/binary.txt"
                 },

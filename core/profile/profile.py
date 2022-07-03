@@ -112,8 +112,9 @@ class Profile:
         self.arguments: dict[str, dict[str, Any]] = self.profile["ARGUMENTS"]["variants"]
         self.defs: list[str] = [definiton for definiton in self.profile["DEFINES"] if isinstance(definiton, str)]
         self.consts: dict[str, str] = {definiton[0]: str(definiton[1]) for definiton in self.profile["DEFINES"] if isinstance(definiton, list)}
-        self.keywords: dict[str, Any] = self.profile["KEYWORDS"]
+        self.entrypoints: dict[str, Any] = self.profile["KEYWORDS"]
         self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
+        self.fill = self.profile["FILL"] if 'FILL' in self.profile else None
     def __get_schematics(self):
         if "SCHEMATIC" in self.profile and self.profile["SCHEMATIC"] is not None:
             self.schematic = SchematicInfo(self.profile)
@@ -126,7 +127,7 @@ class Profile:
         assert self.arguments is not None
         assert self.arguments_len is not None
         assert self.defs is not None
-        assert self.keywords is not None
+        assert self.entrypoints is not None
         assert self.adressing is not None
 
 

@@ -7,27 +7,6 @@ from core.parse.jumps import SectionMeta
 from core.profile.profile import Profile
 
 
-def check_keywords_exists(entry, context):
-    profile: Profile = context['profile']
-    profilekeywords = set(profile.keywords)
-    entrykeywords = set(entry.keys())
-    
-    missing_entrypoints = profilekeywords-entrykeywords
-    missing_keywords = entrykeywords-profilekeywords
-
-    if len(missing_keywords) != 0:
-        msg = f"Keywords: {missing_keywords} are not defined in profile" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_keywords} is not defined in profile"
-        if config.rise_on_missing_keyword:
-            raise error.ParserError(None, msg) # bad one
-        else:
-            context['warnings'].append(msg)
-    if len(missing_entrypoints) != 0:
-        msg = f"Keywords: {missing_entrypoints} are defined in profile but not used" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_entrypoints} is defined in profile but never used"
-        if config.rise_on_missing_entrypoint:
-            raise error.ParserError(None, msg)
-        else:
-            context['warnings'].append(msg)
-
 def gather_instructions_by_section(program, sections: Dict[str, SectionMeta]):
     chunks = {x:list() for x in sections.keys()}
 
@@ -45,6 +24,9 @@ def get_adress_offset(current_line_obj, profile: Profile):
 def get_address(current_chunk_physical_adress, profile: Profile):
     return current_chunk_physical_adress//profile.adressing.bin_len+profile.adressing.offset
 
+def get_adressable_word_count(current_chunk_physical_adress, profile: Profile):
+    return current_chunk_physical_adress//profile.adressing.bin_len
+
 def find_key_by_value(dict: dict, value):
     output = []
     for key, val in dict.items():
@@ -56,6 +38,7 @@ def calculate_addresses(chunks: dict, sections: Dict[str, SectionMeta], profile:
     used_addresses = dict()
     chunk_labels_physical_adresses = dict()
     chunk_labels = dict()
+    entrypoints = profile.entrypoints
 
     def handle_labels(i, chunk_physical_adress):
         label = find_key_by_value(labels, i)
@@ -90,12 +73,17 @@ def calculate_addresses(chunks: dict, sections: Dict[str, SectionMeta], profile:
         for line_obj in chunk:
 
             chunk_physical_adress = get_address(current_chunk_physical_adress, profile)+offset
+
+            command_bit_count = get_adress_offset(line_obj, profile)
             
             handle_labels(i, chunk_physical_adress)
-            add_address(chunk_physical_adress, section.name)
+
+            for off in range(get_adressable_word_count(command_bit_count, profile)):
+                add_address(chunk_physical_adress+off, section.name)
+
+            current_chunk_physical_adress += command_bit_count
 
             line_obj.physical_adress = chunk_physical_adress
-            current_chunk_physical_adress += get_adress_offset(line_obj, profile)
             
             i += 1
         last_section = section_name
@@ -114,7 +102,7 @@ def stick_chunks(chunks, used_addresses, chunk_labels):
 def solve_sections(program, context: Context):
     labels = context.labels
     profile: Profile = context.get_profile()
-    sections: Dict[str,SectionMeta] = context.sections
+    sections: Dict[str, SectionMeta] = context.sections
 
     chunks = gather_instructions_by_section(program, sections)
 

@@ -188,6 +188,7 @@ base = \
             "KEYWORDS": [
                 "CORE0"
             ],
+            "FILL":"nop",
             "COMMANDS": {
             }
         }

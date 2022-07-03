@@ -69,9 +69,15 @@
         "DEFINES":[
             "__CPU5__"
         ],
-        "KEYWORDS":[
-            "ENTRY"
-        ],
+        
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":1,
+                "write":0
+            }
+        },
+
+        "FILL":"err",
         
         "COMMANDS":
         {

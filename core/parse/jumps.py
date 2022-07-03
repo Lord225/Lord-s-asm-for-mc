@@ -13,6 +13,15 @@ class SectionMeta:
         self.name = name
         self.offset = offset
         self.write = write
+    def override(self, other: 'SectionMeta'):
+        if self.name != other.name:
+            raise
+        if other.offset is not None:
+            self.offset = other.offset
+        if other.write is not None:
+            self.write = other.write
+
+        
 
 def check_for_new_section(line_obj):
     label1 = match_expr.match_expr(SectionMeta.find_section, line_obj, None)
@@ -45,20 +54,44 @@ def find_labels(program, context: Context):
             output.append(line_obj)
     return output, context
 
+
+def check_section_exists(context: Context):
+    profilekeywords = set(context.get_profile().entrypoints)
+    entrykeywords = set(context.sections)
+    
+    missing_entrypoints = profilekeywords-entrykeywords
+
+    if len(missing_entrypoints) != 0:
+        msg = f"Keywords: {missing_entrypoints} are defined in profile but not used" if len(missing_entrypoints) != 1 else  f"Keyword: {missing_entrypoints} is defined in profile but never used"
+        if config.rise_on_missing_entrypoint:
+            raise error.ParserError(None, msg)
+        else:
+            context.warnings.append(msg)
+
 def find_sections(program, context: Context):
     output = list()
     current_section = SectionMeta('default', 0, 0)
+    keysections = {name: SectionMeta(name, val['offset'], val['write']) for name, val in context.get_profile().entrypoints.items()}
     context.sections = {'default': current_section}
-
+    
     for line_obj in program:
         section = check_for_new_section(line_obj)
 
         if section is not None:
             current_section = section
-            context.sections[current_section.name] = current_section
+
+            if current_section.name in keysections:
+                context.sections[current_section.name] = keysections[current_section.name]
+                context.sections[current_section.name].override(current_section)
+            else:
+                context.sections[current_section.name] = current_section
+            
+                
         else:
             output.append(line_obj)
 
         line_obj.section = current_section
+    
+    check_section_exists(context)
         
     return output, context

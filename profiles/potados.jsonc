@@ -181,6 +181,7 @@
         "KEYWORDS": [
             "CORE0"
         ],
+        "FILL": "nop",
         "COMMANDS": {
             "nop": {
                 "pattern": "nop",

@@ -106,7 +106,7 @@ Domyślnie src/program.lor
 Domyślnie: compiled/compiled.txt
 ### -s --save
 format z jakim ma zostać zapisana binarka.
-* `raw` - argumenty podane hexadecymalnie w bajtach
+* `hex` - argumenty podane hexadecymalnie w bajtach
 * `bin` - argumenty w systemie binarnym, wyrównane do argumentów
 * `pad` - argumenty w systemie binarnym, wyrównane do bajta
 * `py`  - zapisuje w postaci json'a

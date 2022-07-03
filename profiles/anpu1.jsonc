@@ -94,6 +94,9 @@
         "KEYWORDS":[
             "ENTRY"
         ],
+
+        "FILL":"chill",
+        
         "COMMANDS":{
             "chill":{
                 "pattern":"CHILL",

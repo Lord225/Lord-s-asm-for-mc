@@ -30,11 +30,11 @@ help="""Name of file to compile
 Default: src/program.lor""")
 
 parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
-parser.add_argument("-s", "--save", choices=["bin", "pip", "raw", "pad", "schem"], type=str, default = 'pip',
+parser.add_argument("-s", "--save", choices=["bin", "pip", "hex", "pad", "schem"], type=str, default = 'pip',
 help="""> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
 > pip - Build source and dump json to stdout (for pipelining)
-> raw - Build source and save as decimal representation of bytes
+> hex - Build source and save as hexadecimal representation of bytes
 > schem - Build source and save as schematic
 Default: pip (will not save)""")
 
@@ -59,6 +59,7 @@ parserargs = parser.parse_args()
 def show_warnings(context: contextlib.Context):
     for warning in context.warnings:
         print(f"Warning: {warning}")
+    context.warnings.clear()
 def show_outfiles(context: contextlib.Context):
     print("Output files:")
     SPACE = " "*4
@@ -71,7 +72,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = False,
-            save = "pip",
+            save = "pad",
             comments = True,
             onerror = 'None',
             debug = True,
@@ -137,7 +138,7 @@ def main():
         show_warnings(context)
 
     # Compile and Save
-    if config.save in ['bin', 'pip', 'raw', 'pad', "schem"]:
+    if config.save in ['bin', 'pip', 'hex', 'pad', "schem"]:
         if config.save == 'schem':
             config.override_from_dict(comments = 'False')
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')

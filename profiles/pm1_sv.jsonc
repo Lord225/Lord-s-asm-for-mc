@@ -84,8 +84,9 @@
                     }
                 }
             }
-            
         },
+
+        "FILL":"err",
 
         "COMMANDS":{
             "nop":{
@@ -396,6 +397,16 @@
                     "CU":0,
                     "r1":0,
                     "r2":1
+                }
+            },
+            "err":{
+                "pattern":"err",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":0
                 }
             },
             "cls":

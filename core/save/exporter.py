@@ -91,7 +91,7 @@ def generate_block_data(data, layout, blank, high_id, low_id):
         x, y, z = calculate_bit_cords(i, layout)
         
         try:
-            blocks[flatten(x, y, z)] = get_state(bit)  
+            blocks[flatten(x, y, z)] = get_state(bit)
         except IndexError:
             print(f"Error: Writing to cell outside rom volume. ([{x}, {y}, {z}])")
             return blocks
@@ -124,11 +124,8 @@ def generate_schematic_from_formatted(program: dict, context: Context):
         return
     
     #TODO
-    try:
-        offset = 0
-    except KeyError:
-        raise error.CompilerError(None, "Schematic offset should be defined in #global field.")
-    
+    offset = 0
+
     # Prepare output filenames
     outfile = config.output
     dirname = os.path.dirname(outfile)
@@ -158,10 +155,10 @@ def generate_schematic_from(profile: Profile, program, offset, dirname, filename
     data, _ = gather_instructions(program, adressing)
     data = flatten_instructions(data)
     data = convert_to_bitstream(data, offset, adressing)
-
+    
     # Generate and save schematic
-    file = generate_schematic(data, layout, blank_name, low_state, high_state)
-    file.write_file(new_filename)
+    nbt = generate_schematic(data, layout, blank_name, low_state, high_state)
+    nbt.write_file(new_filename)
 
     filenames.append(new_filename)
 
@@ -225,5 +222,5 @@ def generate_schematic(data, layout, blank_name, low_state, high_state):
 
     nbtfile.tags.append(nbt.TAG_Byte_Array(name="BlockData"))
     nbtfile["BlockData"].value = generate_block_data(data, layout, blankschem, high_id, low_id)
-
+    
     return nbtfile

@@ -146,7 +146,7 @@ def format_output(program, context: Context):
         formatter_function = get_bin
     elif config.save == 'pad' or config.save == "schem":
         formatter_function = get_pad
-    elif config.save == 'raw':
+    elif config.save == 'hex':
         formatter_function = get_raw
     else: 
         raise 

@@ -134,7 +134,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external: co
     def format_function(x):
         return str(x[1][0]) if x is not None else ''
 
-    if config.show_pipeline_steges != 'bar':
+    if config.show_pipeline_steges != 'bar' or progress_bar_name is None:
         # Placeholder that will mimic progressbar function.
         class PlaceHolder:
             def __init__(self, iter, **kwrgs):

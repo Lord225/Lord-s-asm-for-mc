@@ -42,6 +42,8 @@
             "ENTRY"
         ],
 
+        "FILL":"halt",
+
         "COMMANDS":{
             "mov const":{
                 "pattern": "mov reg[{dst:num}], {imm:num}",

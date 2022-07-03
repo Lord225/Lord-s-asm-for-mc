@@ -23,19 +23,6 @@ def get_metadata(program, context: Context):
                 raise
         elif line.startswith("#global"):
             context.warnings.append('#global keyword is deprased. Use Section system instead.')
-            try:
-                _, chunk_name, label_name, *other = line.split()
-                if len(other) == 1:
-                    offset = other[0]
-                elif len(other) == 2:
-                    offset, schemoffset = other
-                    context.schematic_offset = int(schemoffset, base = 0)
-                else:
-                    raise
-            except:
-                raise error.PreprocesorError(program_line.line_index_in_file, f"Expected structure '#global <NAME> <LABEL NAME> <OFFSET> [<OFFSET>]' got: '{line}'")
-
-            context.entry[chunk_name] = (label_name, int(offset))
         elif line.startswith("#data"):
             splited = line.split(" ")
             ADRESS_START = -1
