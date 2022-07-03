@@ -38,9 +38,12 @@
         "DEFINES":[
             "__DUPA__"
         ],
-        "KEYWORDS":[
-            "ENTRY"
-        ],
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":0,
+                "write":0
+            }
+        },
 
         "FILL":"halt",
 

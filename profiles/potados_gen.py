@@ -185,9 +185,12 @@ base = \
                 ["PT", "1"],   # Offset Pointer 
                 ["FL", "8"]    # Flags
             ],
-            "KEYWORDS": [
-                "CORE0"
-            ],
+            "KEYWORDS":{
+                "CORE0":{
+                    "offset":0,
+                    "write":0
+                }
+            },
             "FILL":"nop",
             "COMMANDS": {
             }

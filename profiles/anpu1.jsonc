@@ -91,9 +91,12 @@
             ["r6", "6"],
             ["r7", "7"]
         ],
-        "KEYWORDS":[
-            "ENTRY"
-        ],
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":0,
+                "write":0
+            }
+        },
 
         "FILL":"chill",
         
