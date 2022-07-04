@@ -244,7 +244,7 @@ cmds = \
         "command_layout": "alufpu",
         "bin": {
             "pridec": 1,
-            "secdec": 2,
+            "secdec": 3,
             "r2": "src",
             "flags": 0,
             "4th": 3,
@@ -266,7 +266,7 @@ cmds = \
         "command_layout": "other",
         "bin": {   
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "src": 0,
             "3th": 5,
             "4th": 0,
@@ -378,12 +378,12 @@ alulong = """
 }}
 """
 tokens = [
-    ("add", 0),
-    ("sub", 7),
-    ("arsh", 6),
+    ("add", 1),
+    ("sub", 2),
+    ("arsh", 4),
     ("rsh", 5),
-    ("lsh", 4),
-    ("mul", 3),
+    ("lsh", 6),
+    ("mul", 7),
 ]
 for token, value in tokens:
     formated = decoder.decode(alulong.format(name=token, sec=value))
@@ -411,16 +411,16 @@ ops2 = """
 }}
 """
 tokens = [
-    ("xor", 2, 0, 1),
-    ("and", 2, 0, 2),
-    ("or", 2, 0, 3),
-    ("fadd", 1, 0, 0),
-    ("fsub", 1, 0, 1),
-    ("fmul", 1, 0, 2),
-    ("fdiv", 1, 0, 3), 
-    ("xnor", 2, 4, 1),
-    ("nand", 2, 4, 2),
-    ("nor", 2, 4, 3),
+    ("xor", 3, 0, 1),
+    ("and", 3, 0, 2),
+    ("or", 3, 0, 3),
+    ("fadd", 0, 0, 0),
+    ("fsub", 0, 0, 1),
+    ("fmul", 0, 0, 2),
+    ("fdiv", 0, 0, 3), 
+    ("xnor", 3, 4, 1),
+    ("nand", 3, 4, 2),
+    ("nor", 3, 4, 3),
 ]
 for name, sec, flags, last in tokens:
     formated = decoder.decode(ops2.format(name=name, sec=sec, flags=flags, last=last))
@@ -439,7 +439,7 @@ def generate(pattern, decoder_value, lsh_value, offset, src_dst, neg_offset = Fa
         "command_layout":"indirectlsh",
         "bin": {
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "ptr": "ptr",
             "3th": decoder_value,
             "lsh": lsh_value,
@@ -453,7 +453,7 @@ def generate(pattern, decoder_value, lsh_value, offset, src_dst, neg_offset = Fa
         "command_layout":"indirect",
         "bin": {
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "ptr": "ptr",
             "3th": decoder_value,
             "offset": f"{'-' if neg_offset else ''}offset" if offset else 0,
@@ -535,7 +535,7 @@ values = {
         "command_layout": "other",
         "bin": {
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "src": 0,
             "3th": 5,
             "4th": 0,
@@ -548,20 +548,7 @@ values = {
         "command_layout": "other",
         "bin": {
             "pridec": 1,
-            "secdec": 1,
-            "src": "src",
-            "3th": 6,
-            "4th": 0,
-            "pad": 0,
-            "dst": 0
-        }
-    },
-    "push": {
-        "pattern": "push reg[{src:num}]",
-        "command_layout": "other",
-        "bin": {
-            "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "src": "src",
             "3th": 6,
             "4th": 0,
@@ -574,7 +561,7 @@ values = {
         "command_layout": "other",
         "bin": {
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "src": 0,
             "3th": 7,
             "4th": 3,
@@ -587,7 +574,7 @@ values = {
         "command_layout": "alufpu",
         "bin": {
             "pridec": 1,
-            "secdec": 2,
+            "secdec": 3,
             "r2": 0,
             "flags": 1,
             "4th": 1,
@@ -607,7 +594,7 @@ values = {
         "command_layout": "aluimm",
         "bin": {
             "pridec": 1,
-            "secdec": 0,
+            "secdec": 1,
             "r2": "target",
             "I": 1,
             "R1": 1,
@@ -619,7 +606,7 @@ values = {
         "command_layout": "aluimm",
         "bin": {
             "pridec": 1,
-            "secdec": 7,
+            "secdec": 2,
             "r2": "target",
             "I": 1,
             "R1": 1,
@@ -635,7 +622,7 @@ pattern = """
         "command_layout": "other",
         "bin": {{
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "src": "{src}",
             "3th": 7,
             "4th": {val},
@@ -655,7 +642,7 @@ IOSCHEM="""
         "command_layout":"indirect",
         "bin": {{
             "pridec": 1,
-            "secdec": 1,
+            "secdec": 0,
             "ptr": 0,
             "3th": {ls},
             "offset": {address},

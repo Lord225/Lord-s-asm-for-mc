@@ -48,7 +48,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             return
 
         # int 0 (early stop)
-        if command == 1187584:
+        if command == 1056512:
             self.halt()
             self.regs.increment_pc()
             return
@@ -102,11 +102,11 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             r1 = int(command[13:17])
             sec_decoder = int(command[17:20])
 
-            if sec_decoder in [0, 7, 6, 5, 4, 3]: # alu long
+            if sec_decoder in [1, 2, 4, 5, 6, 7]: # alu long
                 self.alu_long(sec_decoder, destination, command)
-            elif sec_decoder == 2:                # alu short / fpu
+            elif sec_decoder == 3:                # alu short / fpu
                 self.alu_short(destination, flags, command) # type: ignore
-            elif sec_decoder == 1:      # other        
+            elif sec_decoder == 0:      # other        
                 if flags == 0:
                     self.fpu(destination, command)
                 elif flags == 1:        # load ptr lsh
@@ -159,51 +159,59 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         if I:
             imm = ops.sign_extend(r1_value, 16) # type: ignore
-            if sec_decoder == 0:
+            if sec_decoder == 1:
                 self.alu_add_imm(imm, r2_value, destination)
-            elif sec_decoder == 7:
+            elif sec_decoder == 2:
                 self.alu_sub_imm(imm, r2_value, destination)
-            elif sec_decoder == 6:
+            elif sec_decoder == 4:
                 self.alu_arsh_imm(imm, r2_value, destination)
             elif sec_decoder == 5:
                 self.alu_rsh_imm(imm, r2_value, destination)
-            elif sec_decoder == 4:
+            elif sec_decoder == 6:
                 self.alu_lsh_imm(imm, r2_value, destination)
-            elif sec_decoder == 3:
+            elif sec_decoder == 7:
                 self.alu_mul_imm(imm, r2_value, destination)
+            else: 
+                raise error.EmulationError("Unreachable")
         else:
             r1 = int(r1_value[:4]) # type: ignore
-            if sec_decoder == 0:
+            if sec_decoder == 1:
                 self.alu_add_reg(r1, r2_value, destination)
-            elif sec_decoder == 7:
+            elif sec_decoder == 2:
                 self.alu_sub_reg(r1, r2_value, destination)
-            elif sec_decoder == 6:
+            elif sec_decoder == 4:
                 self.alu_arsh_reg(r1, r2_value, destination)
             elif sec_decoder == 5:
                 self.alu_lsh_reg(r1, r2_value, destination)
-            elif sec_decoder == 4:
+            elif sec_decoder == 6:
                 self.alu_rsh_reg(r1, r2_value, destination)
-            elif sec_decoder == 3:
+            elif sec_decoder == 7:
                 self.alu_mul_reg(r1, r2_value, destination)
+            else:
+                raise error.EmulationError("Unreachable")
     def alu_short(self, destination: int, flags: Binary, command: Binary):
         tri_dec = int(command[8:10])
         r1 = int(command[4:8])
         r2 = int(command[13:17])
+
+        neg_r1_flag = flags[1]
+        neg_r2_flag = flags[0]
+        neg_out_flag = flags[2]
 
         if tri_dec == 0:    # adc
             self.alu_adc(r1, r2, destination)
         elif tri_dec == 1:  # sbc
             self.alu_adc(r1, r2, destination)
         elif tri_dec == 2:  # xor
-            if flags[2]:
-                self.alu_xnor(r1, r2, destination, "~" if flags[1] else "", "~" if flags[0] else "")
+            if neg_out_flag:
+                self.alu_xnor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
             else:
-                self.alu_xor(r1, r2, destination, "~" if flags[1] else "", "~" if flags[0] else "")
+                self.alu_xor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
         elif tri_dec == 3:  # or
-            if flags[2]:
-                self.alu_nor(r1, r2, destination, "~" if flags[1] else "", "~" if flags[0] else "")
+            if neg_out_flag:
+                self.alu_nor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
             else:
-                self.alu_or(r1, r2, destination, "~" if flags[1] else "", "~" if flags[0] else "")
+                self.alu_or(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
         else:
             raise error.EmulationError("Unreachable")
     def fpu(self, destination: int, command: Binary):

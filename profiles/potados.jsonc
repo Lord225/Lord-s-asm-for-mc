@@ -227,7 +227,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "src",
                     "flags": 0,
                     "4th": 3,
@@ -249,7 +249,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": 0,
                     "3th": 5,
                     "4th": 0,
@@ -430,7 +430,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 0,
+                    "secdec": 1,
                     "r2": "arg1",
                     "I": 0,
                     "R1": "arg2 if arg2 < 16 else None",
@@ -442,7 +442,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 0,
+                    "secdec": 1,
                     "r2": "arg1",
                     "I": 1,
                     "R1": "const",
@@ -454,7 +454,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 7,
+                    "secdec": 2,
                     "r2": "arg1",
                     "I": 0,
                     "R1": "arg2 if arg2 < 16 else None",
@@ -466,7 +466,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 7,
+                    "secdec": 2,
                     "r2": "arg1",
                     "I": 1,
                     "R1": "const",
@@ -478,7 +478,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 6,
+                    "secdec": 4,
                     "r2": "arg1",
                     "I": 0,
                     "R1": "arg2 if arg2 < 16 else None",
@@ -490,7 +490,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 6,
+                    "secdec": 4,
                     "r2": "arg1",
                     "I": 1,
                     "R1": "const",
@@ -526,7 +526,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 4,
+                    "secdec": 6,
                     "r2": "arg1",
                     "I": 0,
                     "R1": "arg2 if arg2 < 16 else None",
@@ -538,7 +538,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 4,
+                    "secdec": 6,
                     "r2": "arg1",
                     "I": 1,
                     "R1": "const",
@@ -550,7 +550,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 3,
+                    "secdec": 7,
                     "r2": "arg1",
                     "I": 0,
                     "R1": "arg2 if arg2 < 16 else None",
@@ -562,7 +562,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 3,
+                    "secdec": 7,
                     "r2": "arg1",
                     "I": 1,
                     "R1": "const",
@@ -574,7 +574,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 1,
@@ -587,7 +587,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 2,
@@ -600,7 +600,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 3,
@@ -613,7 +613,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 0,
@@ -626,7 +626,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 1,
@@ -639,7 +639,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 2,
@@ -652,7 +652,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "r2": "arg1",
                     "flags": 0,
                     "4th": 3,
@@ -665,7 +665,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 4,
                     "4th": 1,
@@ -678,7 +678,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 4,
                     "4th": 2,
@@ -691,7 +691,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": "arg1",
                     "flags": 4,
                     "4th": 3,
@@ -704,7 +704,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 2,
                     "offset": "offset",
@@ -716,7 +716,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -729,7 +729,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 1,
@@ -742,7 +742,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 2,
@@ -755,7 +755,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 3,
@@ -768,7 +768,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -781,7 +781,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 1,
@@ -794,7 +794,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 2,
@@ -807,7 +807,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 3,
@@ -820,7 +820,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 2,
                     "offset": 0,
@@ -832,7 +832,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -845,7 +845,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 1,
@@ -858,7 +858,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 2,
@@ -871,7 +871,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 3,
@@ -884,7 +884,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 2,
                     "offset": "offset",
@@ -896,7 +896,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 2,
                     "offset": "-offset",
@@ -908,7 +908,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 2,
                     "offset": 0,
@@ -920,7 +920,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -933,7 +933,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -946,7 +946,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 1,
                     "lsh": 0,
@@ -959,7 +959,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "offset": "offset",
@@ -971,7 +971,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 0,
@@ -984,7 +984,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 1,
@@ -997,7 +997,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 2,
@@ -1010,7 +1010,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 3,
@@ -1023,7 +1023,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 0,
@@ -1036,7 +1036,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 1,
@@ -1049,7 +1049,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 2,
@@ -1062,7 +1062,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 3,
@@ -1075,7 +1075,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "offset": 0,
@@ -1087,7 +1087,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 0,
@@ -1100,7 +1100,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 1,
@@ -1113,7 +1113,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 2,
@@ -1126,7 +1126,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 3,
                     "lsh": 3,
@@ -1139,7 +1139,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "offset": "offset",
@@ -1151,7 +1151,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "offset": "-offset",
@@ -1163,7 +1163,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "offset": 0,
@@ -1175,7 +1175,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "lsh": 0,
@@ -1188,7 +1188,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "lsh": 0,
@@ -1201,7 +1201,7 @@
                 "command_layout": "indirectlsh",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": "ptr",
                     "3th": 4,
                     "lsh": 0,
@@ -1214,7 +1214,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": 0,
                     "3th": 5,
                     "4th": 0,
@@ -1227,7 +1227,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": "src",
                     "3th": 6,
                     "4th": 0,
@@ -1240,7 +1240,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": 0,
                     "3th": 7,
                     "4th": 3,
@@ -1253,7 +1253,7 @@
                 "command_layout": "alufpu",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 2,
+                    "secdec": 3,
                     "r2": 0,
                     "flags": 1,
                     "4th": 1,
@@ -1273,7 +1273,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 0,
+                    "secdec": 1,
                     "r2": "target",
                     "I": 1,
                     "R1": 1,
@@ -1285,7 +1285,7 @@
                 "command_layout": "aluimm",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 7,
+                    "secdec": 2,
                     "r2": "target",
                     "I": 1,
                     "R1": 1,
@@ -1297,7 +1297,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": "src",
                     "3th": 7,
                     "4th": 0,
@@ -1310,7 +1310,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": "src",
                     "3th": 7,
                     "4th": 1,
@@ -1323,7 +1323,7 @@
                 "command_layout": "other",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "src": "src",
                     "3th": 7,
                     "4th": 2,
@@ -1336,7 +1336,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 5,
@@ -1348,7 +1348,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 6,
@@ -1360,7 +1360,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 1,
@@ -1372,7 +1372,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 4,
                     "offset": 1,
@@ -1384,7 +1384,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 2,
@@ -1396,7 +1396,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 4,
                     "offset": 2,
@@ -1408,7 +1408,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 3,
@@ -1420,7 +1420,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 4,
                     "offset": 3,
@@ -1432,7 +1432,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 1,
                     "offset": 12,
@@ -1444,7 +1444,7 @@
                 "command_layout": "indirect",
                 "bin": {
                     "pridec": 1,
-                    "secdec": 1,
+                    "secdec": 0,
                     "ptr": 0,
                     "3th": 4,
                     "offset": 13,

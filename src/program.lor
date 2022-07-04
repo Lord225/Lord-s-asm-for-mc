@@ -2,6 +2,7 @@
 
 #define DISPL 0xE5
 
+// python compile.py --save schem -c --run --logs
 
 .CORE0
     mov 0, reg[0]
