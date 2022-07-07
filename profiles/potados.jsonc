@@ -449,6 +449,30 @@
                     "dst": "dst"
                 }
             },
+            "shortcut add": {
+                "pattern": "add reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut add const": {
+                "pattern": "add reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 1,
+                    "r2": "dst",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
             "sub": {
                 "pattern": "sub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "aluimm",
@@ -468,6 +492,30 @@
                     "pridec": 1,
                     "secdec": 2,
                     "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "shortcut sub": {
+                "pattern": "sub reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut sub const": {
+                "pattern": "sub reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 2,
+                    "r2": "dst",
                     "I": 1,
                     "R1": "const",
                     "dst": "dst"
@@ -497,6 +545,30 @@
                     "dst": "dst"
                 }
             },
+            "shortcut arsh": {
+                "pattern": "arsh reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 4,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut arsh const": {
+                "pattern": "arsh reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 4,
+                    "r2": "dst",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
             "rsh": {
                 "pattern": "rsh reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "aluimm",
@@ -516,6 +588,30 @@
                     "pridec": 1,
                     "secdec": 5,
                     "r2": "arg1",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
+            "shortcut rsh": {
+                "pattern": "rsh reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 5,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut rsh const": {
+                "pattern": "rsh reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 5,
+                    "r2": "dst",
                     "I": 1,
                     "R1": "const",
                     "dst": "dst"
@@ -545,6 +641,30 @@
                     "dst": "dst"
                 }
             },
+            "shortcut lsh": {
+                "pattern": "lsh reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 6,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut lsh const": {
+                "pattern": "lsh reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 6,
+                    "r2": "dst",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
             "mul": {
                 "pattern": "mul reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "aluimm",
@@ -569,6 +689,30 @@
                     "dst": "dst"
                 }
             },
+            "shortcut mul": {
+                "pattern": "mul reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 7,
+                    "r2": "dst",
+                    "I": 0,
+                    "R1": "arg2 if arg2 < 16 else None",
+                    "dst": "dst"
+                }
+            },
+            "shortcut mul const": {
+                "pattern": "mul reg[{dst:num}], {const:num}",
+                "command_layout": "aluimm",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 7,
+                    "r2": "dst",
+                    "I": 1,
+                    "R1": "const",
+                    "dst": "dst"
+                }
+            },
             "xor": {
                 "pattern": "xor reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -576,6 +720,19 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
+                    "flags": 0,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut xor": {
+                "pattern": "xor reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
                     "flags": 0,
                     "4th": 1,
                     "r1": "arg2",
@@ -595,6 +752,19 @@
                     "dst": "dst"
                 }
             },
+            "shortcut and": {
+                "pattern": "and reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
+                    "flags": 0,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
             "or": {
                 "pattern": "or reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -602,6 +772,19 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
+                    "flags": 0,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut or": {
+                "pattern": "or reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
                     "flags": 0,
                     "4th": 3,
                     "r1": "arg2",
@@ -621,6 +804,19 @@
                     "dst": "dst"
                 }
             },
+            "shortcut fadd": {
+                "pattern": "fadd reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
+                    "flags": 0,
+                    "4th": 0,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
             "fsub": {
                 "pattern": "fsub reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -628,6 +824,19 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
+                    "flags": 0,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut fsub": {
+                "pattern": "fsub reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
                     "flags": 0,
                     "4th": 1,
                     "r1": "arg2",
@@ -647,6 +856,19 @@
                     "dst": "dst"
                 }
             },
+            "shortcut fmul": {
+                "pattern": "fmul reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
+                    "flags": 0,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
             "fdiv": {
                 "pattern": "fdiv reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -654,6 +876,19 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
+                    "flags": 0,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut fdiv": {
+                "pattern": "fdiv reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
                     "flags": 0,
                     "4th": 3,
                     "r1": "arg2",
@@ -673,6 +908,19 @@
                     "dst": "dst"
                 }
             },
+            "shortcut xnor": {
+                "pattern": "xnor reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
+                    "flags": 4,
+                    "4th": 1,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
             "nand": {
                 "pattern": "nand reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -686,6 +934,19 @@
                     "dst": "dst"
                 }
             },
+            "shortcut nand": {
+                "pattern": "nand reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
+                    "flags": 4,
+                    "4th": 2,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
             "nor": {
                 "pattern": "nor reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
                 "command_layout": "alufpu",
@@ -693,6 +954,19 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
+                    "flags": 4,
+                    "4th": 3,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut nor": {
+                "pattern": "nor reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 3,
+                    "r2": "dst",
                     "flags": 4,
                     "4th": 3,
                     "r1": "arg2",

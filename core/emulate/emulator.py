@@ -11,6 +11,7 @@ import enum
 import pprint
 
 from pybytes import Binary
+from core.quick import gather_instructions, pack_adresses
 
 from core.save.formatter import as_values
 
@@ -153,25 +154,6 @@ def log_disassembly(**kwargs):
         return params_ignore
 
 
-def gather_instructions(program, adressing: AdressingMode):
-    if config.save != 'bin' and config.save != 'schem':
-        raise Exception("Logic Error. Invalid configuration for gathering instructions")
-    
-    output = dict()
-    debug = dict()
-    for line_obj in program:
-        output[line_obj.physical_adress] = as_values(line_obj.formatted, adressing.bin_len)
-        if 'debug' in line_obj:
-            debug[line_obj.physical_adress] = line_obj.debug
-    return output, debug
-def pack_adresses(instructions):
-    output = dict()
-    for adress, data in instructions.items():
-        for i, cell in enumerate(data):
-            if (adress+i) in output:
-                raise error.EmulationError(f"Output data is overlapping: adress: {adress+i} is arleady occuped by value: {output[adress+i]}")
-            output[adress+i] = cell
-    return output
 
 def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profile):
     if config.disable_debug:
@@ -296,7 +278,7 @@ def emulate(program, context: Context):
     if config.log_history:
         telemetry_display(program, context)
 
-def __write_program(program, context: Context, machine):
+def __write_program(program, context: Context, machine: EmulatorBase):
     debug_instructions = dict()
     adressing: AdressingMode = context.get_profile().adressing
 
@@ -310,7 +292,7 @@ def __write_program(program, context: Context, machine):
     
     return debug_instructions
 
-def __write_data(program, context: Context, machine):
+def __write_data(program, context: Context, machine: EmulatorBase):
     data: dict = context.data
 
     machine.write_memory(None, DataTypes.DATA, data)

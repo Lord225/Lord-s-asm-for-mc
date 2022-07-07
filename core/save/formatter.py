@@ -140,6 +140,7 @@ def get_raw(program, context: Context):
 
 
 def format_output(program, context: Context):
+    
     if config.save == 'pip':
         formatter_function = get_py
     elif config.save == 'bin':
@@ -149,7 +150,7 @@ def format_output(program, context: Context):
     elif config.save == 'hex':
         formatter_function = get_raw
     else: 
-        raise 
+        raise error.CompilerError(None, "Unknown save format")
 
     for line in program:
         try:

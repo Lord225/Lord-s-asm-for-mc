@@ -374,6 +374,32 @@ alulong = """
             "R1": "const",
             "dst": "dst"
         }}
+    }},
+    "shortcut {name}":
+    {{
+        "pattern": "{name} reg[{{dst:num}}], reg[{{arg2:num}}]",
+        "command_layout": "aluimm",
+        "bin": {{
+            "pridec": 1,
+            "secdec": {sec},
+            "r2": "dst",
+            "I": 0,
+            "R1": "arg2 if arg2 < 16 else None",
+            "dst": "dst"
+        }}
+    }},
+    "shortcut {name} const":
+    {{
+        "pattern": "{name} reg[{{dst:num}}], {{const:num}}",
+        "command_layout": "aluimm",
+        "bin": {{
+            "pridec": 1,
+            "secdec": {sec},
+            "r2": "dst",
+            "I": 1,
+            "R1": "const",
+            "dst": "dst"
+        }}
     }}
 }}
 """
@@ -402,6 +428,20 @@ ops2 = """
             "pridec": 1,
             "secdec": {sec},
             "r2": "arg1",
+            "flags": {flags},
+            "4th": {last},
+            "r1": "arg2",
+            "dst": "dst"
+        }}
+    }},
+    "shortcut {name}":
+    {{
+        "pattern": "{name} reg[{{dst:num}}], reg[{{arg2:num}}]",
+        "command_layout": "alufpu",
+        "bin": {{
+            "pridec": 1,
+            "secdec": {sec},
+            "r2": "dst",
             "flags": {flags},
             "4th": {last},
             "r1": "arg2",
