@@ -21,3 +21,7 @@ def reasume(context: Context):
     print("COMMANDS: ")
     for i, (_, definitons) in enumerate(profile.commands_definitions.items()):
         print(i, f"{definitons['pattern'].summarize()}")
+    lenght = len(profile.commands_definitions.items())
+    print("MACROS: ")
+    for i, (_, definitons) in enumerate(profile.macro_definitions.items()):
+        print(i+lenght, f"{definitons['pattern'].summarize()}")

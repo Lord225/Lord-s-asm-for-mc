@@ -192,8 +192,8 @@ base = \
                 }
             },
             "FILL":"nop",
-            "COMMANDS": {
-            }
+            "COMMANDS": {},
+            "MACROS":{}
         }
     }
 
@@ -470,102 +470,145 @@ for name, sec, flags, last in tokens:
 # loads and stores
 #
 
-unique_id = 0
-def generate(pattern, decoder_value, lsh_value, offset, src_dst, neg_offset = False):
-    global unique_id
-    if not (lsh_value is None):
-        val = {
-        "pattern":pattern,
-        "command_layout":"indirectlsh",
-        "bin": {
-            "pridec": 1,
-            "secdec": 0,
-            "ptr": "ptr",
-            "3th": decoder_value,
-            "lsh": lsh_value,
-            "offset": f"{'-' if neg_offset else ''}offset" if offset else 0,
-            "srcdst": "src" if src_dst else "dst"
+def gen_base():
+    return {
+        "load ptr lsh":{
+            "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + {lsh:num}*reg[8] + {offset:num}]",
+            "command_layout":"indirectlsh",
+            "bin": {
+                "pridec": 1,
+                "secdec": 0,
+                "ptr": "ptr",
+                "3th": 1,
+                "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
+                "offset": "offset",
+                "srcdst": "dst"
+            }
+        },
+        "load ptr imm":{
+            "pattern": "mov reg[{dst:num}], ram[reg[{ptr:num}] + {offset:num}]",
+            "command_layout":"indirect",
+            "bin": {
+                "pridec": 1,
+                "secdec": 0,
+                "ptr": "ptr",
+                "3th": 2,
+                "offset": "offset",
+                "srcdst": "dst"
+            }
+        },
+        "store ptr lsh":{
+            "pattern": "mov ram[reg[{ptr:num}] + {lsh:num}*reg[8] + {offset:num}], reg[{dst:num}]",
+            "command_layout":"indirectlsh",
+            "bin": {
+                "pridec": 1,
+                "secdec": 0,
+                "ptr": "ptr",
+                "3th": 3,
+                "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
+                "offset": "offset",
+                "srcdst": "dst"
+            }
+        },
+        "store ptr imm":{
+            "pattern": "mov ram[reg[{ptr:num}] + {offset:num}], reg[{dst:num}]",
+            "command_layout":"indirect",
+            "bin": {
+                "pridec": 1,
+                "secdec": 0,
+                "ptr": "ptr",
+                "3th": 4,
+                "offset": "offset",
+                "srcdst": "dst"
             }
         }
+    }
+macro_index = 0
+
+def gen_macro_load(pattern, process: dict):
+    global macro_index
+    macro_index += 1
+
+    if 'lsh' in process and process['lsh'] != '0':
+        return gen_macro_load_lsh(pattern, process)
     else:
-        val = {
-        "pattern":pattern,
-        "command_layout":"indirect",
-        "bin": {
-            "pridec": 1,
-            "secdec": 0,
-            "ptr": "ptr",
-            "3th": decoder_value,
-            "offset": f"{'-' if neg_offset else ''}offset" if offset else 0,
-            "srcdst": "src" if src_dst else "dst"
-            }
-        }
-    val = {f"ptr src/dst {src_dst} offset {offset} lsh {lsh_value} id: {unique_id}":val}
-    unique_id += 1
-    return val
+        process.pop('lsh', None)
+        return gen_macro_load_imm(pattern, process)
 
-# loads
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + {lsh}*reg[8] + {{offset:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 2, None, True, False))
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 1, i, True, False))
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + {lsh}*reg[8] - {{offset:num}}]"
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 1, i, True, False, True))
+def gen_macro_load_lsh(pattern, process):
+    return {f"load lsh macro {macro_index}":{ 
+             "pattern": f"mov reg[{{dst:token}}], ram[{pattern}]",
+             "process": process,
+             "expansion":["mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"]}}
+def gen_macro_load_imm(pattern, process):
+    return {f"load imm macro {macro_index}":{ 
+             "pattern": f"mov reg[{{dst:token}}], ram[{pattern}]",
+             "process": process,
+             "expansion":["mov reg[{dst}], ram[reg[{ptr}] + {offset}]"]}}
 
+def gen_macro_store(pattern, process: dict):
+    global macro_index
+    macro_index += 1
 
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + {lsh}*reg[8]]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 2, None, False, False))
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 1, i, False, False))
+    if 'lsh' in process and process['lsh'] != '0':
+        return gen_macro_store_lsh(pattern, process)
+    else:
+        process.pop('lsh', None)
+        return gen_macro_store_imm(pattern, process)
 
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + {{offset:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 2, None, True, False))
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] - {{offset:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 2, None, True, False, True))
+def gen_macro_store_lsh(pattern, process):
+    return {f"load lsh macro {macro_index}":{ 
+             "pattern": f"mov ram[{pattern}], reg[{{dst:token}}]",
+             "process": process,
+             "expansion":["mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"]}}
+def gen_macro_store_imm(pattern, process):
+    return {f"load imm macro {macro_index}":{ 
+             "pattern": f"mov ram[{pattern}], reg[{{dst:token}}]",
+             "process": process,
+             "expansion":["mov ram[reg[{ptr}] + {offset}], reg[{dst}]"]}}
+base["CPU"]["COMMANDS"].update(gen_base())
 
+def gen_all(gen_func):
+    import itertools
 
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}]]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 2, None, False, False))
+    # base + index + displ
+    for lsh in [0, 1, 2, 4, 8]:
+        for (a,b,c) in itertools.islice(itertools.permutations(["reg[{ptr:token}]", f"{lsh}*reg[8]", "{offset:token}"]), 1, None):
+            base["CPU"]["MACROS"].update(gen_func(f"{a} + {b} + {c}", {"lsh":f"{lsh}", "offset":"offset"}))
+    for (a,b,c) in itertools.permutations(["reg[{ptr:token}]", f"reg[8]", "{offset:token}"]):
+            base["CPU"]["MACROS"].update(gen_func(f"{a} + {b} + {c}", {"lsh":"1", "offset":"offset"}))
+    # base + displ
+    base["CPU"]["MACROS"].update(gen_func("{offset:token} + reg[{ptr:token}]", {"offset":"offset"}))
 
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + reg[8]]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 1, 0, False, False))
+    # base + index
+    for lsh in [0, 1, 2, 4, 8]:
+        for (a,b) in itertools.permutations(["reg[{ptr:token}]", f"{lsh}*reg[8]"]):
+            base["CPU"]["MACROS"].update(gen_func(f"{a} + {b}", {"lsh":f"{lsh}", "offset":"0"}))
+    for (a,b) in itertools.permutations(["reg[{ptr:token}]", "reg[8]"]):
+        base["CPU"]["MACROS"].update(gen_func(f"{a} + {b}", {"lsh":"1", "offset":"0"}))
+    # base
+    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}]", {"offset":"0"}))
+    # displ
+    base["CPU"]["MACROS"].update(gen_func("{offset:token}", {"ptr":"0", "offset":"offset"}))
+    # index
+    for lsh in [0, 1, 2, 4, 8]:
+        base["CPU"]["MACROS"].update(gen_func(f"{lsh}*reg[8]", {"ptr":"0", "offset":"0"}))
+    # base + index + negative displ
+    for lsh in [0, 1, 2, 4, 8]:
+        for (a,b,c) in itertools.permutations(["+ reg[{ptr:token}]", f"+ {lsh}*reg[8]", "- {offset:token}"]):
+            base["CPU"]["MACROS"].update(gen_func(f"{a.strip('+')} {b} {c}", { "lsh":f"{lsh}", "offset":"-int(offset)"}))
+    for (a,b,c) in itertools.permutations(["+ reg[{ptr:token}]", f"+ reg[8]", "- {offset:token}"]):
+            base["CPU"]["MACROS"].update(gen_func(f"{a.strip('+')} {b} {c}", { "lsh":"1", "offset":"-int(offset)"}))
+    # base + negative displ
+    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}] - {offset:token}", {"offset":"-int(offset)"}))
+    base["CPU"]["MACROS"].update(gen_func("- {offset:token} + reg[{ptr:token}]", {"offset":"-int(offset)"}))
+    
 
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + reg[8] + {{offset:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 1, 0, True, False))
-pattern = "mov reg[{{dst:num}}], ram[reg[{{ptr:num}}] + reg[8] - {{offset:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 1, 0, True, False, True))
+gen_all(gen_macro_load)
+gen_all(gen_macro_store)
 
-# writes
-pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 4, None, True, True))
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, True, True))
-pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8] - {{offset:num}}], reg[{{src:num}}]"
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, True, True, True))
-
-pattern = "mov ram[reg[{{ptr:num}}] + {lsh}*reg[8]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=0), 4, None, False, True))
-for i in [0,1,2,3]:
-    base["CPU"]["COMMANDS"].update(generate(pattern.format(lsh=2**i), 3, i, False, True))
-
-pattern = "mov ram[reg[{{ptr:num}}] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, True, True))
-pattern = "mov ram[reg[{{ptr:num}}] - {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, True, True, True))
-
-pattern = "mov ram[reg[{{ptr:num}}]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, None, False, True))
-
-pattern = "mov ram[reg[{{ptr:num}}] + reg[8]], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, False, True))
-
-pattern = "mov ram[reg[{{ptr:num}}] + reg[8] + {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, True, True))
-pattern = "mov ram[reg[{{ptr:num}}] + reg[8] - {{offset:num}}], reg[{{src:num}}]"
-base["CPU"]["COMMANDS"].update(generate(pattern.format(), 4, 0, True, True, True))
-
+base["CPU"]["MACROS"].update({f"store index 0":{ "pattern": "mov ram[reg[{ptr:token}] + 0*reg[8]+{offset:token}], reg[{dst:token}]", "process": {}, "expansion":["mov ram[reg[{ptr}] + {offset}], reg[{dst}]"]}})
+base["CPU"]["MACROS"].update({f"load index 0": { "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}]+0*reg[8] + {offset:token}]", "process": {}, "expansion":["mov reg[{dst}], ram[reg[{ptr}] + {offset}]"]}})
 #
 # others
 #

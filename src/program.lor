@@ -2,7 +2,11 @@
 
 #define DISPL 0xE5
 
-// python compile.py --save schem -c --run --logs
+// compile to binary & emulate
+// python compile.py --save pad -c --run --logs
+
+// compile & send to rs-fun
+// python compile.py | python tools/send.py --nick <LOGIN> --pass <PASSWORD> --copy
 
 .CORE0
     mov 0, reg[0]

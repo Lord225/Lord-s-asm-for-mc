@@ -47,17 +47,22 @@ def __subtitue(match, profile: Profile):
 def wrap_line(newline, line):
     return Line(newline, line_index_in_file=line.line_index_in_file, is_macro_expanded=True)
 
-def expand_macros_recurent(program, context: Context, limit):
+def expand_macros_recurent(program, context: Context, limit, expanded_indexes):
     if limit == 0:
         raise error.ParserError(None, "Macro recursion limit exeeded.")
 
     profile: Profile = context.get_profile()
 
     new_program = list()
+    new_expanded_indexes = set()
 
     modified = False
+    
+    for i, line in enumerate(program):
+        if i not in expanded_indexes:
+            new_program.append(line)
+            continue
 
-    for line in program:
         matched_macro = serach_for_macros(line, profile, context)
         
         if matched_macro is None:
@@ -70,12 +75,13 @@ def expand_macros_recurent(program, context: Context, limit):
 
         expanded = [l for l in expanded if len(l.tokenized) != 0]
 
+        new_expanded_indexes.update(range(len(new_program), len(new_program)+len(expanded)))
         new_program.extend(expanded)
-        
+
         modified = True
     
     if modified:
-        return expand_macros_recurent(new_program, context, limit-1)
+        return expand_macros_recurent(new_program, context, limit-1, new_expanded_indexes)
     else:
         return new_program
 
@@ -84,6 +90,6 @@ def expand_procedural_macros(program, context: Context):
     if profile.macro_definitions is None:
         return program, context
 
-    new_program = expand_macros_recurent(program, context, config.macro_recursion_limit)
+    new_program = expand_macros_recurent(program, context, config.macro_recursion_limit, set(range(len(program))))
     
     return new_program, context

@@ -80,10 +80,7 @@ def get_encoding(layout):
     elif transform_type == "u2bin":
         return u2_module_binary
     else:
-        pass 
-    
-    print("WARNING LAYOUT ENCODING NOT FOUND")            #TODO Warnings in warnings context (modify pipeline execution)
-    return binary
+        raise error.ProfileLoadError("Unknown encoding type: {}".format(transform_type))
 
 def encode_argument(layout, name, val):
     encoding = get_encoding(layout[name])

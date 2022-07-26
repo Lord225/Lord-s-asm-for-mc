@@ -168,7 +168,7 @@ def main():
 def on_compilation_error(err: error.CompilerError):
     print("*"*50) 
     print(f"Error in line {err.line}:" if err.line is not None else f"Error in unknown line:")
-    print(f"{err}")
+    print(f"{err.info}")
 
 def on_profile_error(err):
     print("*"*50)
@@ -177,7 +177,7 @@ def on_profile_error(err):
 
 def other_error(err):
     print("*"*50)
-    print('Other compilig error:')
+    print('Other compile error:')
     print(f'{err}')
 
 def key_error(err):
