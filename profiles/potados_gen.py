@@ -571,25 +571,27 @@ base["CPU"]["COMMANDS"].update(gen_base())
 def gen_all(gen_func):
     import itertools
 
+    # base
+    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}]", {"offset":"0"}))
+    # base + displ
+    base["CPU"]["MACROS"].update(gen_func("{offset:token} + reg[{ptr:token}]", {"offset":"offset"}))
+    # displ
+    base["CPU"]["MACROS"].update(gen_func("{offset:token}", {"ptr":"0", "offset":"offset"}))
+    # base + negative displ
+    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}] - {offset:token}", {"offset":"-int(offset)"}))
+    base["CPU"]["MACROS"].update(gen_func("- {offset:token} + reg[{ptr:token}]", {"offset":"-int(offset)"}))
     # base + index + displ
     for lsh in [0, 1, 2, 4, 8]:
         for (a,b,c) in itertools.islice(itertools.permutations(["reg[{ptr:token}]", f"{lsh}*reg[8]", "{offset:token}"]), 1, None):
             base["CPU"]["MACROS"].update(gen_func(f"{a} + {b} + {c}", {"lsh":f"{lsh}", "offset":"offset"}))
     for (a,b,c) in itertools.permutations(["reg[{ptr:token}]", f"reg[8]", "{offset:token}"]):
             base["CPU"]["MACROS"].update(gen_func(f"{a} + {b} + {c}", {"lsh":"1", "offset":"offset"}))
-    # base + displ
-    base["CPU"]["MACROS"].update(gen_func("{offset:token} + reg[{ptr:token}]", {"offset":"offset"}))
-
     # base + index
     for lsh in [0, 1, 2, 4, 8]:
         for (a,b) in itertools.permutations(["reg[{ptr:token}]", f"{lsh}*reg[8]"]):
             base["CPU"]["MACROS"].update(gen_func(f"{a} + {b}", {"lsh":f"{lsh}", "offset":"0"}))
     for (a,b) in itertools.permutations(["reg[{ptr:token}]", "reg[8]"]):
         base["CPU"]["MACROS"].update(gen_func(f"{a} + {b}", {"lsh":"1", "offset":"0"}))
-    # base
-    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}]", {"offset":"0"}))
-    # displ
-    base["CPU"]["MACROS"].update(gen_func("{offset:token}", {"ptr":"0", "offset":"offset"}))
     # index
     for lsh in [0, 1, 2, 4, 8]:
         base["CPU"]["MACROS"].update(gen_func(f"{lsh}*reg[8]", {"ptr":"0", "offset":"0"}))
@@ -599,10 +601,6 @@ def gen_all(gen_func):
             base["CPU"]["MACROS"].update(gen_func(f"{a.strip('+')} {b} {c}", { "lsh":f"{lsh}", "offset":"-int(offset)"}))
     for (a,b,c) in itertools.permutations(["+ reg[{ptr:token}]", f"+ reg[8]", "- {offset:token}"]):
             base["CPU"]["MACROS"].update(gen_func(f"{a.strip('+')} {b} {c}", { "lsh":"1", "offset":"-int(offset)"}))
-    # base + negative displ
-    base["CPU"]["MACROS"].update(gen_func("reg[{ptr:token}] - {offset:token}", {"offset":"-int(offset)"}))
-    base["CPU"]["MACROS"].update(gen_func("- {offset:token} + reg[{ptr:token}]", {"offset":"-int(offset)"}))
-    
 
 gen_all(gen_macro_load)
 gen_all(gen_macro_store)

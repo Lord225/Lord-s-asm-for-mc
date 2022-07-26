@@ -1268,438 +1268,6 @@
         },
         "MACROS": {
             "load imm macro 1": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 0*reg[8]]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 2": {
-                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 3": {
-                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 4": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 0*reg[8]]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 5": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 0*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load lsh macro 6": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 1*reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 7": {
-                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 8": {
-                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 9": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 1*reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 10": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 1*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 11": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 2*reg[8]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 12": {
-                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 13": {
-                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 14": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 2*reg[8]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 15": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 2*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 16": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 4*reg[8]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 17": {
-                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 18": {
-                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 19": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 4*reg[8]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 20": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 4*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 21": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 8*reg[8]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 22": {
-                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 23": {
-                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 24": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 8*reg[8]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 25": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 8*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 26": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + reg[8] + {offset:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 27": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 28": {
-                "pattern": "mov reg[{dst:token}], ram[reg[8] + reg[{ptr:token}] + {offset:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 29": {
-                "pattern": "mov reg[{dst:token}], ram[reg[8] + {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 30": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 31": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load imm macro 32": {
-                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 33": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 0*reg[8]]",
-                "process": {
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 34": {
-                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load lsh macro 35": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 1*reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 36": {
-                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 37": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 2*reg[8]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 38": {
-                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 39": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 4*reg[8]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 40": {
-                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 41": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 8*reg[8]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 42": {
-                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 43": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + reg[8]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load lsh macro 44": {
-                "pattern": "mov reg[{dst:token}], ram[reg[8] + reg[{ptr:token}]]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
-                ]
-            },
-            "load imm macro 45": {
                 "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}]]",
                 "process": {
                     "offset": "0"
@@ -1708,7 +1276,16 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 46": {
+            "load imm macro 2": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 3": {
                 "pattern": "mov reg[{dst:token}], ram[{offset:token}]",
                 "process": {
                     "ptr": "0",
@@ -1718,7 +1295,448 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 47": {
+            "load imm macro 4": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] - {offset:token}]",
+                "process": {
+                    "offset": "-int(offset)"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 5": {
+                "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "offset": "-int(offset)"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 6": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 0*reg[8]]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 7": {
+                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 8": {
+                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 9": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 0*reg[8]]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 10": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 0*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load lsh macro 11": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 1*reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 12": {
+                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 13": {
+                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 14": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 1*reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 15": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 1*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 16": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 2*reg[8]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 17": {
+                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 18": {
+                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 19": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 2*reg[8]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 20": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 2*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 21": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 4*reg[8]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 22": {
+                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 23": {
+                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 24": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 4*reg[8]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 25": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 4*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 26": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + 8*reg[8]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 27": {
+                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 28": {
+                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 29": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + 8*reg[8]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 30": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + 8*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 31": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + reg[8] + {offset:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 32": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + {offset:token} + reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 33": {
+                "pattern": "mov reg[{dst:token}], ram[reg[8] + reg[{ptr:token}] + {offset:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 34": {
+                "pattern": "mov reg[{dst:token}], ram[reg[8] + {offset:token} + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 35": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[{ptr:token}] + reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 36": {
+                "pattern": "mov reg[{dst:token}], ram[{offset:token} + reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load imm macro 37": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 0*reg[8]]",
+                "process": {
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load imm macro 38": {
+                "pattern": "mov reg[{dst:token}], ram[0*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
+                ]
+            },
+            "load lsh macro 39": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 1*reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 40": {
+                "pattern": "mov reg[{dst:token}], ram[1*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 41": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 2*reg[8]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 42": {
+                "pattern": "mov reg[{dst:token}], ram[2*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 43": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 4*reg[8]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 44": {
+                "pattern": "mov reg[{dst:token}], ram[4*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 45": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + 8*reg[8]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 46": {
+                "pattern": "mov reg[{dst:token}], ram[8*reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 47": {
+                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] + reg[8]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load lsh macro 48": {
+                "pattern": "mov reg[{dst:token}], ram[reg[8] + reg[{ptr:token}]]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
+                ]
+            },
+            "load imm macro 49": {
                 "pattern": "mov reg[{dst:token}], ram[0*reg[8]]",
                 "process": {
                     "ptr": "0",
@@ -1728,7 +1746,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 48": {
+            "load imm macro 50": {
                 "pattern": "mov reg[{dst:token}], ram[1*reg[8]]",
                 "process": {
                     "ptr": "0",
@@ -1738,7 +1756,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 49": {
+            "load imm macro 51": {
                 "pattern": "mov reg[{dst:token}], ram[2*reg[8]]",
                 "process": {
                     "ptr": "0",
@@ -1748,7 +1766,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 50": {
+            "load imm macro 52": {
                 "pattern": "mov reg[{dst:token}], ram[4*reg[8]]",
                 "process": {
                     "ptr": "0",
@@ -1758,7 +1776,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 51": {
+            "load imm macro 53": {
                 "pattern": "mov reg[{dst:token}], ram[8*reg[8]]",
                 "process": {
                     "ptr": "0",
@@ -1768,7 +1786,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 52": {
+            "load imm macro 54": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + 0*reg[8] - {offset:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1777,7 +1795,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 53": {
+            "load imm macro 55": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + 0*reg[8]]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1786,7 +1804,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 54": {
+            "load imm macro 56": {
                 "pattern": "mov reg[{dst:token}], ram[ 0*reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1795,7 +1813,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 55": {
+            "load imm macro 57": {
                 "pattern": "mov reg[{dst:token}], ram[ 0*reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1804,7 +1822,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 56": {
+            "load imm macro 58": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + 0*reg[8]]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1813,7 +1831,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load imm macro 57": {
+            "load imm macro 59": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + 0*reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "offset": "-int(offset)"
@@ -1822,7 +1840,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
                 ]
             },
-            "load lsh macro 58": {
+            "load lsh macro 60": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + 1*reg[8] - {offset:token}]",
                 "process": {
                     "lsh": "1",
@@ -1832,7 +1850,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 59": {
+            "load lsh macro 61": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + 1*reg[8]]",
                 "process": {
                     "lsh": "1",
@@ -1842,7 +1860,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 60": {
+            "load lsh macro 62": {
                 "pattern": "mov reg[{dst:token}], ram[ 1*reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "lsh": "1",
@@ -1852,7 +1870,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 61": {
+            "load lsh macro 63": {
                 "pattern": "mov reg[{dst:token}], ram[ 1*reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "1",
@@ -1862,7 +1880,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 62": {
+            "load lsh macro 64": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + 1*reg[8]]",
                 "process": {
                     "lsh": "1",
@@ -1872,7 +1890,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 63": {
+            "load lsh macro 65": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + 1*reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "1",
@@ -1882,7 +1900,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 64": {
+            "load lsh macro 66": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + 2*reg[8] - {offset:token}]",
                 "process": {
                     "lsh": "2",
@@ -1892,7 +1910,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 65": {
+            "load lsh macro 67": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + 2*reg[8]]",
                 "process": {
                     "lsh": "2",
@@ -1902,7 +1920,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 66": {
+            "load lsh macro 68": {
                 "pattern": "mov reg[{dst:token}], ram[ 2*reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "lsh": "2",
@@ -1912,7 +1930,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 67": {
+            "load lsh macro 69": {
                 "pattern": "mov reg[{dst:token}], ram[ 2*reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "2",
@@ -1922,7 +1940,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 68": {
+            "load lsh macro 70": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + 2*reg[8]]",
                 "process": {
                     "lsh": "2",
@@ -1932,7 +1950,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 69": {
+            "load lsh macro 71": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + 2*reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "2",
@@ -1942,7 +1960,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 70": {
+            "load lsh macro 72": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + 4*reg[8] - {offset:token}]",
                 "process": {
                     "lsh": "4",
@@ -1952,7 +1970,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 71": {
+            "load lsh macro 73": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + 4*reg[8]]",
                 "process": {
                     "lsh": "4",
@@ -1962,7 +1980,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 72": {
+            "load lsh macro 74": {
                 "pattern": "mov reg[{dst:token}], ram[ 4*reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "lsh": "4",
@@ -1972,7 +1990,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 73": {
+            "load lsh macro 75": {
                 "pattern": "mov reg[{dst:token}], ram[ 4*reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "4",
@@ -1982,7 +2000,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 74": {
+            "load lsh macro 76": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + 4*reg[8]]",
                 "process": {
                     "lsh": "4",
@@ -1992,7 +2010,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 75": {
+            "load lsh macro 77": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + 4*reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "4",
@@ -2002,7 +2020,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 76": {
+            "load lsh macro 78": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + 8*reg[8] - {offset:token}]",
                 "process": {
                     "lsh": "8",
@@ -2012,7 +2030,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 77": {
+            "load lsh macro 79": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + 8*reg[8]]",
                 "process": {
                     "lsh": "8",
@@ -2022,7 +2040,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 78": {
+            "load lsh macro 80": {
                 "pattern": "mov reg[{dst:token}], ram[ 8*reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "lsh": "8",
@@ -2032,7 +2050,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 79": {
+            "load lsh macro 81": {
                 "pattern": "mov reg[{dst:token}], ram[ 8*reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "8",
@@ -2042,7 +2060,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 80": {
+            "load lsh macro 82": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + 8*reg[8]]",
                 "process": {
                     "lsh": "8",
@@ -2052,7 +2070,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 81": {
+            "load lsh macro 83": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + 8*reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "8",
@@ -2062,7 +2080,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 82": {
+            "load lsh macro 84": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] + reg[8] - {offset:token}]",
                 "process": {
                     "lsh": "1",
@@ -2072,7 +2090,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 83": {
+            "load lsh macro 85": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[{ptr:token}] - {offset:token} + reg[8]]",
                 "process": {
                     "lsh": "1",
@@ -2082,7 +2100,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 84": {
+            "load lsh macro 86": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[8] + reg[{ptr:token}] - {offset:token}]",
                 "process": {
                     "lsh": "1",
@@ -2092,7 +2110,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 85": {
+            "load lsh macro 87": {
                 "pattern": "mov reg[{dst:token}], ram[ reg[8] - {offset:token} + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "1",
@@ -2102,7 +2120,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 86": {
+            "load lsh macro 88": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}] + reg[8]]",
                 "process": {
                     "lsh": "1",
@@ -2112,7 +2130,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load lsh macro 87": {
+            "load lsh macro 89": {
                 "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[8] + reg[{ptr:token}]]",
                 "process": {
                     "lsh": "1",
@@ -2122,457 +2140,7 @@
                     "mov reg[{dst}], ram[reg[{ptr}] + {lsh}*reg[8] + {offset}]"
                 ]
             },
-            "load imm macro 88": {
-                "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}] - {offset:token}]",
-                "process": {
-                    "offset": "-int(offset)"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
-            "load imm macro 89": {
-                "pattern": "mov reg[{dst:token}], ram[- {offset:token} + reg[{ptr:token}]]",
-                "process": {
-                    "offset": "-int(offset)"
-                },
-                "expansion": [
-                    "mov reg[{dst}], ram[reg[{ptr}] + {offset}]"
-                ]
-            },
             "load imm macro 90": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 0*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 91": {
-                "pattern": "mov ram[0*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 92": {
-                "pattern": "mov ram[0*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 93": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 0*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 94": {
-                "pattern": "mov ram[{offset:token} + 0*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 95": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 1*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 96": {
-                "pattern": "mov ram[1*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 97": {
-                "pattern": "mov ram[1*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 98": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 1*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 99": {
-                "pattern": "mov ram[{offset:token} + 1*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 100": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 2*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 101": {
-                "pattern": "mov ram[2*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 102": {
-                "pattern": "mov ram[2*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 103": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 2*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 104": {
-                "pattern": "mov ram[{offset:token} + 2*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 105": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 4*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 106": {
-                "pattern": "mov ram[4*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 107": {
-                "pattern": "mov ram[4*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 108": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 4*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 109": {
-                "pattern": "mov ram[{offset:token} + 4*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 110": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 8*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 111": {
-                "pattern": "mov ram[8*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 112": {
-                "pattern": "mov ram[8*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 113": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 8*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 114": {
-                "pattern": "mov ram[{offset:token} + 8*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 115": {
-                "pattern": "mov ram[reg[{ptr:token}] + reg[8] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 116": {
-                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 117": {
-                "pattern": "mov ram[reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 118": {
-                "pattern": "mov ram[reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 119": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 120": {
-                "pattern": "mov ram[{offset:token} + reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 121": {
-                "pattern": "mov ram[{offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "offset": "offset"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 122": {
-                "pattern": "mov ram[reg[{ptr:token}] + 0*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 123": {
-                "pattern": "mov ram[0*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 124": {
-                "pattern": "mov ram[reg[{ptr:token}] + 1*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 125": {
-                "pattern": "mov ram[1*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 126": {
-                "pattern": "mov ram[reg[{ptr:token}] + 2*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 127": {
-                "pattern": "mov ram[2*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "2",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 128": {
-                "pattern": "mov ram[reg[{ptr:token}] + 4*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 129": {
-                "pattern": "mov ram[4*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "4",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 130": {
-                "pattern": "mov ram[reg[{ptr:token}] + 8*reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 131": {
-                "pattern": "mov ram[8*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "8",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 132": {
-                "pattern": "mov ram[reg[{ptr:token}] + reg[8]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load lsh macro 133": {
-                "pattern": "mov ram[reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "lsh": "1",
-                    "offset": "0"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 134": {
                 "pattern": "mov ram[reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "offset": "0"
@@ -2581,7 +2149,16 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 135": {
+            "load imm macro 91": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 92": {
                 "pattern": "mov ram[{offset:token}], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2591,7 +2168,448 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 136": {
+            "load imm macro 93": {
+                "pattern": "mov ram[reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "offset": "-int(offset)"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 94": {
+                "pattern": "mov ram[- {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "offset": "-int(offset)"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 95": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 0*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 96": {
+                "pattern": "mov ram[0*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 97": {
+                "pattern": "mov ram[0*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 98": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 0*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 99": {
+                "pattern": "mov ram[{offset:token} + 0*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 100": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 1*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 101": {
+                "pattern": "mov ram[1*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 102": {
+                "pattern": "mov ram[1*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 103": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 1*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 104": {
+                "pattern": "mov ram[{offset:token} + 1*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 105": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 2*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 106": {
+                "pattern": "mov ram[2*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 107": {
+                "pattern": "mov ram[2*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 108": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 2*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 109": {
+                "pattern": "mov ram[{offset:token} + 2*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 110": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 4*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 111": {
+                "pattern": "mov ram[4*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 112": {
+                "pattern": "mov ram[4*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 113": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 4*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 114": {
+                "pattern": "mov ram[{offset:token} + 4*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 115": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + 8*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 116": {
+                "pattern": "mov ram[8*reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 117": {
+                "pattern": "mov ram[8*reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 118": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + 8*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 119": {
+                "pattern": "mov ram[{offset:token} + 8*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 120": {
+                "pattern": "mov ram[reg[{ptr:token}] + reg[8] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 121": {
+                "pattern": "mov ram[reg[{ptr:token}] + {offset:token} + reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 122": {
+                "pattern": "mov ram[reg[8] + reg[{ptr:token}] + {offset:token}], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 123": {
+                "pattern": "mov ram[reg[8] + {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 124": {
+                "pattern": "mov ram[{offset:token} + reg[{ptr:token}] + reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 125": {
+                "pattern": "mov ram[{offset:token} + reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "offset"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 126": {
+                "pattern": "mov ram[reg[{ptr:token}] + 0*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 127": {
+                "pattern": "mov ram[0*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 128": {
+                "pattern": "mov ram[reg[{ptr:token}] + 1*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 129": {
+                "pattern": "mov ram[1*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 130": {
+                "pattern": "mov ram[reg[{ptr:token}] + 2*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 131": {
+                "pattern": "mov ram[2*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "2",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 132": {
+                "pattern": "mov ram[reg[{ptr:token}] + 4*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 133": {
+                "pattern": "mov ram[4*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "4",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 134": {
+                "pattern": "mov ram[reg[{ptr:token}] + 8*reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 135": {
+                "pattern": "mov ram[8*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "8",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 136": {
+                "pattern": "mov ram[reg[{ptr:token}] + reg[8]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load lsh macro 137": {
+                "pattern": "mov ram[reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
+                "process": {
+                    "lsh": "1",
+                    "offset": "0"
+                },
+                "expansion": [
+                    "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
+                ]
+            },
+            "load imm macro 138": {
                 "pattern": "mov ram[0*reg[8]], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2601,7 +2619,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 137": {
+            "load imm macro 139": {
                 "pattern": "mov ram[1*reg[8]], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2611,7 +2629,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 138": {
+            "load imm macro 140": {
                 "pattern": "mov ram[2*reg[8]], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2621,7 +2639,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 139": {
+            "load imm macro 141": {
                 "pattern": "mov ram[4*reg[8]], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2631,7 +2649,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 140": {
+            "load imm macro 142": {
                 "pattern": "mov ram[8*reg[8]], reg[{dst:token}]",
                 "process": {
                     "ptr": "0",
@@ -2641,7 +2659,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 141": {
+            "load imm macro 143": {
                 "pattern": "mov ram[ reg[{ptr:token}] + 0*reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2650,7 +2668,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 142": {
+            "load imm macro 144": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + 0*reg[8]], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2659,7 +2677,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 143": {
+            "load imm macro 145": {
                 "pattern": "mov ram[ 0*reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2668,7 +2686,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 144": {
+            "load imm macro 146": {
                 "pattern": "mov ram[ 0*reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2677,7 +2695,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 145": {
+            "load imm macro 147": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + 0*reg[8]], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2686,7 +2704,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load imm macro 146": {
+            "load imm macro 148": {
                 "pattern": "mov ram[- {offset:token} + 0*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "offset": "-int(offset)"
@@ -2695,7 +2713,7 @@
                     "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 147": {
+            "load lsh macro 149": {
                 "pattern": "mov ram[ reg[{ptr:token}] + 1*reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2705,7 +2723,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 148": {
+            "load lsh macro 150": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + 1*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2715,7 +2733,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 149": {
+            "load lsh macro 151": {
                 "pattern": "mov ram[ 1*reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2725,7 +2743,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 150": {
+            "load lsh macro 152": {
                 "pattern": "mov ram[ 1*reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2735,7 +2753,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 151": {
+            "load lsh macro 153": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + 1*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2745,7 +2763,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 152": {
+            "load lsh macro 154": {
                 "pattern": "mov ram[- {offset:token} + 1*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2755,7 +2773,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 153": {
+            "load lsh macro 155": {
                 "pattern": "mov ram[ reg[{ptr:token}] + 2*reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2765,7 +2783,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 154": {
+            "load lsh macro 156": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + 2*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2775,7 +2793,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 155": {
+            "load lsh macro 157": {
                 "pattern": "mov ram[ 2*reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2785,7 +2803,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 156": {
+            "load lsh macro 158": {
                 "pattern": "mov ram[ 2*reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2795,7 +2813,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 157": {
+            "load lsh macro 159": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + 2*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2805,7 +2823,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 158": {
+            "load lsh macro 160": {
                 "pattern": "mov ram[- {offset:token} + 2*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "2",
@@ -2815,7 +2833,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 159": {
+            "load lsh macro 161": {
                 "pattern": "mov ram[ reg[{ptr:token}] + 4*reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2825,7 +2843,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 160": {
+            "load lsh macro 162": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + 4*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2835,7 +2853,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 161": {
+            "load lsh macro 163": {
                 "pattern": "mov ram[ 4*reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2845,7 +2863,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 162": {
+            "load lsh macro 164": {
                 "pattern": "mov ram[ 4*reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2855,7 +2873,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 163": {
+            "load lsh macro 165": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + 4*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2865,7 +2883,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 164": {
+            "load lsh macro 166": {
                 "pattern": "mov ram[- {offset:token} + 4*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "4",
@@ -2875,7 +2893,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 165": {
+            "load lsh macro 167": {
                 "pattern": "mov ram[ reg[{ptr:token}] + 8*reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2885,7 +2903,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 166": {
+            "load lsh macro 168": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + 8*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2895,7 +2913,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 167": {
+            "load lsh macro 169": {
                 "pattern": "mov ram[ 8*reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2905,7 +2923,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 168": {
+            "load lsh macro 170": {
                 "pattern": "mov ram[ 8*reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2915,7 +2933,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 169": {
+            "load lsh macro 171": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + 8*reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2925,7 +2943,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 170": {
+            "load lsh macro 172": {
                 "pattern": "mov ram[- {offset:token} + 8*reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "8",
@@ -2935,7 +2953,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 171": {
+            "load lsh macro 173": {
                 "pattern": "mov ram[ reg[{ptr:token}] + reg[8] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2945,7 +2963,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 172": {
+            "load lsh macro 174": {
                 "pattern": "mov ram[ reg[{ptr:token}] - {offset:token} + reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2955,7 +2973,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 173": {
+            "load lsh macro 175": {
                 "pattern": "mov ram[ reg[8] + reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2965,7 +2983,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 174": {
+            "load lsh macro 176": {
                 "pattern": "mov ram[ reg[8] - {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2975,7 +2993,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 175": {
+            "load lsh macro 177": {
                 "pattern": "mov ram[- {offset:token} + reg[{ptr:token}] + reg[8]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2985,7 +3003,7 @@
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
                 ]
             },
-            "load lsh macro 176": {
+            "load lsh macro 178": {
                 "pattern": "mov ram[- {offset:token} + reg[8] + reg[{ptr:token}]], reg[{dst:token}]",
                 "process": {
                     "lsh": "1",
@@ -2993,24 +3011,6 @@
                 },
                 "expansion": [
                     "mov ram[reg[{ptr}] + {lsh}*reg[8] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 177": {
-                "pattern": "mov ram[reg[{ptr:token}] - {offset:token}], reg[{dst:token}]",
-                "process": {
-                    "offset": "-int(offset)"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
-                ]
-            },
-            "load imm macro 178": {
-                "pattern": "mov ram[- {offset:token} + reg[{ptr:token}]], reg[{dst:token}]",
-                "process": {
-                    "offset": "-int(offset)"
-                },
-                "expansion": [
-                    "mov ram[reg[{ptr}] + {offset}], reg[{dst}]"
                 ]
             },
             "store index 0": {
