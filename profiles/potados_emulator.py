@@ -132,14 +132,15 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                     self.push(r1)
                 elif flags == 7:        # converts & interupt
                     third = int(command[8:10])
+                    r2_value = int(command[13:17])
                     if third == 0:
-                        pass
+                        self.ftoi(r2_value, destination)
                     elif third == 1:
-                        pass
+                        self.itof(r2_value, destination)
                     elif third == 2:
-                        pass
+                        self.utof(r2_value, destination)
                     elif third == 3:
-                        pass
+                        self.interupt(destination)
                     else:
                         raise error.EmulationError("Unrachable")
                 else:
@@ -324,13 +325,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='itof reg[{dst}], reg[{src}]')
     def itof(self, src, dst):
-        val = self.FP.get_concat(ops.cast(self.regs[src], 'signed'))
+        val = self.FP.get_concat(float(ops.cast(self.regs[src], 'signed')))
 
         self.regs[dst] = u16(int(val))
     
     @emulate.log_disassembly(format='utof reg[{dst}], reg[{src}]')
     def utof(self, src, dst):
-        val = self.FP.get_concat(ops.cast(self.regs[src], 'unsigned'))
+        val = self.FP.get_concat(float(ops.cast(self.regs[src], 'unsigned')))
 
         self.regs[dst] = u16(int(val))
 
@@ -782,6 +783,32 @@ class REGS:
         if not self.pc_modified:
             self.regs[self.potados.PC] += 1
         self.pc_modified = False
+
+class IO:
+    def __init__(self, potados: typing.Optional[POTADOS_EMULATOR]):
+        self.potados = potados if potados is not None else POTADOS_EMULATOR()
+    def Null(self, val) -> int:
+        return 0
+    def ClockFlag(self, val) -> int:
+        return 0
+    def TimerValue(self, val) -> int:
+        raise error.EmulationError("TODO")
+    def TimerFlags(self, val) -> int:
+        raise error.EmulationError("TODO")
+    def Out0(self, val: Binary) -> int:
+        return 0
+    def Out1(self, val: Binary) -> int:
+        print(f"\tBINARY DISPLAY  -  {bin(val)}  -")
+        return 0
+    def Out2(self, val: Binary) -> int:
+        print(f"\tDBG  -  {int(val)}  -  {Binary(val).as_hex()}  -  {self.potados.FP.get_float(val)}")
+        return 0
+    def Out3(self, val) -> int:
+        return 0
+
+    ADDRESSES = [Null, ClockFlag, TimerValue, TimerFlags, Out0, Out1, Out2, Out3]        
+
+
 class RAM:
     DEBUG_LOG_RAM_MOVMENT = False 
     DEBUG_FREEZE_RAM_WRITES = False
@@ -794,6 +821,7 @@ class RAM:
         else:
             self.ram: np.ndarray = ram.astype('uint16')
         self.ram = self.ram[:256]
+        self.io = IO(potados)
 
     
     def __getitem__(self, key: typing.Union[int, Binary]) -> Binary:
@@ -835,11 +863,17 @@ class RAM:
     def io_set(self, index: int, val: Binary):
         if index > 0x0100:
             raise
+
+        if index <= 0x001f:
+            self.io.ADDRESSES[index](self.io, val)
         
         
     def io_get(self, index: int) -> Binary:
         if index > 0x0100:
             raise
+
+        if index <= 0x001f:
+            return self.io.ADDRESSES[index](self.io, 0)
         
         return u16()
     

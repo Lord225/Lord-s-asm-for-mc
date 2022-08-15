@@ -1152,7 +1152,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 5,
                     "srcdst": "srcdst"
                 }
@@ -1164,7 +1164,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 6,
                     "srcdst": "srcdst"
                 }
@@ -1176,7 +1176,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 1,
                     "srcdst": "srcdst"
                 }
@@ -1188,7 +1188,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 4,
+                    "3th": 2,
                     "offset": 1,
                     "srcdst": "srcdst"
                 }
@@ -1200,7 +1200,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 2,
                     "srcdst": "srcdst"
                 }
@@ -1212,7 +1212,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 4,
+                    "3th": 2,
                     "offset": 2,
                     "srcdst": "srcdst"
                 }
@@ -1224,7 +1224,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 3,
                     "srcdst": "srcdst"
                 }
@@ -1236,7 +1236,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 4,
+                    "3th": 2,
                     "offset": 3,
                     "srcdst": "srcdst"
                 }
@@ -1248,7 +1248,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 1,
+                    "3th": 4,
                     "offset": 12,
                     "srcdst": "srcdst"
                 }
@@ -1260,7 +1260,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": 0,
-                    "3th": 4,
+                    "3th": 2,
                     "offset": 13,
                     "srcdst": "srcdst"
                 }

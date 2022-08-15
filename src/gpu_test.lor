@@ -1,8 +1,4 @@
 
-
-
-
-
 halt
 cmov reg[dst], const   
 ge reg[r1], reg[r2]

@@ -734,7 +734,7 @@ IOSCHEM="""
 """
 
 def add_io(name, is_load, address):
-    formated = decoder.decode(IOSCHEM.format(name=name, ls = 1 if is_load else 4, address=address))
+    formated = decoder.decode(IOSCHEM.format(name=name, ls = 4 if is_load else 2, address=address))
     base["CPU"]["COMMANDS"].update(formated)
 
 add_io("print", True, 0x0005)

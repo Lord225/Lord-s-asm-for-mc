@@ -71,7 +71,7 @@ def show_outfiles(context: contextlib.Context):
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = False,
+            run = True,
             save = "pad",
             comments = True,
             onerror = 'None',
