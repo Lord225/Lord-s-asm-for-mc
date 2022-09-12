@@ -38,15 +38,12 @@ base = \
                         "r2": {
                             "size": 4
                         },
-                        "offsetHi": {
-                            "size": 5
+                        "offset": {
+                            "size": 9
                         },
                         "r1": {
                             "size": 4
                         },
-                        "offsetLo": {
-                            "size": 4
-                        }
                     },
                     "aluimm":
                     {
@@ -292,9 +289,8 @@ branch ="""
             "pridec": 2,
             "secdec": {value},
             "r2": "{arg2}",
-            "offsetHi": "offset>>4",
-            "r1": "{arg1}",
-            "offsetLo": "offset%16"
+            "offset": "offset",
+            "r1": "{arg1}"
         }}
     }}
 }}
@@ -332,9 +328,8 @@ branchimm ="""
             "pridec": 2,
             "secdec": {value},
             "r2": "reg",
-            "offsetHi": "offset>>4",
-            "r1": {decoder},
-            "offsetLo": "offset%16"
+            "offset": "offset",
+            "r1": {decoder}
         }}
     }}
 }}
@@ -450,10 +445,12 @@ ops2 = """
     }}
 }}
 """
+
+
 tokens = [
     ("xor", 3, 0, 1),
-    ("and", 3, 0, 2),
-    ("or", 3, 0, 3),
+    ("and", 3, 7, 2),
+    ("or", 3, 0, 2),
     ("fadd", 0, 0, 0),
     ("fsub", 0, 0, 1),
     ("fmul", 0, 0, 2),
@@ -734,7 +731,7 @@ IOSCHEM="""
 """
 
 def add_io(name, is_load, address):
-    formated = decoder.decode(IOSCHEM.format(name=name, ls = 1 if is_load else 4, address=address))
+    formated = decoder.decode(IOSCHEM.format(name=name, ls = 4 if is_load else 2, address=address))
     base["CPU"]["COMMANDS"].update(formated)
 
 add_io("print", True, 0x0005)

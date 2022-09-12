@@ -132,7 +132,7 @@ def log_disassembly(**kwargs):
 
     def format_value(value):
         if isinstance(value, Binary):
-            return f"0x{value.as_hex()}"
+            return value.hex(prefix=True)
         return value
 
     def params_log_dissasembly(func):
@@ -168,7 +168,10 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
             debug.ram_display(ram, profile.adressing.bin_len, 0, None)
         elif command_str.lower() == 'regs':
             regs = machine.exec_command(None, 'get_regs_ref', [])
-            pprint.pprint(regs)
+            print('regs ----------------')
+            for i, reg in enumerate(regs):
+                print(i, '\t', reg.bin(), reg.hex(), reg.int())
+            print('---- ----------------')
     elif command[0] == 'log':
         pos = machine.get_current_pos(None)
         debug.log(f"{pos}  {' '.join(command[1:])}")

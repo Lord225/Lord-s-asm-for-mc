@@ -5,15 +5,15 @@ from core.profile.profile import Profile
 import pybytes
 
 def into_binary(x, pad):
-    return pybytes.Binary(x, bit_lenght=pad)
+    return pybytes.Binary(x, lenght=pad)
 
 def padhex(x, pad):
-    val = pybytes.Binary(x, bit_lenght=pad)
-    return val.as_hex()
+    val = pybytes.Binary(x, lenght=pad)
+    return val.hex(prefix=False)
 
 def padbin(x, pad):
-    val = pybytes.Binary(x, bit_lenght=pad)
-    return val.to_string()
+    val = pybytes.Binary(x, lenght=pad)
+    return val.bin(prefix=False)
 
 def paddec(x, pad, fill = "0"):
     x = 0 if x is None else x
@@ -52,13 +52,16 @@ def reversed_one_hot(x, size):
     return pybytes.Binary([v for v in one_hot(x, size)])
 
 def unsigned_binary(x, size) -> pybytes.Binary:
-    return pybytes.Binary(x, bit_lenght=size, sign_behavior='unsigned')
+    return pybytes.Binary(x, lenght=size, sign_behavior='unsigned')
 
 def sign_module_binary(x, size):
-    return pybytes.Binary(x, bit_lenght=size, sign_behavior='magnitude')
+    if x >= 0:
+        return pybytes.Binary(x, lenght=size, sign_behavior='unsigned')
+    else:
+        return pybytes.Binary(x, lenght=size-1, sign_behavior='unsigned').append(True)
 
 def u2_module_binary(x, size):
-    return pybytes.Binary(x, bit_lenght=size, sign_behavior='signed')
+    return pybytes.Binary(x, lenght=size, sign_behavior='signed')
     
 def get_encoding(layout):
     if "encoding" not in layout:
@@ -85,7 +88,7 @@ def get_encoding(layout):
 def encode_argument(layout, name, val):
     encoding = get_encoding(layout[name])
     try:
-        encoded = encoding(val, layout[name]["size"]).to_string()
+        encoded = encoding(val, layout[name]["size"]).bin(prefix=False)
         if len(encoded) != layout[name]["size"]:
             raise error.ParserError(None, f"Cannot encode {val}, encoder returned invalid value.")
         return encoded

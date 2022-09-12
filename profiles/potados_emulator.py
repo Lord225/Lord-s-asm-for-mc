@@ -5,7 +5,8 @@ if __name__ == "__main__":
 
 from ast import operator
 import typing
-from pybytes import Binary, u16, i16, u4, ops, floats
+from pybytes import Binary, arithm as ops
+from pybytes.alias import  u16, i16, u4, u6
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -73,14 +74,10 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         elif pri_decoder == 2: # jumps
             sec_decoder = int(command[17:20])
             r2_value = int(command[13:17])
-            offsethi = command[8:13]
-            r1_value = int(command[4:8])
-            offsetlo = command[0:4]
+            offset = Binary(command[4:13])
+            r1_value = int(command[0:4])
 
-            offset = Binary(bit_lenght=9)
-            offset[0:4] = offsetlo
-            offset[4:9] = offsethi
-            offset = ops.sign_extend(offset, 16)
+            offset = ops.pad_sign_extend(offset, 16)
 
             if sec_decoder == 0:   # jge
                 self.jge(r1_value, r2_value, offset)
@@ -101,51 +98,52 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
-            flags = Binary(command[10:13])
-            r1 = int(command[13:17])
-            sec_decoder = int(command[17:20])
+            flags = command[10:13]
+            r1 = command[13:17].int()
+            sec_decoder = command[17:20].int()
 
             if sec_decoder in [1, 2, 4, 5, 6, 7]: # alu long
                 self.alu_long(sec_decoder, destination, command)
             elif sec_decoder == 3:                # alu short / fpu
                 self.alu_short(destination, flags, command) # type: ignore
-            elif sec_decoder == 0:      # other        
+            elif sec_decoder == 0:      # other
+                flags = flags.int()        
                 if flags == 0:
                     self.fpu(destination, command)
                 elif flags == 1:        # load ptr lsh
-                    lsh = int(command[8:10])
-                    offset = int(command[4:8])
+                    lsh = command[8:10].int()
+                    offset = command[4:8].int()
                     self.load_ptr_lsh(2**lsh, offset, r1, destination)
                 elif flags == 2:        # load ptr imm
-                    offset = int(command[4:10])
+                    offset = command[4:10].int()
                     self.load_ptr_imm(offset, r1, destination)
                 elif flags == 3:        # store ptr lsh
-                    lsh = int(command[8:10])
-                    offset = int(command[4:8])
+                    lsh = command[8:10].int()
+                    offset = command[4:8].int()
                     self.store_ptr_lsh(2**lsh, offset, r1, destination)
                 elif flags == 4:        # store ptr imm
-                    offset = int(command[4:10])
+                    offset = command[4:10].int()
                     self.store_ptr_imm(offset, r1, destination)
                 elif flags == 5:        # pop
                     self.pop(destination)
                 elif flags == 6:        # push
                     self.push(r1)
                 elif flags == 7:        # converts & interupt
-                    third = int(command[8:10])
+                    third = command[8:10].int()
                     if third == 0:
-                        pass
+                        self.ftoi(r1, destination)
                     elif third == 1:
-                        pass
+                        self.itof(r1, destination)
                     elif third == 2:
-                        pass
+                        self.utof(r1, destination)
                     elif third == 3:
-                        pass
+                        self.interupt(destination)
                     else:
-                        raise error.EmulationError("Unrachable")
+                        raise error.EmulationError("Unrachable 1")
                 else:
-                    raise error.EmulationError("Unrachable")
+                    raise error.EmulationError("Unrachable 2")
             else:
-                raise error.EmulationError("Unrachable")
+                raise error.EmulationError("Unrachable 3")
         
         self.regs.increment_pc()
 
@@ -157,11 +155,11 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
     def alu_long(self, sec_decoder: int, destination: int, command: Binary):
         I = command[12]
-        r1_value = Binary(command[4:12])       # 8 bit
-        r2_value = int(command[13:17])         # 4 bit
+        r1_value = command[4:12]        # 8 bit
+        r2_value = command[13:17].int() # 4 bit
 
         if I:
-            imm = ops.sign_extend(r1_value, 16) # type: ignore
+            imm = ops.pad_sign_extend(r1_value, 16) # type: ignore
             if sec_decoder == 1:
                 self.alu_add_imm(imm, r2_value, destination)
             elif sec_decoder == 2:
@@ -251,10 +249,10 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         self.regs[self.FL][5:16] = False
 
     def update_flags_for_add_sub(self, flags: ops.Flags):
-        self.regs[self.FL][0] = flags.is_zero()
-        self.regs[self.FL][1] = flags.is_overflow() #TODO check if it works fine for subtraction (tzn czy to jest borrow flag)
-        self.regs[self.FL][2] = flags.is_sign()
-        self.regs[self.FL][3] = flags.is_overflow()
+        self.regs[self.FL][0] = flags.zeroflag
+        self.regs[self.FL][1] = flags.overflow #TODO check if it works fine for subtraction (tzn czy to jest borrow flag)
+        self.regs[self.FL][2] = flags.signflag
+        self.regs[self.FL][3] = flags.overflow
 
     ###############
     #     nops    #
@@ -287,52 +285,53 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     #######
     # FPU #
     #######
-
-    FP = floats.CustomFloat(preset='fp16')
-
+    def cast_to_fp16(self, value: Binary) -> float:
+        return np.frombuffer(value._data, dtype='float16')[0]
+    def cast_from_fp16(self, value: float) -> Binary:
+        return Binary(np.array([value], dtype='float16').tobytes(), lenght=16)
     @emulate.log_disassembly(format='fadd reg[{dst}], reg[{r1}], reg[{r2}]')
-    def fadd(self, r1, r2, dst):        
-        a = self.FP.get_float(self.regs[r1])
-        b = self.FP.get_float(self.regs[r2])
+    def fadd(self, r1, r2, dst):
+        a = self.cast_to_fp16(self.regs[r1])
+        b = self.cast_to_fp16(self.regs[r2])
 
-        self.regs[dst] = ops.cast(self.FP.get_concat(a+b), 'unsigned')
+        self.regs[dst] = ops.cast(self.cast_from_fp16(a+b), 'unsigned')
 
     @emulate.log_disassembly(format='fsub reg[{dst}], reg[{r1}], reg[{r2}]')
     def fsub(self, r1, r2, dst):
-        a = self.FP.get_float(self.regs[r1])
-        b = self.FP.get_float(self.regs[r2])
+        a = self.cast_to_fp16(self.regs[r1])
+        b = self.cast_to_fp16(self.regs[r2])
 
-        self.regs[dst] = ops.cast(self.FP.get_concat(b-a), 'unsigned') 
+        self.regs[dst] = ops.cast(self.cast_from_fp16(b-a), 'unsigned') 
     
     @emulate.log_disassembly(format='fmul reg[{dst}], reg[{r1}], reg[{r2}]')
     def fmul(self, r1, r2, dst):
-        a = self.FP.get_float(self.regs[r1])
-        b = self.FP.get_float(self.regs[r2])
+        a = self.cast_to_fp16(self.regs[r1])
+        b = self.cast_to_fp16(self.regs[r2])
 
-        self.regs[dst] = ops.cast(self.FP.get_concat(a*b), 'unsigned')
+        self.regs[dst] = ops.cast(self.cast_from_fp16(a*b), 'unsigned')
 
     @emulate.log_disassembly(format='fdiv reg[{dst}], reg[{r1}], reg[{r2}]')
     def fdiv(self, r1, r2, dst):
-        a = self.FP.get_float(self.regs[r1])
-        b = self.FP.get_float(self.regs[r2])
-
-        self.regs[dst] = ops.cast(self.FP.get_concat(a/b), 'unsigned')
+        a = self.cast_to_fp16(self.regs[r1])
+        b = self.cast_to_fp16(self.regs[r2])
+        
+        self.regs[dst] = ops.cast(self.cast_from_fp16(a/b), 'unsigned')
 
     @emulate.log_disassembly(format='ftoi reg[{dst}], reg[{src}]')
     def ftoi(self, src, dst):
-        self.regs[dst] = u16(int(self.FP.get_float(self.regs[src])))
+        self.regs[dst] = u16(int(self.cast_to_fp16(self.regs[src])))
 
     @emulate.log_disassembly(format='itof reg[{dst}], reg[{src}]')
     def itof(self, src, dst):
-        val = self.FP.get_concat(ops.cast(self.regs[src], 'signed'))
+        val = self.cast_from_fp16(ops.cast(self.regs[src], 'signed').int())
 
-        self.regs[dst] = u16(int(val))
+        self.regs[dst] = u16(val)
     
     @emulate.log_disassembly(format='utof reg[{dst}], reg[{src}]')
     def utof(self, src, dst):
-        val = self.FP.get_concat(ops.cast(self.regs[src], 'unsigned'))
+        val = self.cast_from_fp16(ops.cast(self.regs[src], 'unsigned').int())
 
-        self.regs[dst] = u16(int(val))
+        self.regs[dst] = u16(val)
 
     #########
     # stack #
@@ -356,9 +355,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def load_ptr_lsh(self, lsh, offset, ptr, dst):
         ptr_val = self.regs[ptr]
         
-        offset = ops.sign_extend(u4(offset), 16)
+        offset = ops.pad_sign_extend(u4(offset), 16)
 
-        address = self.regs[self.PT]*lsh + offset + ptr_val
+        address = ops.wrapping_mul(self.regs[self.PT], lsh) + offset + ptr_val
 
         self.regs[dst] = self.load(address)
 
@@ -366,7 +365,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def load_ptr_imm(self, offset, ptr, dst):
         ptr_val = self.regs[ptr]
         
-        offset = ops.sign_extend(u4(offset), 16)
+        offset = ops.pad_sign_extend(u6(offset), 16)
 
         address = offset + ptr_val
 
@@ -377,9 +376,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         ptr_val = self.regs[ptr]
         src_val = self.regs[src]
 
-        offset = ops.sign_extend(u4(offset), 16)
+        offset = ops.pad_sign_extend(u4(offset), 16)
         
-        address = self.regs[self.PT]*lsh + offset + ptr_val
+        address = ops.wrapping_mul(self.regs[self.PT], lsh) + offset + ptr_val
 
         self.store(address, src_val)
     
@@ -388,7 +387,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         ptr_val = self.regs[ptr]
         src_val = self.regs[src]
         
-        offset = ops.sign_extend(u4(offset), 16)
+        offset = ops.pad_sign_extend(u6(offset), 16)
         
         address = offset + ptr_val
 
@@ -455,7 +454,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.arithmetic_flaged_rsh(r1, r2)
+        out = ops.arithmetic_wrapping_rsh(r1, r2)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -480,7 +479,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_rsh(r2, r1)
+        out = ops.logical_wrapping_rsh(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -505,7 +504,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_lsh(r2, r1)
+        out = ops.wrapping_lsh(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -530,7 +529,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = ops.cast(imm_r1.extended_low(), 'unsigned')
         r2 = ops.cast(imm_r2.extended_low(), 'unsigned')
         
-        out, _ = ops.flaged_mul(r2, r1)
+        out, _ = ops.overflowing_mul(r2, r1)
 
         #self.update_flags_for_add_sub(flags)
 
@@ -585,7 +584,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_xnor(r2_imm, r1_imm)
+        self.regs[dst] = ops.bitwise_not(ops.bitwise_xor(r2_imm, r1_imm))
 
     @emulate.log_disassembly(format='or reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_or(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
@@ -598,7 +597,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
         r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
         
-        self.regs[dst] = ops.bitwise_nor(r2_imm, r1_imm)
+        self.regs[dst] = ops.bitwise_not(ops.bitwise_or(r2_imm, r1_imm))
     
     
     ######################
@@ -816,7 +815,7 @@ class RAM:
     def __setitem__(self, key: typing.Union[int, Binary], val: typing.Union[int, Binary]):
         key = int(key)
         if not isinstance(val, Binary):
-            val = Binary(val, bit_lenght=16)
+            val = Binary(val, lenght=16)
         if key < 0x0100:
             if self.DEBUG_LOG_RAM_MOVMENT:
                 print(f"WRITE: {key} (BUS: {val.extended_low()})")
@@ -836,12 +835,14 @@ class RAM:
         if index > 0x0100:
             raise
         
-        
+        if index == 6:
+            print(f"[PotaDOS] [DBG] {val.int()}")
+
     def io_get(self, index: int) -> Binary:
         if index > 0x0100:
             raise
         
-        return u16()
+        return u16(0)
     
     def enable_ram_bus_logging(self):
         self.DEBUG_LOG_RAM_MOVMENT = True
@@ -864,7 +865,7 @@ class ROM:
             self.rom[address] = value
     
     def __getitem__(self, address: int) -> Binary:
-        return Binary(int(self.rom[address]), bit_lenght=22)
+        return Binary(int(self.rom[address]), lenght=22)
     
 def get_emulator() -> POTADOS_EMULATOR:
     return POTADOS_EMULATOR()
@@ -926,10 +927,10 @@ class ROM_TESTS(unittest.TestCase):
 
         rom.program_rom({0: 0, 1: 1, 2: 2, 3: 3})
 
-        self.assertEqual(rom[0], u16(0))
-        self.assertEqual(rom[1], u16(1))
-        self.assertEqual(rom[2], u16(2))
-        self.assertEqual(rom[3], u16(3))
+        self.assertEqual(rom[0], Binary(0, lenght=22))
+        self.assertEqual(rom[1], Binary(1, lenght=22))
+        self.assertEqual(rom[2], Binary(2, lenght=22))
+        self.assertEqual(rom[3], Binary(3, lenght=22))
         
         self.assertEqual(rom.rom.shape, (4096,))
 
@@ -1078,8 +1079,8 @@ class POTADOS_TESTS(unittest.TestCase):
 
         def get(r1, r2):
             potados = POTADOS_EMULATOR()
-            potados.regs[1] = Binary(r1, bit_lenght=16)
-            potados.regs[2] = Binary(r2, bit_lenght=16)
+            potados.regs[1] = Binary(r1, lenght=16)
+            potados.regs[2] = Binary(r2, lenght=16)
             potados.regs[potados.PC] = u16(10)
             return potados
 
@@ -1123,7 +1124,7 @@ class POTADOS_COMPILATION_TESTS(unittest.TestCase):
             [
                 {'const16': {'pdec': 0, 'const': 1, 'dst': 1}}, 
                 {'aluimm': {'pridec': 1, 'secdec': 1, 'r2': 2, 'I': 0, 'R1': 3, 'dst': 1}}, 
-                {'branch': {'pridec': 2, 'secdec': 3, 'r2': 2, 'offsetHi': 0, 'r1': 1, 'offsetLo': 0}}, 
+                {'branch': {'pridec': 2, 'secdec': 3, 'r2': 2, 'offset': 0, 'r1': 1}}, 
                 {'indirect': {'pridec': 1, 'secdec': 0, 'ptr': 2, '3th': 2, 'offset': 3, 'srcdst': 1}},
             ]
         )
@@ -1220,7 +1221,35 @@ class POTADOS_COMPILATION_TESTS(unittest.TestCase):
         for i in range(0, 16):
             self.assertEqual(potados.ram[0x0100+i], potados.ram[0x0100+0x0010+i])
 
+    def test_fibonacci_floats(self):
+        potados = POTADOS_EMULATOR()
+        FIBONACCI_CODE = [
+                'mov reg[1], 0',
+                'mov reg[2], 0',
+                'mov reg[3], 1',
+                'mov reg[4], 8',
+                'mov reg[5], 0x5640', # 100.0f16
+                'LOOP:',
+                'add reg[2], reg[2], reg[3]',
+                #'dbg reg[2]',
+                'add reg[3], reg[3], reg[2]',
+                #'dbg reg[3]',
+                'jne reg[1]++, reg[4], LOOP',
+                'itof reg[2], reg[2]',
+                'itof reg[3], reg[3]',
+                'fdiv reg[1], reg[2], reg[3]',
+                'fmul reg[1], reg[1], reg[5]',
+                'ftoi reg[1], reg[1]',
+                #'dbg reg[1]',
+                'int 0',
+        ]
+        
+        try:
+            potados = self.run_emulation(potados, FIBONACCI_CODE, 1000)
+        except Exception as e:
+            raise Exception(f'Fibonacci failed: {e}')
 
+        self.assertEqual(potados.regs[1], 161)
 
         
 

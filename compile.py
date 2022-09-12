@@ -12,7 +12,7 @@ import core.context as contextlib
 import sys
 import os
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
@@ -71,7 +71,7 @@ def show_outfiles(context: contextlib.Context):
 def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
-            run = False,
+            run = True,
             save = "pad",
             comments = True,
             onerror = 'None',
