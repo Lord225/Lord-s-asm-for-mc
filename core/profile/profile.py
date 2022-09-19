@@ -89,17 +89,18 @@ class AdressingMode:
         self.offset: int = kwargs["ADRESSING"]["offset"] if "offset" in kwargs["ADRESSING"] else 0
 
 class SchematicInfo:
-    def __init__(self, kwargs: dict):
+    def __init__(self, kwargs: dict, base_folder: Path):
         schem_settings = kwargs["SCHEMATIC"]
-        self.blank_name = f"profiles/{schem_settings['blank']}"
+        self.blank_name = str(base_folder/schem_settings['blank'])
         self.layout = schem_settings["layout"]
         self.high_state = schem_settings["high"]
         self.low_state = schem_settings["low"]
 
 class Profile:
-    def __init__(self, profile, emulator):
+    def __init__(self, profile, base_folder, emulator):
         from core.emulate.emulator import EmulatorBase
         self.builded = False
+        self.base_folder = base_folder
 
         self.profile: dict[str, Any] = profile["CPU"]
         self.emul: 'Union[Callable[[], EmulatorBase], dict[Any, Any]]' = emulator
@@ -190,7 +191,7 @@ class Profile:
         
     def __get_schematics(self):
         if "SCHEMATIC" in self.profile and self.profile["SCHEMATIC"] is not None:
-            self.schematic = SchematicInfo(self.profile)
+            self.schematic = SchematicInfo(self.profile, self.base_folder)
         else:
             self.schematic = None
 
@@ -210,7 +211,7 @@ def load_profile_from_file(path, load_emulator = True) -> Profile:
     emulator = get_emulator(base_folder, profile) if load_emulator else None
 
     try:
-        return Profile(profile, emulator)
+        return Profile(profile, base_folder, emulator)
     except KeyError as err:
         raise error.ProfileLoadError(f"Cannot find field: {err} in profile '{path}'")
 
