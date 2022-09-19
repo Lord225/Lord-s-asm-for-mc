@@ -12,7 +12,7 @@ import core.context as contextlib
 import sys
 import os
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
