@@ -745,5 +745,5 @@ add_io("tim state get", False, 0x0003)
 add_io("gpu status", True, 0x000c)
 add_io("gpu invoke", False, 0x000d)
 
-with open('profiles/potados.jsonc', 'w') as f:
+with open('profiles/potados/potados.jsonc', 'w') as f:
     json.dump(base, f, indent=4)
