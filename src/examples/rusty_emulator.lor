@@ -1,4 +1,4 @@
-#profile rusty_emulator.jsonc
+#profile rusty_emulator
 
 .ENTRY
     imm 16384

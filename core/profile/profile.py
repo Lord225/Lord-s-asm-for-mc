@@ -1,10 +1,13 @@
 from .patterns import Pattern
 import json
-from typing import Any, Literal
+from typing import Any, Callable, Literal, Union
 from jsmin import jsmin
 import core.config as config
 import core.error as error
-import importlib
+import runpy
+
+from path import Path 
+import os
 
 REQUIRED_FIELDS = ["pattern", "command_layout", "bin"]
 OPTIONAL_FIELDS = []
@@ -17,14 +20,31 @@ def load_json(file):
         raise error.ProfileLoadError(f"Cannot Load json: {err}") 
 
 def load_json_profile(profile_path):
-    
-    with open(profile_path, "r") as file:
-        return load_json(file)
+    path = Path(profile_path)
+    if os.path.isfile(path):
+        with open(path, "r") as file:
+            base_folder = path.parent
+            return load_json(file), base_folder
+    if os.path.isdir(path):
+        path_to_profile = path/f'{path.basename()}.jsonc'
+        if path_to_profile.exists():
+            with open(path_to_profile, "r") as file:
+                base_folder = path_to_profile.parent
+                return load_json(file), base_folder
+    raise error.ProfileLoadError(f"Cannot find Profile under {path}")
 
-def get_emulator(DEFAULT_PROFILES_PATH: str, CPU_PROFILE: dict):
-    emul: dict = CPU_PROFILE["CPU"]["emulator"]
+def get_emulator(DEFAULT_PROFILES_PATH: Path, CPU_PROFILE: dict):
+    emul = CPU_PROFILE["CPU"]["emulator"]
     if isinstance(emul, str):
-        return importlib.import_module("{}.{}".format(DEFAULT_PROFILES_PATH, CPU_PROFILE["CPU"]["emulator"]))
+        emulator_path = DEFAULT_PROFILES_PATH/f'{emul}.py'
+        try:
+            emul = runpy.run_path(str(emulator_path), run_name="__package__")
+        except Exception as err:
+            raise error.ProfileLoadError(f"Cannot load emulator: {emulator_path}, Trying to run this script resulted in this error: {err}")
+        if 'get_emulator' in emul:
+            return emul['get_emulator']
+        else:
+            raise error.ProfileLoadError(f"Emulator should define `get_emulator` function that returns instance of EmulatorBase class. But function is not even present in the file {emulator_path}")
     else:
         return emul
 
@@ -78,22 +98,43 @@ class SchematicInfo:
 
 class Profile:
     def __init__(self, profile, emulator):
+        from core.emulate.emulator import EmulatorBase
         self.builded = False
 
         self.profile: dict[str, Any] = profile["CPU"]
-        self.emul = emulator
+        self.emul: 'Union[Callable[[], EmulatorBase], dict[Any, Any]]' = emulator
 
         self.build_profile()
         self.__selfcheck()
 
         self.builded = True
     
+
     def build_profile(self):
-        self.__build_commands()
-        self.__build_macros()
-        self.__build_arguments()
-        self.__build_info()
-        self.__get_schematics()
+        try:
+            self.__build_commands()
+        except Exception as err:
+            raise error.ProfileLoadError(f"Faild to load commands: {err}")
+
+        try:
+            self.__build_macros()
+        except Exception as err:
+            raise error.ProfileLoadError(f"Faild to load macros: {err}")
+        
+        try:
+            self.__build_arguments()
+        except Exception as err:
+            raise error.ProfileLoadError(f"Faild to load layouts variants: {err}")
+
+        try:
+            self.__build_info()
+        except Exception as err:
+            raise error.ProfileLoadError(f"Faild to load mata data of the profile: {err}")
+        
+        try:
+            self.__get_schematics()
+        except Exception as err:
+            raise error.ProfileLoadError(f"Faild to load schematic definitions: {err}")
     
     def __build_commands(self):
         raw_commandset = self.profile["COMMANDS"]
@@ -109,12 +150,44 @@ class Profile:
         self.info = ProfileInfo(self.profile)
         self.adressing = AdressingMode(self.profile, self)
     def __build_arguments(self):
-        self.arguments: dict[str, dict[str, Any]] = self.profile["ARGUMENTS"]["variants"]
-        self.defs: list[str] = [definiton for definiton in self.profile["DEFINES"] if isinstance(definiton, str)]
-        self.consts: dict[str, str] = {definiton[0]: str(definiton[1]) for definiton in self.profile["DEFINES"] if isinstance(definiton, list)}
-        self.entrypoints: dict[str, Any] = self.profile["KEYWORDS"]
-        self.arguments_len = {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
-        self.fill = self.profile["FILL"] if 'FILL' in self.profile else None
+        def load_raw_arguments():
+            try:
+                return self.profile["ARGUMENTS"]["variants"]
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not defined `ARGUMENTS/variants` section")
+        def load_defs():
+            try:
+                return [definiton for definiton in self.profile["DEFINES"] if isinstance(definiton, str)]
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not have `DEFINES` section")
+        def load_consts():
+            try:
+                return {definiton[0]: str(definiton[1]) for definiton in self.profile["DEFINES"] if isinstance(definiton, list)}
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not have `CONSTANTS` section")
+        def load_entrypoint():
+            try:
+                return self.profile["KEYWORDS"]
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not have `KEYWORDS` section")
+        def load_arguments_len():
+            try:
+                return {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not have `ARGUMENTS/variants` section")
+        def load_fill():
+            try:
+                return self.profile["FILL"] if 'FILL' in self.profile else None
+            except KeyError:
+                raise error.ProfileLoadError(f"Profile does not have `ARGUMENTS/fill` section")
+
+        self.arguments: dict[str, dict[str, Any]] = load_raw_arguments()
+        self.defs: list[str]                      = load_defs()
+        self.consts: dict[str, str]               = load_consts()
+        self.entrypoints: dict[str, Any]          = load_entrypoint()
+        self.arguments_len                        = load_arguments_len()
+        self.fill                                 = load_fill()
+        
     def __get_schematics(self):
         if "SCHEMATIC" in self.profile and self.profile["SCHEMATIC"] is not None:
             self.schematic = SchematicInfo(self.profile)
@@ -132,15 +205,10 @@ class Profile:
 
 
     
-def load_profile_from_file(path, ignore_emulator_on_fail = False) -> Profile:
-    profile = load_json_profile(path)
-    try:
-        emulator = get_emulator(config.default_emuletor_path, profile)
-    except ModuleNotFoundError as err:
-        if ignore_emulator_on_fail:
-            emulator = None
-        else:
-            raise err
+def load_profile_from_file(path, load_emulator = True) -> Profile:
+    profile, base_folder = load_json_profile(path)
+    emulator = get_emulator(base_folder, profile) if load_emulator else None
+
     try:
         return Profile(profile, emulator)
     except KeyError as err:

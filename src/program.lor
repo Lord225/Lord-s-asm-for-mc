@@ -1,4 +1,4 @@
-#profile pm1.jsonc
+#profile pm1
 
 #define DISPL 0xE5
 

@@ -7,8 +7,10 @@ import subprocess
 
 def emulate(output, context):
     print("Custom emulation pipeline")
-    profile: core.profile.profile.Profile = context['profile']
-    emul: dict = profile.emul
+    profile: core.profile.profile.Profile = context.profile
+    emul = profile.emul
+    if not isinstance(emul, dict):
+        raise error.ProfileLoadError(f"Expected Dict with emulation settings got: {emul}")
 
     save_settings = emul["output"]["save"]
     data_settings = emul["output"]["data"]

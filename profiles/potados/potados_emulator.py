@@ -3,7 +3,6 @@ if __name__ == "__main__":
     import os
     sys.path.append(os.getcwd())
 
-from ast import operator
 import typing
 from pybytes import Binary, arithm as ops
 from pybytes.alias import  u16, i16, u4, u6
@@ -11,9 +10,8 @@ import core.config as config
 import core.error as error
 import core.emulate as emulate
 import numpy as np
-import queue
 import unittest
-from core.profile.profile import Profile, load_profile_from_file
+from core.profile.profile import load_profile_from_file
 
 import core.quick as quick
 
@@ -1107,7 +1105,7 @@ class POTADOS_TESTS(unittest.TestCase):
                 self.assertEqual(potados.regs[potados.PC]==0, ops.cast(i16(r1), 'unsigned')<ops.cast(i16(r2), 'unsigned'))
 
 class POTADOS_COMPILATION_TESTS(unittest.TestCase):
-    profile = load_profile_from_file('profiles/potados.jsonc')
+    profile = load_profile_from_file('profiles\\potados', load_emulator=False)
     def test_compile(self):
         output, context = quick.translate([
             'mov reg[1], 1',
@@ -1250,11 +1248,6 @@ class POTADOS_COMPILATION_TESTS(unittest.TestCase):
             raise Exception(f'Fibonacci failed: {e}')
 
         self.assertEqual(potados.regs[1], 161)
-
-        
-
-
-
 
 
 if __name__ == "__main__":

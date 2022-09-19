@@ -229,12 +229,12 @@ def emulate(program, context: Context):
     global GLOBAL_CURR_ADRESS
 
     profile: Profile = context.get_profile()
-    emulator = profile.emul
+    get_emulator = profile.emul
 
-    try:
-        machine: EmulatorBase = emulator.get_emulator()
-    except:
-        raise error.EmulationError("File with emulator definition should define the 'get_emulator' function")
+    if isinstance(get_emulator, dict):
+        raise error.EmulationError(f"Emulator is callable that returns EmulatorBase class: {get_emulator}")
+
+    machine = get_emulator()
 
     if machine is None or not isinstance(machine, EmulatorBase):
         raise error.EmulationError(f"Function get_emulator returned invalid instance of machine expected: 'EmulatorBase', got '{machine}'")
