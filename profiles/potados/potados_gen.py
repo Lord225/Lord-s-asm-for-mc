@@ -190,7 +190,35 @@ base = \
             },
             "FILL":"nop",
             "COMMANDS": {},
-            "MACROS":{}
+            "MACROS":{},
+            "SCHEMATIC":
+            {
+                "blank":"potados_blank.schem",
+                "high":"minecraft:netherite_block",
+                "low":"minecraft:redstone_block",
+                "layout": 
+                {
+                    # block
+                    "offset":[0, 0, 0],
+                    "stride":[0, 0, 6],
+                    "size": 32,
+                    "layout": 
+                    {
+                        # floor 
+                        "offset":[0, 0, 0],
+                        "stride":[3, 0, 0],
+                        "size": 32,
+                        "layout":
+                        {
+                            # word
+                            "offset":[0, 0, 0],
+                            "stride":[0, 2, 0],
+                            "size": 22,
+                            "layout": None
+                        }
+                    }
+                }
+            }
         }
     }
 
