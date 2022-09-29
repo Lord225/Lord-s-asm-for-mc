@@ -28,8 +28,11 @@
                     "r2": {
                         "size": 4
                     },
+                    "pad": {
+                        "size": 1
+                    },
                     "offset": {
-                        "size": 9
+                        "size": 8
                     },
                     "r1": {
                         "size": 4
@@ -66,10 +69,7 @@
                         "size": 4
                     },
                     "flags": {
-                        "size": 3
-                    },
-                    "4th": {
-                        "size": 2
+                        "size": 5
                     },
                     "r1": {
                         "size": 4
@@ -132,12 +132,9 @@
                         "size": 4
                     },
                     "3th": {
-                        "size": 3
+                        "size": 5
                     },
-                    "4th": {
-                        "size": 2
-                    },
-                    "pad": {
+                    "r1": {
                         "size": 4
                     },
                     "dst": {
@@ -703,8 +700,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 0,
-                    "4th": 1,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -716,8 +712,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 0,
-                    "4th": 1,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -729,8 +724,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 7,
-                    "4th": 2,
+                    "flags": 14,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -742,8 +736,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 7,
-                    "4th": 2,
+                    "flags": 14,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -756,7 +749,6 @@
                     "secdec": 3,
                     "r2": "arg1",
                     "flags": 0,
-                    "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -769,7 +761,6 @@
                     "secdec": 3,
                     "r2": "dst",
                     "flags": 0,
-                    "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -781,8 +772,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
-                    "flags": 0,
-                    "4th": 0,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -794,8 +784,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "dst",
-                    "flags": 0,
-                    "4th": 0,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -807,8 +796,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
-                    "flags": 0,
-                    "4th": 1,
+                    "flags": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -820,8 +808,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "dst",
-                    "flags": 0,
-                    "4th": 1,
+                    "flags": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -833,8 +820,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
-                    "flags": 0,
-                    "4th": 2,
+                    "flags": 3,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -846,8 +832,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "dst",
-                    "flags": 0,
-                    "4th": 2,
+                    "flags": 3,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -859,8 +844,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "arg1",
-                    "flags": 0,
-                    "4th": 3,
+                    "flags": 4,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -872,8 +856,79 @@
                     "pridec": 1,
                     "secdec": 0,
                     "r2": "dst",
-                    "flags": 0,
-                    "4th": 3,
+                    "flags": 4,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "ftoi": {
+                "pattern": "ftoi reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "flags": 5,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut ftoi": {
+                "pattern": "ftoi reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
+                    "flags": 5,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "itof": {
+                "pattern": "itof reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "flags": 6,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut itof": {
+                "pattern": "itof reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
+                    "flags": 6,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "utof": {
+                "pattern": "utof reg[{dst:num}], reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "arg1",
+                    "flags": 7,
+                    "r1": "arg2",
+                    "dst": "dst"
+                }
+            },
+            "shortcut utof": {
+                "pattern": "utof reg[{dst:num}], reg[{arg2:num}]",
+                "command_layout": "alufpu",
+                "bin": {
+                    "pridec": 1,
+                    "secdec": 0,
+                    "r2": "dst",
+                    "flags": 7,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -885,8 +940,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 4,
-                    "4th": 1,
+                    "flags": 8,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -898,8 +952,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 4,
-                    "4th": 1,
+                    "flags": 8,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -911,8 +964,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 4,
-                    "4th": 2,
+                    "flags": 7,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -924,8 +976,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 4,
-                    "4th": 2,
+                    "flags": 7,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -937,8 +988,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 4,
-                    "4th": 3,
+                    "flags": 9,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -950,8 +1000,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 4,
-                    "4th": 3,
+                    "flags": 9,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -963,7 +1012,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": "ptr",
-                    "3th": 1,
+                    "3th": 6,
                     "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
                     "offset": "offset",
                     "srcdst": "dst"
@@ -976,7 +1025,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": "ptr",
-                    "3th": 2,
+                    "3th": 7,
                     "offset": "offset",
                     "srcdst": "dst"
                 }
@@ -988,7 +1037,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": "ptr",
-                    "3th": 3,
+                    "3th": 4,
                     "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
                     "offset": "offset",
                     "srcdst": "dst"
@@ -1001,7 +1050,7 @@
                     "pridec": 1,
                     "secdec": 0,
                     "ptr": "ptr",
-                    "3th": 4,
+                    "3th": 5,
                     "offset": "offset",
                     "srcdst": "dst"
                 }
@@ -1013,9 +1062,8 @@
                     "pridec": 1,
                     "secdec": 0,
                     "src": 0,
-                    "3th": 5,
-                    "4th": 0,
-                    "pad": 0,
+                    "3th": 9,
+                    "r1": 0,
                     "dst": "dst"
                 }
             },
@@ -1026,9 +1074,8 @@
                     "pridec": 1,
                     "secdec": 0,
                     "src": "src",
-                    "3th": 6,
-                    "4th": 0,
-                    "pad": 0,
+                    "3th": 10,
+                    "r1": 0,
                     "dst": 0
                 }
             },
@@ -1039,9 +1086,8 @@
                     "pridec": 1,
                     "secdec": 0,
                     "src": 0,
-                    "3th": 7,
-                    "4th": 3,
-                    "pad": 0,
+                    "3th": 11,
+                    "r1": 0,
                     "dst": "type"
                 }
             },
@@ -1087,45 +1133,6 @@
                     "I": 1,
                     "R1": 1,
                     "dst": "target"
-                }
-            },
-            "ftoi": {
-                "pattern": "ftoi reg[{dst:num}], reg[{src:num}]",
-                "command_layout": "other",
-                "bin": {
-                    "pridec": 1,
-                    "secdec": 0,
-                    "src": "src",
-                    "3th": 7,
-                    "4th": 0,
-                    "pad": 0,
-                    "dst": "dst"
-                }
-            },
-            "itof": {
-                "pattern": "itof reg[{dst:num}], reg[{src:num}]",
-                "command_layout": "other",
-                "bin": {
-                    "pridec": 1,
-                    "secdec": 0,
-                    "src": "src",
-                    "3th": 7,
-                    "4th": 1,
-                    "pad": 0,
-                    "dst": "dst"
-                }
-            },
-            "utof": {
-                "pattern": "utof reg[{dst:num}], reg[{src:num}]",
-                "command_layout": "other",
-                "bin": {
-                    "pridec": 1,
-                    "secdec": 0,
-                    "src": "src",
-                    "3th": 7,
-                    "4th": 2,
-                    "pad": 0,
-                    "dst": "dst"
                 }
             },
             "print": {

@@ -1,4 +1,4 @@
-from numpy import dtype, ndarray, split
+from numpy import dtype, ndarray, split, array
 import core.config as config
 import core.error as error
 import core.save.formatter as formatter
@@ -29,6 +29,9 @@ def generate_ram_display(RAM: ndarray, rows = 8, subrows = 2, ADRESS_AS_HEX = Tr
     """
     It just works.
     """
+    if not isinstance(RAM, ndarray):
+        RAM = array(RAM, dtype='int32')
+
     if start != 0:
         start = start + (rows - start % rows)-rows
     else:

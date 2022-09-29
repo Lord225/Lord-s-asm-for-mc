@@ -17,6 +17,8 @@ import core.quick as quick
 
 class POTADOS_EMULATOR(emulate.EmulatorBase):
     DEBUG_HALT_ON_NOP = False
+    INTERUPT_0_AS_INT = Binary("01 000 0000 01011 0000 0000", lenght=22).int()
+    NOP_AS_INT = Binary("0 0000000000000000 0000", lenght=22).int()
 
     SP = 15
     PC = 7
@@ -44,13 +46,13 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         command = self.rom[self.get_current_pos(None)]
         
         # nop
-        if command == 0:
+        if command == POTADOS_EMULATOR.NOP_AS_INT:
             self.nop()
             self.regs.increment_pc()
             return
 
         # int 0 (early stop)
-        if command == 1056512:
+        if command == POTADOS_EMULATOR.INTERUPT_0_AS_INT:
             self.halt()
             self.regs.increment_pc()
             return
@@ -72,7 +74,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         elif pri_decoder == 2: # jumps
             sec_decoder = int(command[17:20])
             r2_value = int(command[13:17])
-            offset = Binary(command[4:13])
+            offset = Binary(command[4:12])
             r1_value = int(command[0:4])
 
             offset = ops.pad_sign_extend(offset, 16)
@@ -96,50 +98,43 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
-            flags = command[10:13]
-            r1 = command[13:17].int()
+            flags       = command[8:13]
             sec_decoder = command[17:20].int()
 
             if sec_decoder in [1, 2, 4, 5, 6, 7]: # alu long
                 self.alu_long(sec_decoder, destination, command)
             elif sec_decoder == 3:                # alu short / fpu
-                self.alu_short(destination, flags, command) # type: ignore
+                self.alu_short(destination, flags, command) 
             elif sec_decoder == 0:      # other
-                flags = flags.int()        
-                if flags == 0:
-                    self.fpu(destination, command)
-                elif flags == 1:        # load ptr lsh
+                dec = flags[2:].int()
+                r1    = command[4:8].int()
+                r2    = command[13:17].int()
+                fpu   = command[8:11].int()
+
+                if dec == 0 or dec == 1:
+                    self.fpu(r1, r2, destination, fpu)
+                elif dec == 6:        # load ptr lsh
                     lsh = command[8:10].int()
                     offset = command[4:8].int()
-                    self.load_ptr_lsh(2**lsh, offset, r1, destination)
-                elif flags == 2:        # load ptr imm
+                    self.load_ptr_lsh(2**lsh, offset, r2, destination)
+                elif dec == 7:        # load ptr imm
                     offset = command[4:10].int()
-                    self.load_ptr_imm(offset, r1, destination)
-                elif flags == 3:        # store ptr lsh
+                    self.load_ptr_imm(offset, r2, destination)
+                elif dec == 4:        # store ptr lsh
                     lsh = command[8:10].int()
                     offset = command[4:8].int()
-                    self.store_ptr_lsh(2**lsh, offset, r1, destination)
-                elif flags == 4:        # store ptr imm
+                    self.store_ptr_lsh(2**lsh, offset, r2, destination)
+                elif dec == 5:        # store ptr imm
                     offset = command[4:10].int()
-                    self.store_ptr_imm(offset, r1, destination)
-                elif flags == 5:        # pop
+                    self.store_ptr_imm(offset, r2, destination)
+                elif flags == 9:        # pop
                     self.pop(destination)
-                elif flags == 6:        # push
-                    self.push(r1)
-                elif flags == 7:        # converts & interupt
-                    third = command[8:10].int()
-                    if third == 0:
-                        self.ftoi(r1, destination)
-                    elif third == 1:
-                        self.itof(r1, destination)
-                    elif third == 2:
-                        self.utof(r1, destination)
-                    elif third == 3:
-                        self.interupt(destination)
-                    else:
-                        raise error.EmulationError("Unrachable 1")
+                elif flags == 10:        # push
+                    self.push(r2)
+                elif flags == 11:        # int
+                    self.interupt(destination)
                 else:
-                    raise error.EmulationError("Unrachable 2")
+                    raise error.EmulationError("Invalid Command")
             else:
                 raise error.EmulationError("Unrachable 3")
         
@@ -189,62 +184,52 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             else:
                 raise error.EmulationError("Unreachable")
     def alu_short(self, destination: int, flags: Binary, command: Binary):
-        tri_dec = int(command[8:10])
         r1 = int(command[4:8])
         r2 = int(command[13:17])
 
-        neg_r1_flag = flags[1]
-        neg_r2_flag = flags[0]
-        neg_out_flag = flags[2]
+        op_flag      = flags[0]
+        neg_r2_flag  = flags[1]
+        neg_r1_flag  = flags[2]
+        neg_out_flag = flags[3]
 
-        if tri_dec == 0:    # adc
-            self.alu_adc(r1, r2, destination)
-        elif tri_dec == 1:  # sbc
-            self.alu_adc(r1, r2, destination)
-        elif tri_dec == 2:  # xor
+        if op_flag:  # xor
             if neg_out_flag:
                 self.alu_xnor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
             else:
                 self.alu_xor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
-        elif tri_dec == 3:  # or
+        else:        # or
             if neg_out_flag:
                 self.alu_nor(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
             else:
                 self.alu_or(r1, r2, destination, "~" if neg_r1_flag else "", "~" if neg_r2_flag else "")
-        else:
-            raise error.EmulationError("Unreachable")
-    def fpu(self, destination: int, command: Binary):
-        tri_dec = int(command[8:10])
-        r1 = int(command[4:8])
-        r2 = int(command[13:16])
-
-        if tri_dec == 0:    # fadd
+    
+    def fpu(self, r1: int, r2: int, destination: int, cmd: int):
+        if cmd == 0:
+            pass
+        if cmd == 1:
             self.fadd(r1, r2, destination)
-        elif tri_dec == 1:  # fsub
+        elif cmd == 2:
             self.fsub(r1, r2, destination)
-        elif tri_dec == 2:  # fmul
+        elif cmd == 3:
             self.fmul(r1, r2, destination)
-        elif tri_dec == 3:  # fdiv
+        elif cmd == 4:
             self.fdiv(r1, r2, destination)
+        elif cmd == 5:
+            self.ftoi(r1, destination)
+        elif cmd == 6:
+            self.itof(r1, destination)
+        elif cmd == 7:
+            self.utof(r1, destination)
         else:
             raise error.EmulationError("Unreachable")
+        
     
     ##################
     #    FL update   #
     ##################
     
     def update_flags_for_jump(self, r1, r2):
-        eq = r1 == r2
-        gr = r1 > r2
-        le = r1 <= r2
-        ge = r1 >= r2
-        ls = r1 < r2
-        self.regs[self.FL][0] = eq
-        self.regs[self.FL][1] = gr
-        self.regs[self.FL][2] = le
-        self.regs[self.FL][3] = ge
-        self.regs[self.FL][4] = ls
-        self.regs[self.FL][5:16] = False
+        pass
 
     def update_flags_for_add_sub(self, flags: ops.Flags):
         self.regs[self.FL][0] = flags.zeroflag
@@ -376,7 +361,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
 
         offset = ops.pad_sign_extend(u4(offset), 16)
         
-        address = ops.wrapping_mul(self.regs[self.PT], lsh) + offset + ptr_val
+        address = ops.wrapping_mul(self.regs[self.PT], Binary(lsh, lenght=2)) + offset + ptr_val
 
         self.store(address, src_val)
     
@@ -1045,28 +1030,28 @@ class POTADOS_TESTS(unittest.TestCase):
 
         potados.jge(2, 1, u16(10))
         self.assertEqual(potados.regs[potados.PC], 20)
-        self.assertEqual(potados.regs[potados.FL], u16('01010'))
+        #self.assertEqual(potados.regs[potados.FL], u16('01010'))
 
         potados.regs[potados.PC] = u16(10)
         
         potados.jge(1, 2, u16(10))
         self.assertEqual(potados.regs[potados.PC], 10)
-        self.assertEqual(potados.regs[potados.FL], u16('10100'))
+        #self.assertEqual(potados.regs[potados.FL], u16('10100'))
 
         potados.regs[3] = i16(-1)
         potados.regs[4] = i16(1)
 
         potados.jge(3, 4, i16(-10))
         self.assertEqual(potados.regs[potados.PC], 10)
-        self.assertEqual(potados.regs[potados.FL], u16('10100'))
+        #self.assertEqual(potados.regs[potados.FL], u16('10100'))
 
         potados.jl(4, 3, u16(10))
         self.assertEqual(potados.regs[potados.PC], 10)
-        self.assertEqual(potados.regs[potados.FL], u16('01010'))
+        #self.assertEqual(potados.regs[potados.FL], u16('01010'))
         
         potados.je(3, 3, u16(10))
         self.assertEqual(potados.regs[potados.PC], 20)
-        self.assertEqual(potados.regs[potados.FL], u16('01101'))
+        #self.assertEqual(potados.regs[potados.FL], u16('01101'))
 
         # -1 casted to unsigned (all ones) >= 1 casted to unsigned 
         potados.jae(3, 4, u16(10))
@@ -1122,8 +1107,8 @@ class POTADOS_COMPILATION_TESTS(unittest.TestCase):
             [
                 {'const16': {'pdec': 0, 'const': 1, 'dst': 1}}, 
                 {'aluimm': {'pridec': 1, 'secdec': 1, 'r2': 2, 'I': 0, 'R1': 3, 'dst': 1}}, 
-                {'branch': {'pridec': 2, 'secdec': 3, 'r2': 2, 'offset': 0, 'r1': 1}}, 
-                {'indirect': {'pridec': 1, 'secdec': 0, 'ptr': 2, '3th': 2, 'offset': 3, 'srcdst': 1}},
+                {'branch': {'pridec': 2, 'secdec': 3, 'r2': 2, 'pad': 0, 'offset': 0, 'r1': 1}}, 
+                {'indirect': {'pridec': 1, 'secdec': 0, 'ptr': 2, '3th': 7, 'offset': 3, 'srcdst': 1}},
             ]
         )
 

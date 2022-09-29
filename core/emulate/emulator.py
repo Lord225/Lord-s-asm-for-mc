@@ -170,7 +170,12 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
             regs = machine.exec_command(None, 'get_regs_ref', [])
             print('regs ----------------')
             for i, reg in enumerate(regs):
-                print(i, '\t', reg.bin(), reg.hex(), reg.int())
+                if isinstance(reg, Binary):
+                    print(i, '\t', reg.bin(), reg.hex(), reg.int())
+                elif isinstance(reg, int):
+                    print(i, '\t', bin(reg), hex(reg), reg)
+                else:
+                    print(i, '\t', reg)
             print('---- ----------------')
     elif command[0] == 'log':
         pos = machine.get_current_pos(None)

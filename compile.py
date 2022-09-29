@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(
 You can start with: \t 'python compile.py --save pad --comments'
 
 It will compile "program.lor" and save it in "output" dir.
-if emulation is avalible add --run to emulate compiler program and --logs to show instruction in console.
+if emulation is avalible add --run to emulate compiled program and --logs to show instructions in console (if avalible)
 """)
 
 parser.add_argument("-i", "--input", type=str, default="src/program.lor",
@@ -33,7 +33,7 @@ parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", h
 parser.add_argument("-s", "--save", choices=["bin", "pip", "hex", "pad", "schem"], type=str, default = 'pip',
 help="""> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments
-> pip - Build source and dump json to stdout (for pipelining)
+> pip - Build source and dump json to stdout (for pipelining), (standard output will be redirected to stderr)
 > hex - Build source and save as hexadecimal representation of bytes
 > schem - Build source and save as schematic
 Default: pip (will not save)""")
@@ -72,7 +72,7 @@ def override_debug():
     if DEBUG_MODE:
         config.override_from_dict(
             run = True,
-            save = "pad",
+            save = "bin",
             comments = True,
             onerror = 'None',
             debug = True,
@@ -87,9 +87,8 @@ override_debug()
 
 
 if config.save == "pip":
-    # redirect output to void
-    if not DEBUG_MODE:
-        sys.stdout = open(os.devnull, 'w')
+    # redirect output
+    sys.stdout = sys.stderr
 
 def main():
     print(f"Lord's Compiler Redux is working on '{config.input}'")

@@ -1,0 +1,148 @@
+{
+    "CPU":
+    {
+        "Name": "<CPU NAME>",
+        "Arch": "<CPU ARCH>",
+        "Author": "<Author Name>",
+        "emulator":"example_emulator",
+        "time_per_cycle":3.3,
+        
+        "ARGUMENTS":{
+            "variants":{
+                // Layouts:
+                // AAAABBCCDDDDDDDD
+                //     \ \ \       \_ n1 (8 bit)
+                //      \ \ \________ r1 (2 bit)
+                //       \ \_________ r2 (2 bit)
+                //        \__________ CU (4 bit)
+                "example_layout":{
+                    "CU":{
+                        "size":4
+                    },
+                    "r2":{
+                        "size":2
+                    },
+                    "r1":{
+                        "size":2
+                    },
+                    "n1":{
+                        "size":8,
+                        "encoding":"binrev" // bin, binrev, onehot, onehotrev, unsignedbin, signmodulebin, u2bin (default: bin)
+                    }
+                }
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"packed", // packed, align 
+            "bin_len":8,     // size of *smallest* addressable unit
+            "offset":0       // value of first address
+        },
+
+        "DEFINES":[
+            "__DEF__",   // definitions (conditional compilation)
+            ["PC", "4"]  // definitions to replace
+        ],
+
+        "KEYWORDS":{
+            "CORE0":{ // Expects .CORE0, defaults offset & write to 0 for this section
+                "offset":0,
+                "write":0
+            }
+        },
+
+        "SCHEMATIC":
+        {
+            "blank":"example.schem",            // Name of blank schematic
+            "high":"minecraft:lapis_block",   // Value that represents `1`
+            "low":"minecraft:redstone_block", // Value that represents `0`
+            "layout": 
+            {
+                // 16 floors of words (each shifted 3 blocks)
+                "offset":[0, 0, 0],
+                "stride":[0, 3, 0],
+                "size": 16,
+                "layout":
+                {
+                    // one word (8 bits)
+                    "offset":[14, 0, 0], // First bit is at 14,0,0 (counting from corner)
+                    "stride":[-2, 0, 0], // Each bit shifted 2 blocks
+                    "size": 8,           
+                    "layout": null
+                }
+            }
+        },
+
+        "FILL":"nop", // Instruction used to fill empty space. It has to have size equal to one adressable space
+
+        "COMMANDS":{
+            "nop":{
+                "pattern":"nop",
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":0,
+                    "r1":0,
+                    "r2":0,
+                    "n1":0
+                }
+            },
+            "mov const":{
+                // {<TOKEN_NAME>:<TOKEN_TYPE>}, token types: `num`, `label`, `token`, `offset_label`, `hex_num`, `bin_num`, `dec_num`, `string`
+                "pattern":"mov reg[{arg2:num}], {arg1:num}", // For example maches mov reg[1], 2
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":1,
+                    "r1":"arg2", // Perform substitution for arg2
+                    // "r2":0,   // Default value for skipped arguments is 0
+                    "n1":"arg1"
+                }
+            },
+            "add":{
+                "pattern":"add reg[{arg2:num}], reg[{arg1:num}]", // For example maches add reg[1], reg[2]
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":3,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "add const":{
+                "pattern":"add reg[{arg1:num}], {const:num}", // For example maches add reg[1], 2
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":4,
+                    "r1":"arg1",
+                    "n1":"const"
+                }
+            },
+            "cmp":{
+                "pattern":"cmp reg[{arg2:num}], reg[{arg1:num}]", // For example maches cmp reg[1], reg[2]
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":6,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "jz":{
+                // Use token type `label` to refer to labels 
+                "pattern":"jz {jump_address:label}", // For example maches jz label1, where label1 is defined within the file as label1:
+                "command_layout": "example_layout",
+                "bin":{
+                    "CU":7,
+                    "n1":"jump_address"
+                }
+            }
+        },
+        "MACROS":{
+            "jne macro":{
+                "pattern": "jne reg[{src:token}], reg[{dst:token}], {jmp:token}", // Maches jne reg[1], reg[2], label1 and expands it to cmp reg[1], reg[2] \n jz label1 
+                "process": {},
+                "expansion":[
+                    "cmp reg[{src}], reg[{dst}]",
+                    "jz {jmp}"
+                ]
+            }
+        }
+    }
+}
