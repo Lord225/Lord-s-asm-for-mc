@@ -53,6 +53,15 @@
         },
         // Macro list
         "MACROS":{
+            "macro":{
+                "pattern": "",
+                "process": {
+
+                },
+                "expansion":[
+                    
+                ]
+            }
         }
     }
 }
