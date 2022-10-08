@@ -4,8 +4,8 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
 
 import typing
-from pybytes import Binary, arithm as ops
-from pybytes.alias import  u16, i16, u4, u6
+from bitvec import Binary, arithm as ops
+from bitvec.alias import  u16, i16, u4, u6
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -269,7 +269,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     # FPU #
     #######
     def cast_to_fp16(self, value: Binary) -> float:
-        return np.frombuffer(value._data, dtype='float16')[0]
+        return np.frombuffer(value.data, dtype='float16')[0]
     def cast_from_fp16(self, value: float) -> Binary:
         return Binary(np.array([value], dtype='float16').tobytes(), lenght=16)
     @emulate.log_disassembly(format='fadd reg[{dst}], reg[{r1}], reg[{r2}]')

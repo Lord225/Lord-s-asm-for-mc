@@ -10,7 +10,7 @@ import time
 import enum
 import pprint
 
-from pybytes import Binary
+from bitvec import Binary
 from core.quick import gather_instructions, pack_adresses
 
 from core.save.formatter import as_values

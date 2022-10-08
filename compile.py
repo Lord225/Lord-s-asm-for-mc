@@ -10,7 +10,6 @@ import core.error as error
 import core.config as config
 import core.context as contextlib
 import sys
-import os
 
 DEBUG_MODE = False
 
