@@ -28,13 +28,10 @@
                     "r2": {
                         "size": 4
                     },
-                    "offsetHi": {
-                        "size": 5
+                    "offset": {
+                        "size": 9
                     },
                     "r1": {
-                        "size": 4
-                    },
-                    "offsetLo": {
                         "size": 4
                     }
                 },
@@ -264,9 +261,8 @@
                     "pridec": 2,
                     "secdec": 0,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch jl ": {
@@ -276,9 +272,8 @@
                     "pridec": 2,
                     "secdec": 1,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch je ": {
@@ -288,9 +283,8 @@
                     "pridec": 2,
                     "secdec": 2,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch jne ": {
@@ -300,9 +294,8 @@
                     "pridec": 2,
                     "secdec": 3,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch jae ": {
@@ -312,9 +305,8 @@
                     "pridec": 2,
                     "secdec": 4,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch jb ": {
@@ -324,9 +316,8 @@
                     "pridec": 2,
                     "secdec": 5,
                     "r2": "arg2",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg1",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg1"
                 }
             },
             "branch jg imm": {
@@ -336,9 +327,8 @@
                     "pridec": 2,
                     "secdec": 1,
                     "r2": "arg1",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg2",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg2"
                 }
             },
             "branch ja imm": {
@@ -348,9 +338,8 @@
                     "pridec": 2,
                     "secdec": 5,
                     "r2": "arg1",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg2",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg2"
                 }
             },
             "branch jle imm": {
@@ -360,9 +349,8 @@
                     "pridec": 2,
                     "secdec": 0,
                     "r2": "arg1",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg2",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg2"
                 }
             },
             "branch jbe imm": {
@@ -372,9 +360,8 @@
                     "pridec": 2,
                     "secdec": 4,
                     "r2": "arg1",
-                    "offsetHi": "offset>>4",
-                    "r1": "arg2",
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": "arg2"
                 }
             },
             "branch jge ++": {
@@ -384,9 +371,8 @@
                     "pridec": 2,
                     "secdec": 6,
                     "r2": "reg",
-                    "offsetHi": "offset>>4",
-                    "r1": 1,
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": 1
                 }
             },
             "branch jge --": {
@@ -396,9 +382,8 @@
                     "pridec": 2,
                     "secdec": 6,
                     "r2": "reg",
-                    "offsetHi": "offset>>4",
-                    "r1": 2,
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": 2
                 }
             },
             "branch jne ++": {
@@ -408,9 +393,8 @@
                     "pridec": 2,
                     "secdec": 7,
                     "r2": "reg",
-                    "offsetHi": "offset>>4",
-                    "r1": 1,
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": 1
                 }
             },
             "branch jne --": {
@@ -420,9 +404,8 @@
                     "pridec": 2,
                     "secdec": 7,
                     "r2": "reg",
-                    "offsetHi": "offset>>4",
-                    "r1": 2,
-                    "offsetLo": "offset%16"
+                    "offset": "offset",
+                    "r1": 2
                 }
             },
             "add": {
@@ -746,7 +729,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 0,
+                    "flags": 7,
                     "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
@@ -759,7 +742,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 0,
+                    "flags": 7,
                     "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
@@ -773,7 +756,7 @@
                     "secdec": 3,
                     "r2": "arg1",
                     "flags": 0,
-                    "4th": 3,
+                    "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -786,7 +769,7 @@
                     "secdec": 3,
                     "r2": "dst",
                     "flags": 0,
-                    "4th": 3,
+                    "4th": 2,
                     "r1": "arg2",
                     "dst": "dst"
                 }

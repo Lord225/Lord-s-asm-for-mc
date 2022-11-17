@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, Union
-from pybytes import Binary, ops
+from pybytes import Binary, arithm as ops
 import core.config as config
 import core.error as error
 import core.emulate as emulate
@@ -44,7 +44,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
     
 
     def parse_command(self):
-        low = Binary(int(self.RAM[self.ROM_COUNTER]), bit_lenght=8)
+        low = Binary(int(self.RAM[self.ROM_COUNTER]), lenght=8)
         cu = int(low[4:])
         r1 = int(low[:2])
         r2 = int(low[2:4])
@@ -193,23 +193,23 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='rsh reg[{_from_a}], reg[{_to_b}]')
     def alu_reg_reg_rsh(self, _from_a, _to_b):
-        _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
-        _value, of = ops.underflowing_rsh(_value, 1)  #TODO
-        self.overflow_flag = of
+        _value = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned') 
+        _value, of = ops.logical_underflowing_rsh(_value, 1)  #TODO
+        self.overflow_flag = of[0]
 
         self.Regs[_to_b] = _value
 
     @emulate.log_disassembly(format='lsh reg[{_from_a}], reg[{_to_b}]')
     def alu_reg_reg_lsh(self, _from_a, _to_b):
-        _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
+        _value = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned') 
         _value, of = ops.overflowing_lsh(_value, 1)  #TODO
         
         self.Regs[_to_b] = int(_value)
 
     @emulate.log_disassembly(format='add reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_add(self, _from_a, _from_b):
-        _value_a = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
-        _value_b = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned') 
+        _value_a = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned') 
+        _value_b = Binary(int(self.Regs[_from_b]), lenght=8, sign_behavior='unsigned') 
         
         _value, of = ops.overflowing_add(_value_a, _value_b)
         self.overflow_flag = of
@@ -218,7 +218,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='inc reg[{_from_a}]')
     def alu_reg_inc(self, _from_a):
-        _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
+        _value = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned') 
 
         _value, of = ops.overflowing_add(_value, 1)
         self.overflow_flag = of
@@ -227,7 +227,7 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='dec reg[{_from_a}]')
     def alu_reg_dec(self, _from_a):
-        _value = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned') 
+        _value = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned') 
 
         _value, of = ops.overflowing_sub(_value, 1)
         self.overflow_flag = of
@@ -236,16 +236,16 @@ class PM1_EMULATOR(emulate.EmulatorBase):
 
     @emulate.log_disassembly(format='sub reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_sub(self, _from_a, _from_b):
-        _value_a = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned')
-        _value_b = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned')
+        _value_a = Binary(int(self.Regs[_from_b]), lenght=8, sign_behavior='unsigned')
+        _value_b = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned')
         _value, of = ops.overflowing_sub(_value_a, _value_b)
 
         self.Regs[_from_b] = _value
     
     @emulate.log_disassembly(format='cmp reg[{_from_a}], reg[{_from_b}]')
     def alu_reg_reg_cmp(self, _from_a, _from_b):
-        _value_a = Binary(int(self.Regs[_from_b]), bit_lenght=8, sign_behavior='unsigned')
-        _value_b = Binary(int(self.Regs[_from_a]), bit_lenght=8, sign_behavior='unsigned')
+        _value_a = Binary(int(self.Regs[_from_b]), lenght=8, sign_behavior='unsigned')
+        _value_b = Binary(int(self.Regs[_from_a]), lenght=8, sign_behavior='unsigned')
         _value, of = ops.overflowing_sub(_value_b, _value_a)
         zf = int(_value) == 0
         return zf, of
