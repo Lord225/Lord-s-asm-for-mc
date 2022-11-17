@@ -129,20 +129,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                     self.store_ptr_imm(offset, r2, destination)
                 elif flags == 9:        # pop
                     self.pop(destination)
-<<<<<<< HEAD:profiles/potados_emulator.py
                 elif flags == 6:        # push
                     self.push(r1)
                 elif flags == 7:        # converts & interupt
-<<<<<<< HEAD
-                    third = int(command[8:10])
-                    r2_value = int(command[13:17])
-                    if third == 0:
-                        self.ftoi(r2_value, destination)
-                    elif third == 1:
-                        self.itof(r2_value, destination)
-                    elif third == 2:
-                        self.utof(r2_value, destination)
-=======
                     third = command[8:10].int()
                     if third == 0:
                         self.ftoi(r1, destination)
@@ -150,17 +139,14 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                         self.itof(r1, destination)
                     elif third == 2:
                         self.utof(r1, destination)
->>>>>>> 1bb6504e3ec8fe6cb85c056963cf8714fc564d3f
                     elif third == 3:
                         self.interupt(destination)
                     else:
                         raise error.EmulationError("Unrachable 1")
-=======
                 elif flags == 10:        # push
                     self.push(r2)
                 elif flags == 11:        # int
                     self.interupt(destination)
->>>>>>> dafaf9402b015ebce738b287efbcaf2f08c49fc4:profiles/potados/potados_emulator.py
                 else:
                     raise error.EmulationError("Invalid Command")
             else:
@@ -807,10 +793,10 @@ class IO:
     def Out0(self, val: Binary) -> int:
         return 0
     def Out1(self, val: Binary) -> int:
-        print(f"\tBINARY DISPLAY  -  {bin(val)}  -")
+        print(f"\tBINARY DISPLAY  -  {val.bin()}  -")
         return 0
     def Out2(self, val: Binary) -> int:
-        print(f"\tDBG  -  {int(val)}  -  {Binary(val).as_hex()}  -  {self.potados.FP.get_float(val)}")
+        print(f"\tDBG  -  {int(val)}  -  {Binary(val).hex()} ")
         return 0
     def Out3(self, val) -> int:
         return 0
