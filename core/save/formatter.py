@@ -2,17 +2,17 @@ from core.context import Context
 import core.error as error
 import core.config as config
 from core.profile.profile import Profile
-import pybytes
+import bitvec
 
 def into_binary(x, pad):
-    return pybytes.Binary(x, lenght=pad)
+    return bitvec.Binary(x, lenght=pad)
 
 def padhex(x, pad):
-    val = pybytes.Binary(x, lenght=pad)
+    val = bitvec.Binary(x, lenght=pad)
     return val.hex(prefix=False)
 
 def padbin(x, pad):
-    val = pybytes.Binary(x, lenght=pad)
+    val = bitvec.Binary(x, lenght=pad)
     return val.bin(prefix=False)
 
 def paddec(x, pad, fill = "0"):
@@ -36,32 +36,32 @@ def as_values(seq, n: int):
         seq = [seq]
     return [int(chunk, base = 2) for chunk in wrap(''.join(seq), n)]
 
-def binary(x, size) -> pybytes.Binary:
+def binary(x, size) -> bitvec.Binary:
     try:
         return into_binary(x, size)
     except:
         raise error.ParserError(None, f"Argument of value: {x} ({len(into_binary(x, None))} bits) cannot be parsed to {size} bits.")
     
 def reversed_binary(x, size):
-    return pybytes.Binary([v for v in binary(x, size)]) # Reverse value
+    return bitvec.Binary([v for v in binary(x, size)]) # Reverse value
 
 def one_hot(x, size):
     return binary(2**x, size)
 
 def reversed_one_hot(x, size):
-    return pybytes.Binary([v for v in one_hot(x, size)])
+    return bitvec.Binary([v for v in one_hot(x, size)])
 
-def unsigned_binary(x, size) -> pybytes.Binary:
-    return pybytes.Binary(x, lenght=size, sign_behavior='unsigned')
+def unsigned_binary(x, size) -> bitvec.Binary:
+    return bitvec.Binary(x, lenght=size, sign_behavior='unsigned')
 
 def sign_module_binary(x, size):
     if x >= 0:
-        return pybytes.Binary(x, lenght=size, sign_behavior='unsigned')
+        return bitvec.Binary(x, lenght=size, sign_behavior='unsigned')
     else:
-        return pybytes.Binary(x, lenght=size-1, sign_behavior='unsigned').append(True)
+        return bitvec.Binary(x, lenght=size-1, sign_behavior='unsigned').append(True)
 
 def u2_module_binary(x, size):
-    return pybytes.Binary(x, lenght=size, sign_behavior='signed')
+    return bitvec.Binary(x, lenght=size, sign_behavior='signed')
     
 def get_encoding(layout):
     if "encoding" not in layout:

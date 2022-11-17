@@ -26,7 +26,7 @@ def add_comments(program, context: Context):
     if not config.comments or config.save == 'pip':
         return program, context
     profile: Profile = context.get_profile()
-    labels = context.chunk_adreses
+    labels = context.physical_adresses
 
     longest_layout = len(max(program, key=lambda x: len(x.formatted)).formatted)
     

@@ -1,4 +1,4 @@
-#profile potados.jsonc
+#profile potados
 
 #define STACK_BASE 0x0100 
 

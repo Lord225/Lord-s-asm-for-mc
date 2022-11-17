@@ -38,8 +38,11 @@ base = \
                         "r2": {
                             "size": 4
                         },
+                        "pad": {
+                            "size": 1
+                        },
                         "offset": {
-                            "size": 9
+                            "size": 8
                         },
                         "r1": {
                             "size": 4
@@ -78,10 +81,7 @@ base = \
                             "size": 4
                         },
                         "flags": {
-                            "size": 3
-                        },
-                        "4th": {
-                            "size": 2
+                            "size": 5
                         },
                         "r1": {
                             "size": 4
@@ -147,12 +147,9 @@ base = \
                             "size": 4
                         },
                         "3th": {
-                            "size": 3
+                            "size": 5
                         },
-                        "4th": {
-                            "size": 2
-                        },
-                        "pad": {
+                        "r1": {
                             "size": 4
                         },
                         "dst": {
@@ -190,7 +187,35 @@ base = \
             },
             "FILL":"nop",
             "COMMANDS": {},
-            "MACROS":{}
+            "MACROS":{},
+            "SCHEMATIC":
+            {
+                "blank":"potados_blank.schem",
+                "high":"minecraft:netherite_block",
+                "low":"minecraft:redstone_block",
+                "layout": 
+                {
+                    # block
+                    "offset":[0, 0, 0],
+                    "stride":[0, 0, 6],
+                    "size": 32,
+                    "layout": 
+                    {
+                        # floor 
+                        "offset":[0, 0, 0],
+                        "stride":[3, 0, 0],
+                        "size": 32,
+                        "layout":
+                        {
+                            # word
+                            "offset":[0, 0, 0],
+                            "stride":[0, 2, 0],
+                            "size": 22,
+                            "layout": None
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -424,7 +449,6 @@ ops2 = """
             "secdec": {sec},
             "r2": "arg1",
             "flags": {flags},
-            "4th": {last},
             "r1": "arg2",
             "dst": "dst"
         }}
@@ -438,29 +462,34 @@ ops2 = """
             "secdec": {sec},
             "r2": "dst",
             "flags": {flags},
-            "4th": {last},
             "r1": "arg2",
             "dst": "dst"
         }}
     }}
 }}
 """
-
+# 0 0    1
+# 1 0    1
+# 0 1    1
+# 1 1    0 
 
 tokens = [
-    ("xor", 3, 0, 1),
-    ("and", 3, 7, 2),
-    ("or", 3, 0, 2),
-    ("fadd", 0, 0, 0),
-    ("fsub", 0, 0, 1),
-    ("fmul", 0, 0, 2),
-    ("fdiv", 0, 0, 3), 
-    ("xnor", 3, 4, 1),
-    ("nand", 3, 4, 2),
-    ("nor", 3, 4, 3),
+    ("xor", 3, 1),  # N 0 ~A 0 ~B 0 xor 1 0001 # 1
+    ("and", 3, 14), # N 1 ~A 1 ~B 1 or  0 1110 # 14
+    ("or", 3, 0),   # N 0 ~A 0 ~B 0 or  0 0000 # 0
+    ("fadd", 0, 1), # 00001 # 1
+    ("fsub", 0, 2),
+    ("fmul", 0, 3),
+    ("fdiv", 0, 4),
+    ("ftoi", 0, 5),
+    ("itof", 0, 6),
+    ("utof", 0, 7), 
+    ("xnor", 3, 8), # N 1 ~A 0 ~B 0 xor 0 1000 # 8
+    ("nand", 3, 7), # N 0 ~A 1 ~B 1 or  1 0111 # 7 
+    ("nor", 3, 9),  # N 1 ~A 0 ~B 0 or  1 1001 # 9
 ]
-for name, sec, flags, last in tokens:
-    formated = decoder.decode(ops2.format(name=name, sec=sec, flags=flags, last=last))
+for name, sec, flags in tokens:
+    formated = decoder.decode(ops2.format(name=name, sec=sec, flags=flags))
     base["CPU"]["COMMANDS"].update(formated)
 
 #
@@ -476,7 +505,7 @@ def gen_base():
                 "pridec": 1,
                 "secdec": 0,
                 "ptr": "ptr",
-                "3th": 1,
+                "3th": 6,
                 "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
                 "offset": "offset",
                 "srcdst": "dst"
@@ -489,7 +518,7 @@ def gen_base():
                 "pridec": 1,
                 "secdec": 0,
                 "ptr": "ptr",
-                "3th": 2,
+                "3th": 7,
                 "offset": "offset",
                 "srcdst": "dst"
             }
@@ -501,7 +530,7 @@ def gen_base():
                 "pridec": 1,
                 "secdec": 0,
                 "ptr": "ptr",
-                "3th": 3,
+                "3th": 4,
                 "lsh": "{1:0, 2:1, 4:2, 8:3}[lsh] if lsh in [1, 2, 4, 8] else None",
                 "offset": "offset",
                 "srcdst": "dst"
@@ -514,7 +543,7 @@ def gen_base():
                 "pridec": 1,
                 "secdec": 0,
                 "ptr": "ptr",
-                "3th": 4,
+                "3th": 5,
                 "offset": "offset",
                 "srcdst": "dst"
             }
@@ -604,6 +633,7 @@ gen_all(gen_macro_store)
 
 base["CPU"]["MACROS"].update({f"store index 0":{ "pattern": "mov ram[reg[{ptr:token}] + 0*reg[8]+{offset:token}], reg[{dst:token}]", "process": {}, "expansion":["mov ram[reg[{ptr}] + {offset}], reg[{dst}]"]}})
 base["CPU"]["MACROS"].update({f"load index 0": { "pattern": "mov reg[{dst:token}], ram[reg[{ptr:token}]+0*reg[8] + {offset:token}]", "process": {}, "expansion":["mov reg[{dst}], ram[reg[{ptr}] + {offset}]"]}})
+
 #
 # others
 #
@@ -615,9 +645,8 @@ values = {
             "pridec": 1,
             "secdec": 0,
             "src": 0,
-            "3th": 5,
-            "4th": 0,
-            "pad": 0,
+            "3th": 9,
+            "r1": 0,
             "dst": "dst"
         }
     },
@@ -628,9 +657,8 @@ values = {
             "pridec": 1,
             "secdec": 0,
             "src": "src",
-            "3th": 6,
-            "4th": 0,
-            "pad": 0,
+            "3th": 10,
+            "r1": 0,
             "dst": 0
         }
     },
@@ -641,12 +669,12 @@ values = {
             "pridec": 1,
             "secdec": 0,
             "src": 0,
-            "3th": 7,
-            "4th": 3,
-            "pad": 0,
+            "3th": 11,
+            "r1": 0,
             "dst": "type"
         }
     },
+
     "not": {
         "pattern": "not reg[{dst:num}], reg[{src:num}]",
         "command_layout": "alufpu",
@@ -693,25 +721,6 @@ values = {
     }
 }
 base["CPU"]["COMMANDS"].update(values)
-pattern = """
-{{
-    "{name}": {{
-        "pattern": "{name} reg[{{dst:num}}], reg[{{src:num}}]",
-        "command_layout": "other",
-        "bin": {{
-            "pridec": 1,
-            "secdec": 0,
-            "src": "{src}",
-            "3th": 7,
-            "4th": {val},
-            "pad": 0,
-            "dst": "{dst}"
-        }}
-    }}
-}}"""
-base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="ftoi", src="src", val=0, dst="dst")))
-base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="itof", src="src", val=1, dst="dst")))
-base["CPU"]["COMMANDS"].update(decoder.decode(pattern.format(name="utof", src="src", val=2, dst="dst")))
 
 IOSCHEM="""
 {{
@@ -745,5 +754,5 @@ add_io("tim state get", False, 0x0003)
 add_io("gpu status", True, 0x000c)
 add_io("gpu invoke", False, 0x000d)
 
-with open('profiles/potados.jsonc', 'w') as f:
+with open('profiles/potados/potados.jsonc', 'w') as f:
     json.dump(base, f, indent=4)

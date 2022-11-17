@@ -10,7 +10,7 @@ import time
 import enum
 import pprint
 
-from pybytes import Binary
+from bitvec import Binary
 from core.quick import gather_instructions, pack_adresses
 
 from core.save.formatter import as_values
@@ -170,7 +170,12 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
             regs = machine.exec_command(None, 'get_regs_ref', [])
             print('regs ----------------')
             for i, reg in enumerate(regs):
-                print(i, '\t', reg.bin(), reg.hex(), reg.int())
+                if isinstance(reg, Binary):
+                    print(i, '\t', reg.bin(), reg.hex(), reg.int())
+                elif isinstance(reg, int):
+                    print(i, '\t', bin(reg), hex(reg), reg)
+                else:
+                    print(i, '\t', reg)
             print('---- ----------------')
     elif command[0] == 'log':
         pos = machine.get_current_pos(None)
@@ -224,12 +229,12 @@ def emulate(program, context: Context):
     global GLOBAL_CURR_ADRESS
 
     profile: Profile = context.get_profile()
-    emulator = profile.emul
+    get_emulator = profile.emul
 
-    try:
-        machine: EmulatorBase = emulator.get_emulator()
-    except:
-        raise error.EmulationError("File with emulator definition should define the 'get_emulator' function")
+    if isinstance(get_emulator, dict):
+        raise error.EmulationError(f"Emulator is callable that returns EmulatorBase class: {get_emulator}")
+
+    machine = get_emulator()
 
     if machine is None or not isinstance(machine, EmulatorBase):
         raise error.EmulationError(f"Function get_emulator returned invalid instance of machine expected: 'EmulatorBase', got '{machine}'")

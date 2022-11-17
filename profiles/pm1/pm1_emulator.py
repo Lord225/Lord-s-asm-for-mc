@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, Union
-from pybytes import Binary, arithm as ops
+from bitvec import Binary, arithm as ops
 import core.config as config
 import core.error as error
 import core.emulate as emulate

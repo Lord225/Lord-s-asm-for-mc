@@ -1,6 +1,0 @@
-#profile zmaszyna.jsonc
-
-.CORE0
-    stp
-    ld static (1, 2)
-    st static 32 <- 2

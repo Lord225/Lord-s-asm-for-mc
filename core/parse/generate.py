@@ -31,14 +31,17 @@ def generate(program, context: Context):
                 if isinstance(process_request, int):
                     output_line[arg_name] = process_request
                 elif isinstance(process_request, str):
-                    output_line[arg_name] = eval_space(args, process_request)
+                    try:
+                        output_line[arg_name] = eval_space(args, process_request)
+                    except Exception as e:
+                        raise error.CompilerError(line_obj.line_index_in_file, f"Expression '{process_request}' in command '{name}' rised an exeption: '{e}' with args: '{args}'")
                 else:
-                    raise error.ProfileLoadError(f"Binary map in '{name}'' cannot be resolved becouse of token: '{process_request}' with name '{arg_name}'")
+                    raise error.ProfileLoadError(f"Binary map in '{name}' cannot be resolved becouse of token: '{process_request}' with name '{arg_name}'")
                 
                 if output_line[arg_name] is None:
                     raise error.CompilerError(line_obj.line_index_in_file, f"Cannot evalate value: `{process_request}` with args: {args}")
                 if not isinstance(output_line[arg_name], int):
-                    raise error.ProfileLoadError(f"Evaluator: `{process_request}` returned None-integer value: {output_line[arg_name]} for args: {args}")
+                    raise error.ProfileLoadError(f"Expression: `{process_request}` returned None-integer value: {output_line[arg_name]} for args: {args}")
         line_obj.parsed_command = {cmd['command_layout']: output_line}
     
     return program, context

@@ -1,4 +1,4 @@
-#profile cpu5.jsonc
+#profile cpu5
 
 
 // Sine plotter using FPU & Pade's approximation

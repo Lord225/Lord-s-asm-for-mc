@@ -1,0 +1,67 @@
+{
+    "CPU":
+    {
+        "Name": "<CPU NAME>",
+        "Arch": "<CPU ARCH>",
+        "Author": "<Author Name>",
+        "emulator":null, // "example_emulator"
+        "time_per_cycle":1,
+        
+        "ARGUMENTS":{
+            "variants":{
+
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"packed", // packed, align 
+            "bin_len":16,
+            "offset":0
+        },
+
+        "DEFINES":[
+
+        ],
+
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":0,
+                "write":0
+            }
+        },
+
+        "SCHEMATIC":
+        {
+            "blank":"blank.schem",           // Name of blank schematic
+            "high":"minecraft:lapis_block",  
+            "low":"minecraft:redstone_block",
+            "layout": null
+        },
+
+        "FILL":"",
+
+        // Command list
+        "COMMANDS":{
+            "nop":{
+                "pattern":"",
+                "command_layout": "",
+                "bin":{
+
+                }
+            }
+           
+        },
+        // Macro list
+        "MACROS":{
+            "macro":{
+                "pattern": "",
+                "process": {
+
+                },
+                "expansion":[
+                    
+                ]
+            }
+        }
+    }
+}
