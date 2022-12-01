@@ -129,6 +129,20 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
                     self.store_ptr_imm(offset, r2, destination)
                 elif flags == 9:        # pop
                     self.pop(destination)
+                elif flags == 6:        # push
+                    self.push(r1)
+                elif flags == 7:        # converts & interupt
+                    third = command[8:10].int()
+                    if third == 0:
+                        self.ftoi(r1, destination)
+                    elif third == 1:
+                        self.itof(r1, destination)
+                    elif third == 2:
+                        self.utof(r1, destination)
+                    elif third == 3:
+                        self.interupt(destination)
+                    else:
+                        raise error.EmulationError("Unrachable 1")
                 elif flags == 10:        # push
                     self.push(r2)
                 elif flags == 11:        # int
@@ -764,6 +778,32 @@ class REGS:
         if not self.pc_modified:
             self.regs[self.potados.PC] += 1
         self.pc_modified = False
+
+class IO:
+    def __init__(self, potados: typing.Optional[POTADOS_EMULATOR]):
+        self.potados = potados if potados is not None else POTADOS_EMULATOR()
+    def Null(self, val) -> int:
+        return 0
+    def ClockFlag(self, val) -> int:
+        return 0
+    def TimerValue(self, val) -> int:
+        raise error.EmulationError("TODO")
+    def TimerFlags(self, val) -> int:
+        raise error.EmulationError("TODO")
+    def Out0(self, val: Binary) -> int:
+        return 0
+    def Out1(self, val: Binary) -> int:
+        print(f"\tBINARY DISPLAY  -  {val.bin()}  -")
+        return 0
+    def Out2(self, val: Binary) -> int:
+        print(f"\tDBG  -  {int(val)}  -  {Binary(val).hex()} ")
+        return 0
+    def Out3(self, val) -> int:
+        return 0
+
+    ADDRESSES = [Null, ClockFlag, TimerValue, TimerFlags, Out0, Out1, Out2, Out3]        
+
+
 class RAM:
     DEBUG_LOG_RAM_MOVMENT = False 
     DEBUG_FREEZE_RAM_WRITES = False
@@ -776,6 +816,7 @@ class RAM:
         else:
             self.ram: np.ndarray = ram.astype('uint16')
         self.ram = self.ram[:256]
+        self.io = IO(potados)
 
     
     def __getitem__(self, key: typing.Union[int, Binary]) -> Binary:
@@ -817,6 +858,9 @@ class RAM:
     def io_set(self, index: int, val: Binary):
         if index > 0x0100:
             raise
+
+        if index <= 0x001f:
+            self.io.ADDRESSES[index](self.io, val)
         
         if index == 6:
             print(f"[PotaDOS] [DBG] {val.int()}")
@@ -824,6 +868,9 @@ class RAM:
     def io_get(self, index: int) -> Binary:
         if index > 0x0100:
             raise
+
+        if index <= 0x001f:
+            return self.io.ADDRESSES[index](self.io, 0)
         
         return u16(0)
     

@@ -201,7 +201,7 @@ def telemetry_display(program, context: Context):
     import pandas
     from collections import Counter
     from sklearn.preprocessing import OneHotEncoder
-    from scipy.interpolate import interp1d
+    from scipy.signal import savgol_filter
     import numpy as np
 
     df = pandas.DataFrame(GLOBAL_CMD_HISTORY, columns=['history'])
@@ -212,7 +212,7 @@ def telemetry_display(program, context: Context):
     encoder_df = pandas.DataFrame(encoder.fit_transform(df[['history']]).toarray(), columns=encoder.categories_)
 
     rolling = encoder_df.rolling(int(config.telemetry_window_size), min_periods=1).mean().interpolate(method='cubic', limit_direction='both')
-    rollinginterp = interp1d(rolling.index, rolling.T, kind='cubic')
+    smoothed = savgol_filter(rolling.T, config.telemetry_window_size, 3)
 
     hist.plot(kind='bar')
     plt.xticks(rotation=45)
@@ -221,12 +221,7 @@ def telemetry_display(program, context: Context):
     plt.title("Command Usage Histogram")
     plt.show()
 
-    if config.telemetry_interpolate:
-        freqs = rollinginterp(np.linspace(0, len(rolling.index)-1, int(config.telemetry_interpolate_points))).T
-    else:
-        freqs = rolling
-
-    plt.plot(freqs, label=rolling.columns)
+    plt.plot(smoothed.T, label=rolling.columns)
     plt.legend()
     plt.show()
 
