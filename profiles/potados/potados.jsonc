@@ -700,7 +700,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 1,
+                    "flags": 8,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -712,7 +712,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 1,
+                    "flags": 8,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -724,7 +724,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 14,
+                    "flags": 7,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -736,7 +736,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 14,
+                    "flags": 7,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -940,7 +940,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 8,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -952,7 +952,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 8,
+                    "flags": 1,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -964,7 +964,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "arg1",
-                    "flags": 7,
+                    "flags": 14,
                     "r1": "arg2",
                     "dst": "dst"
                 }
@@ -976,7 +976,7 @@
                     "pridec": 1,
                     "secdec": 3,
                     "r2": "dst",
-                    "flags": 7,
+                    "flags": 14,
                     "r1": "arg2",
                     "dst": "dst"
                 }

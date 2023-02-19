@@ -201,10 +201,10 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
         r1 = int(command[4:8])
         r2 = int(command[13:17])
 
-        op_flag      = flags[0]
-        neg_r2_flag  = flags[1]
-        neg_r1_flag  = flags[2]
-        neg_out_flag = flags[3]
+        op_flag      = flags[3]
+        neg_r2_flag  = flags[2]
+        neg_r1_flag  = flags[1]
+        neg_out_flag = flags[0]
 
         if op_flag:  # xor
             if neg_out_flag:
@@ -283,7 +283,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     # FPU #
     #######
     def cast_to_fp16(self, value: Binary) -> float:
-        return np.frombuffer(value.data, dtype='float16')[0]
+        return np.frombuffer(value.raw_bytes, dtype='float16')[0]
     def cast_from_fp16(self, value: float) -> Binary:
         return Binary(np.array([value], dtype='float16').tobytes(), lenght=16)
     @emulate.log_disassembly(format='fadd reg[{dst}], reg[{r1}], reg[{r2}]')

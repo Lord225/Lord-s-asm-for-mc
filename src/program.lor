@@ -1,25 +1,16 @@
-#profile pm1
+#profile bedrockcore
 
-#define DISPL 0xE5
+.CORE0 
+    cldi r1, 1, r2
+    mov r1, r2L
+    mov r1, r2H
+    mov r1, r2l
+    mov r1, r2h
 
-// compile to binary & emulate
-// python compile.py --save pad -c --run --logs
+    movs r1, r2L
+    movs r1, r2H
+    movs r1, r2l
+    movs r1, r2h
 
-// compile & send to rs-fun
-// python compile.py | python tools/send.py --nick <LOGIN> --pass <PASSWORD> --copy
 
-.CORE0
-    mov 0, reg[0]
-    mov 1, reg[1]
-    mov DISPL, reg[2]
-    mov 233, reg[3]
-LOOP:
-    add reg[0], reg[1]
-    mov reg[0], ram[reg[2]]
-    add reg[1], reg[0]
-    mov reg[1], ram[reg[2]]
-
-    je reg[3], reg[1], END
-    jmp LOOP
-END:
-    shut
+    halt

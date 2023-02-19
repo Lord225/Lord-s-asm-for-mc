@@ -474,8 +474,8 @@ ops2 = """
 # 1 1    0 
 
 tokens = [
-    ("xor", 3, 1),  # N 0 ~A 0 ~B 0 xor 1 0001 # 1
-    ("and", 3, 14), # N 1 ~A 1 ~B 1 or  0 1110 # 14
+    ("xor", 3, 8),  # N 0 ~A 0 ~B 0 xor 1 1000 # 8
+    ("and", 3, 7), # N 1 ~A 1 ~B 1 or  0 0111 # 7
     ("or", 3, 0),   # N 0 ~A 0 ~B 0 or  0 0000 # 0
     ("fadd", 0, 1), # 00001 # 1
     ("fsub", 0, 2),
@@ -484,8 +484,8 @@ tokens = [
     ("ftoi", 0, 5),
     ("itof", 0, 6),
     ("utof", 0, 7), 
-    ("xnor", 3, 8), # N 1 ~A 0 ~B 0 xor 0 1000 # 8
-    ("nand", 3, 7), # N 0 ~A 1 ~B 1 or  1 0111 # 7 
+    ("xnor", 3, 1), # N 1 ~A 0 ~B 0 xor 0 0001 # 1
+    ("nand", 3, 14), # N 0 ~A 1 ~B 1 or  1 1110 # 14 
     ("nor", 3, 9),  # N 1 ~A 0 ~B 0 or  1 1001 # 9
 ]
 for name, sec, flags in tokens:
