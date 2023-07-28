@@ -1,16 +1,19 @@
-#profile bedrockcore
+#profile potados
 
 .CORE0 
-    cldi r1, 1, r2
-    mov r1, r2L
-    mov r1, r2H
-    mov r1, r2l
-    mov r1, r2h
+    nop
+.SECTION2 96
+    nop
+TEST:
+    mov reg[1], 0
+    mov reg[2], 10
+    jne reg[1]++, reg[2], TEST
+    int 0
 
-    movs r1, r2L
-    movs r1, r2H
-    movs r1, r2l
-    movs r1, r2h
-
-
-    halt
+// jne 9, 10   ->  Taken
+// jne 10, 10  ->  Skip
+// je  10, 10  ->  Taken
+// je  9, 10   ->  Skip
+// jge 10, 10  ->  Taken
+// jge 9, 10   ->  Taken
+// jge 10, 9   ->  Skip

@@ -359,10 +359,10 @@ branchimm ="""
     }}
 }}
 """
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="++", decoder=1)))
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="--", decoder=2)))
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="++", decoder=1)))
-base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="--", decoder=2)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="++", decoder=2)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jge", value=6, symbol="--", decoder=1)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="++", decoder=2)))
+base["CPU"]["COMMANDS"].update(decoder.decode(branchimm.format(cmd_name="jne", value=7, symbol="--", decoder=1)))
 
 #
 # ALU PART 1

@@ -4,6 +4,7 @@ from enum import Enum, auto
 class TokenTypes(Enum):
     LITERAL_WORD = auto()
     ARGUMENT = auto()
+    PREFIX_ARGUMENT = auto()
 
 class ArgumentTypes(Enum):
     NUM = auto()

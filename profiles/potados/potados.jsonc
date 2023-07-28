@@ -369,7 +369,7 @@
                     "secdec": 6,
                     "r2": "reg",
                     "offset": "offset",
-                    "r1": 1
+                    "r1": 2
                 }
             },
             "branch jge --": {
@@ -380,7 +380,7 @@
                     "secdec": 6,
                     "r2": "reg",
                     "offset": "offset",
-                    "r1": 2
+                    "r1": 1
                 }
             },
             "branch jne ++": {
@@ -391,7 +391,7 @@
                     "secdec": 7,
                     "r2": "reg",
                     "offset": "offset",
-                    "r1": 1
+                    "r1": 2
                 }
             },
             "branch jne --": {
@@ -402,7 +402,7 @@
                     "secdec": 7,
                     "r2": "reg",
                     "offset": "offset",
-                    "r1": 2
+                    "r1": 1
                 }
             },
             "add": {

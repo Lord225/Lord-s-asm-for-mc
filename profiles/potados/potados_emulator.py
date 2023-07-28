@@ -92,9 +92,9 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             elif sec_decoder == 5: # jb 
                 self.jb(r1_value, r2_value, offset)
             elif sec_decoder == 6: # jge imm
-                self.jge_inc_dec("++" if r1_value == 1 else "--", r2_value, offset)
+                self.jge_inc_dec("++" if r1_value == 2 else "--", r2_value, offset)
             elif sec_decoder == 7: # je imm
-                self.jne_inc_dec("++" if r1_value == 1 else "--", r2_value, offset)
+                self.jne_inc_dec("++" if r1_value == 2 else "--", r2_value, offset)
             else:
                 raise error.EmulationError("Unreachable")
         else:                      # rest
