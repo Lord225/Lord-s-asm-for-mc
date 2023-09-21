@@ -251,26 +251,26 @@
                     "dst": 7
                 }
             },
-            "branch jge ": {
+            "branch jge imm": {
                 "pattern": "jge reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 0,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
-            "branch jl ": {
+            "branch jl imm": {
                 "pattern": "jl reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 1,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
             "branch je ": {
@@ -295,70 +295,70 @@
                     "r1": "arg1"
                 }
             },
-            "branch jae ": {
+            "branch jae imm": {
                 "pattern": "jae reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
-            "branch jb ": {
+            "branch jb imm": {
                 "pattern": "jb reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
-            "branch jg imm": {
+            "branch jg ": {
                 "pattern": "jg reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 1,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
-            "branch ja imm": {
+            "branch ja ": {
                 "pattern": "ja reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
-            "branch jle imm": {
+            "branch jle ": {
                 "pattern": "jle reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 0,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
-            "branch jbe imm": {
+            "branch jbe ": {
                 "pattern": "jbe reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
             "branch jge ++": {

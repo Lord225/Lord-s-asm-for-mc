@@ -28,7 +28,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     def __init__(self) -> None:
         self.regs = REGS(self)
         self.ram = RAM(self, None)
-        self.rom = ROM(self, 4096)
+        self.rom = ROM(self, 1024)
         self.is_running_flag = True
         self.pc_modified = False
 

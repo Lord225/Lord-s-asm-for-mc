@@ -44,8 +44,8 @@ def calculate_bit_cords(index, layout):
         stride = np.array(layout["stride"])
         next_level = layout["layout"] 
 
-        if index >= get_size(layout):
-            raise error.CompilerError(None, "Adress out of bounds")
+        if index > get_size(layout):
+            raise error.CompilerError(None, f"Adress out of bounds, index: {index}, size: {get_size(layout)}")
         
         if next_level is None:
             return offset+stride*index

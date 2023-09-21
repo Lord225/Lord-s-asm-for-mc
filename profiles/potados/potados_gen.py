@@ -321,18 +321,18 @@ branch ="""
 }}
 """
 tokens = [
-    ("jge", 0, False), 
-    ("jl", 1, False), 
+    ("jge", 0, True), 
+    ("jl", 1, True), 
     ("je", 2, False), 
     ("jne", 3, False), 
-    ("jae", 4, False), 
-    ("jb", 5, False),
+    ("jae", 4, True), 
+    ("jb", 5, True),
     # Rev args
-    ("jg", 1, True), 
-    ("ja", 5, True),
+    ("jg", 1, False), 
+    ("ja", 5, False),
 
-    ("jle", 0, True), 
-    ("jbe", 4, True),
+    ("jle", 0, False), 
+    ("jbe", 4, False),
 ]
 
 for token, value, rev in tokens:
