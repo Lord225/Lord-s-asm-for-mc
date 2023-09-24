@@ -216,6 +216,12 @@ class Profile:
 
     
 def load_profile_from_file(path, load_emulator = True) -> Profile:
+    path = path.strip('"')
+    if path.startswith("http"):
+        import core.install_profiles as install_profiles
+        path = install_profiles.download_and_install_profile(path, quiter=True)
+
+    path = f"{config.default_json_profile_path}\\{path}"
     profile, base_folder = load_json_profile(path)
     emulator = get_emulator(base_folder, profile) if load_emulator else None
 

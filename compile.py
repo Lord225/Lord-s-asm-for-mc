@@ -24,7 +24,7 @@ It will compile "program.lor" and save it in "output" dir.
 if emulation is avalible add --run to emulate compiled program and --logs to show instructions in console (if avalible)
 """)
 
-parser.add_argument("-i", "--input", type=str, default="./src/program.lor",
+parser.add_argument("-i", "--input", type=str, default="./program.lor",
 help="""Name of file to compile
 Default: src/program.lor""")
 
@@ -47,6 +47,15 @@ parser.add_argument('--logs', dest='logmode', action='store_true', help="Show em
 parser.set_defaults(feature=False)
 
 parser.add_argument('--why', dest='why_error', action='store_true', help="Program will try harder to find why command cannot be mached")
+parser.set_defaults(feature=True)
+
+parser.add_argument('--install', dest='install', type=str, help="Install profile from github", default = None)
+
+parser.add_argument('--installed', dest='installed', action='store_true', help="Show installed profiles")
+parser.set_defaults(feature=False)
+
+parser.add_argument('--new-profile', dest='new_profile', type=str, help="Create new profile")
+parser.add_argument('--home', dest='home', action='store_true', help="Create new profile in home directory")
 parser.set_defaults(feature=False)
 
 parser.add_argument('--reassume', dest='reassume', action='store_true', help="Show informations about profile")
@@ -84,10 +93,24 @@ if config.init is not None:
 config.override_from_dict(vars(parserargs))
 override_debug()
 
-
 if config.save == "pip":
     # redirect output
     sys.stdout = sys.stderr
+
+if parserargs.install is not None:
+    from core.install_profiles import download_and_install_profile
+    download_and_install_profile(config.install)
+    exit()
+
+if parserargs.installed:
+    from core.install_profiles import show_installed_profiles
+    show_installed_profiles()
+    exit()
+
+if parserargs.new_profile is not None:
+    from core.install_profiles import create_blank
+    create_blank(config.new_profile, parserargs.home)
+    exit()
 
 def main():
     print(f"Lord's Compiler Redux is working on '{config.input}'")
@@ -115,7 +138,7 @@ def main():
     override_debug()
 
     # Load profile and pass it to context
-    profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}\\{context.profile_name}", True)
+    profile = core.profile.profile.load_profile_from_file(context.profile_name, True)
 
     # Second pass reloads file with new settings
     output, context = core.pipeline.exec_pipeline(load_preproces_pipeline, start_file, contextlib.Context(profile), progress_bar_name='Reloading')

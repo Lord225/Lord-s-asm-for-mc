@@ -123,7 +123,7 @@ def make_format_pipeline()  -> List[Tuple[str, Callable]]:
         [
             ('format', save.formatter.format_output),
         ]
-    return pipeline
+    return pipeline  # type: ignore
 
 def check_types(lines, stage):
     for line in lines:

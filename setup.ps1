@@ -25,16 +25,20 @@ pip install -r requirements.txt
 $compile = Join-Path $root "compile.py"
 
 # funcytion lor that calls python $compile with arguments, write to $profile
-"function lor { python `"$compile`" $args }" | Out-File -FilePath $PROFILE -Append
+"function lor { python `"$compile`" @args }" | Out-File -FilePath $PROFILE -Append
+
+
+$send = Join-Path $root "tools" "send.py"
+"function rfsend { python `"$send`" @args }" | Out-File -FilePath $PROFILE -Append
 
 # Inform the user
 Write-Host "Alias 'lor' created for 'python $compile' and added to $PROFILE."
 
 # add $root to the PATH, if not already there
-if ($env:Path -notlike "*$root*") {
-    $env:Path += ";$root"
-    Write-Host "Added '$root' to the PATH."
-}
+
+Write-Host "Adding '$root' to the PATH environment variable."
+"`$env:PATH  += `";$root`"" | Out-File -FilePath $PROFILE -Append
+
 
 "# lords-asm-for-mc-end" | Out-File -FilePath $PROFILE -Append
 

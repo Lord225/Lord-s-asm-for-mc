@@ -14,6 +14,11 @@ def save(program, context: Context):
     dirname = config.output
     filename, ext = os.path.splitext(os.path.basename(dirname))
     filenames = {}
+
+    # check if directory exists
+    if not os.path.exists(dirname):
+        os.makedirs(os.path.dirname(dirname), exist_ok=True)
+
     if config.save == 'schem':
         exporter.generate_schematic_from_formatted(program, context)
         return program, context

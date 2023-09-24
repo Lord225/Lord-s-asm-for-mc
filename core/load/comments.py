@@ -7,6 +7,9 @@ import core.config as config
 def remove_comments(lines: List[Line], context: Context):
     for line in lines:
         if "//" in line.line:
+            if line.line.find('"') < line.line.find("//"):
+                continue
+
             if config.save_comments_after_lines:
                 pos = line.line.find("//%")
                 if pos > 0:

@@ -1,0 +1,4 @@
+#profile example
+
+.CORE0
+    nop

@@ -1,0 +1,4 @@
+#profile cpu5
+
+.ENTRY
+    przerywanie 0

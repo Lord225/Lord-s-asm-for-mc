@@ -209,7 +209,7 @@ def telemetry_display(program, context: Context):
     
     encoder = OneHotEncoder(handle_unknown='ignore')
     
-    encoder_df = pandas.DataFrame(encoder.fit_transform(df[['history']]).toarray(), columns=encoder.categories_)
+    encoder_df = pandas.DataFrame(np.array(encoder.fit_transform(df[['history']])), columns=encoder.categories_)
 
     rolling = encoder_df.rolling(int(config.telemetry_window_size), min_periods=1).mean().interpolate(method='cubic', limit_direction='both')
     smoothed = savgol_filter(rolling.T, config.telemetry_window_size, 3)

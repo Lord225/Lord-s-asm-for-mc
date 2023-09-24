@@ -1,0 +1,4 @@
+#profile pm1
+
+.CORE0
+    int 0
