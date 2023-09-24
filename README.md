@@ -62,7 +62,29 @@ Stwórz własny profil, zapisz odrazu w głównym folderze
 lor --new-profile my-cpu --home
 ```
 
-
+### Jak stworzyć repo?
+Twoje repozytorium z profilem powinno wyglądać jak to: [https://github.com/Lord225/potados]
+* Pliki profilu powinny być w głównym folerze
+* nazwa repozytorium to nazwa profilu
+```
+root/
+  potados.jsonc
+  init.lor
+  emulator.py
+  ...
+```
+Jeżeli chcesz stworzyć repozytorium z kodem i profilem upewnij się że profil znajduje się w podkatalogu: `profiles/<NAZWA PROFILU>`
+Przykładowo:
+```
+root/
+  out/
+  profiles/
+    potados/
+      potados.jsonc
+      init.lor
+      emulator.py
+      program.lor
+```
 ## ArgParser
 ### -i --input
 Ścieżka pliku wejściowego z programem, 
