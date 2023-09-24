@@ -68,6 +68,7 @@ Twoje repozytorium z profilem powinno wyglądać jak to: https://github.com/Lord
 * nazwa repozytorium to nazwa profilu
 
 To repozytorium pozwala na używanie komendy `--install` i składni `#profile "https://github.com/Lord225/potados"`
+
 ```
 root/
   potados.jsonc
