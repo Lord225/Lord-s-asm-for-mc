@@ -10,6 +10,94 @@ Program kompilujący całkowicie customowy assembler, przyjmując schemat komend
   * skrypt modyfikuje profil powershella. Możesz go zobaczyć wpisując `code $profile` 
 * Możesz cofnąć zmiany uruchamając skrypt `revert`
 
+## Przykłady
+Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
+
+### Zapisz
+Skompiluj i zapisz. (plik domylśny to `program.lor`)
+```
+lor -s pad -c 
+```
+Zapisz jako schematic
+```
+lor compile.py -s schem 
+```
+Wgraj schematic na serwer
+```
+lor | rfsend --nick NICK --pass PASS -c
+```
+### Emuluj
+Uruchom emulator z logami
+```
+lor --run --logs
+```
+Skompiluj inny plik niż domyślny, zapisz z inną nazwą
+```
+lor -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
+```
+Zapisz jako json
+```
+lor --save py
+```
+
+### Twórz
+Sprawdź jakie profile są zainstalowane (folder `profiles`)
+```
+lor --installed
+```
+
+Zainstaluj profil z repo na githubie (wymagany `git`)
+```
+lor --install <GIT LINK>
+```
+
+Stwórz własny profil!
+```
+lor --new-profile my-cpu
+```
+
+Stwórz własny profil, zapisz odrazu w głównym folderze
+```
+lor --new-profile my-cpu --home
+```
+
+
+## ArgParser
+### -i --input
+Ścieżka pliku wejściowego z programem, 
+Domyślnie src/program.lor
+### -o --output
+Ściezka pliku wyjściowego. Do nazwy zostanie dodana nazwa entrypoint'a.
+
+
+Domyślnie: compiled/compiled.txt
+### -s --save
+format z jakim ma zostać zapisana binarka.
+* `hex` - argumenty podane hexadecymalnie w bajtach
+* `bin` - argumenty w systemie binarnym, wyrównane do argumentów
+* `pad` - argumenty w systemie binarnym, wyrównane do bajta
+* `py`  - zapisuje w postaci json'a
+* `schem` - zapisuje w postaci schematica
+
+
+Domyślnie: None (Nie wykona zapisu)
+### -c --comments
+Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
+### -r --run
+Uruchom emulacje
+### --logs
+Czy podczas emulacji mają się wyświetlać operacje procesora. (nie wpływa na komendy debugowania)
+### --why
+Kompilator bardziej się postara przy wyświetlaniu komunikatu błędu.
+### --install INSTALL
+Zainstaluj profil z git'a
+### --installed
+Pokaż zainstalowane profile
+### --new-profile NEW_PROFIL
+Stwórz nowy profil o nazwie NEW_PROFILE
+### --home
+Stwórz ten profil w głównym folderze
+
 ## Możliwości
 ### Syntax
 Program daje dużo swobody w formie i wyglądzie komend.
@@ -77,82 +165,3 @@ rsh reg[2] // Maro rozwineło się trzy razy, za każdym razem podstawiając sie
 rsh reg[2]
 rsh reg[2]
 ```
-## Przykłady
-Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
-
-### Zapisz
-Skompiluj i zapisz. (plik domylśny to `program.lor`)
-```
-lor -s pad -c 
-```
-Zapisz jako schematic
-```
-lor compile.py -s schem 
-```
-Wgraj schematic na serwer
-```
-lor | rfsend --nick NICK --pass PASS -c
-```
-### Emuluj
-Uruchom emulator z logami
-```
-lor --run --logs
-```
-Skompiluj inny plik niż domyślny, zapisz z inną nazwą
-```
-lor -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
-```
-Zapisz jako json
-```
-lor --save py
-```
-
-### Twórz
-Sprawdź jakie profile są zainstalowane (folder `profiles`)
-```
-lor --installed
-```
-
-Zainstaluj profil z repo na githubie (wymagany `git`)
-```
-lor --install <GIT LINK>
-```
-
-Stwórz własny profil!
-```
-lor --new-profile my-cpu
-```
-
-Stwórz własny profil, zapisz odrazu w głównym folderze
-```
-lor --new-profile my-cpu --home
-```
-
-## ArgParser
-### -i --input
-Ścieżka pliku wejściowego z programem, 
-Domyślnie src/program.lor
-### -o --output
-Ściezka pliku wyjściowego. Do nazwy zostanie dodana nazwa entrypoint'a.
-
-
-Domyślnie: compiled/compiled.txt
-### -s --save
-format z jakim ma zostać zapisana binarka.
-* `hex` - argumenty podane hexadecymalnie w bajtach
-* `bin` - argumenty w systemie binarnym, wyrównane do argumentów
-* `pad` - argumenty w systemie binarnym, wyrównane do bajta
-* `py`  - zapisuje w postaci json'a
-* `schem` - zapisuje w postaci schematica
-
-
-Domyślnie: None (Nie wykona zapisu)
-### -c --comments
-Jeżeli plik ma zostać zapisany, czy na końcu każdej linijki mają być załączone komentarze z liniami w assemblerze, etykietami i fizycznymi adresami komend.
-### -r --run
-Uruchom emulacje
-### --logs
-Czy podczas emulacji mają się wyświetlać operacje procesora. (nie wpływa na komendy debugowania)
-### --why
-Kompilator bardziej się postara przy wyświetlaniu komunikatu błędu.
-
