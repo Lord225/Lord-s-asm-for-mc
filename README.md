@@ -4,8 +4,10 @@ Program kompilujący całkowicie customowy assembler, przyjmując schemat komend
 # Instalacja
 * Sklonuj repo lub pobierz jako zip i wypakuj
 * Uruchom `setup.ps1` w powershellu lub `setup.sh` w bash'u
-  * skrypt doda alias do kompilatora nazwany `lor`. Możesz teraz otworzyć dowolny folder i wpisać `lor` aby plik
+  * skrypt doda alias do kompilatora nazwany `lor`. Możesz teraz otworzyć dowolny folder i wpisać `lor` aby używać kompilatora
   * skrypt doda również komende sendrf. Pozwala wysyłać schematici na redstonefun.pl
+  * skrypt doda folder do PATH
+  * skrypt modyfikuje profil powershella. Możesz go zobaczyć wpisując `code $profile` 
 * Możesz cofnąć zmiany uruchamając skrypt `revert`
 
 ## Możliwości
