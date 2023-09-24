@@ -1,8 +1,0 @@
-#profile potados
-
-.CORE0 
-    mov reg[2], 12
-    mov reg[3], 2
-LOOP:
-    mov reg[2], ram[reg[2]+1]
-    
