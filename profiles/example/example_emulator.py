@@ -19,7 +19,7 @@ class EXAMPLE_EMULATOR(emulate.EmulatorBase):
     def next_tick(self,) -> Optional[str]:
         # Execute next CPU cycle
 
-        instruction = Binary(self.ROM[self.ROM_COUNTER], lenght=16) # You can use this module to work with binary numbers
+        instruction = Binary(self.ROM[self.ROM_COUNTER.int()], lenght=16) # You can use this module to work with binary numbers
         # 0000 00 00 00000000
 
         cu = instruction[12:16]

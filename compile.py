@@ -24,11 +24,11 @@ It will compile "program.lor" and save it in "output" dir.
 if emulation is avalible add --run to emulate compiled program and --logs to show instructions in console (if avalible)
 """)
 
-parser.add_argument("-i", "--input", type=str, default="src/program.lor",
+parser.add_argument("-i", "--input", type=str, default="./src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor""")
 
-parser.add_argument("-o", "--output", type=str, default="output/compiled.txt", help="Name of file to save in")
+parser.add_argument("-o", "--output", type=str, default="./out/compiled.txt", help="Name of file to save in")
 parser.add_argument("-s", "--save", choices=["bin", "pip", "hex", "pad", "schem"], type=str, default = 'pip',
 help="""> pad - Build source and save as binary with padding to bytes
 > bin - Build source and save as binary with padding to arguments

@@ -20,18 +20,27 @@ def load_json(file):
         raise error.ProfileLoadError(f"Cannot Load json: {err}") 
 
 def load_json_profile(profile_path):
-    path = Path(profile_path)
-    if os.path.isfile(path):
-        with open(path, "r") as file:
-            base_folder = path.parent
-            return load_json(file), base_folder
-    if os.path.isdir(path):
-        path_to_profile = path/f'{path.basename()}.jsonc'
-        if path_to_profile.exists():
-            with open(path_to_profile, "r") as file:
-                base_folder = path_to_profile.parent
+    def load(path):
+        path = Path(path)
+        if os.path.isfile(path):
+            with open(path, "r") as file:
+                base_folder = path.parent
                 return load_json(file), base_folder
-    raise error.ProfileLoadError(f"Cannot find Profile under {path}")
+        if os.path.isdir(path):
+            path_to_profile = path/f'{path.basename()}.jsonc'
+            if path_to_profile.exists():
+                with open(path_to_profile, "r") as file:
+                    base_folder = path_to_profile.parent
+                    return load_json(file), base_folder
+    loaded = load(profile_path)
+    if loaded is not None:
+        return loaded
+    
+    # check if profile is in default profiles folder
+    loaded = load(f"{config.HOME_DIR}\\{profile_path}")
+    if loaded is not None:
+        return loaded
+    raise error.ProfileLoadError(f"Cannot find Profile under {profile_path}")
 
 def get_emulator(DEFAULT_PROFILES_PATH: Path, CPU_PROFILE: dict):
     emul = CPU_PROFILE["CPU"]["emulator"]

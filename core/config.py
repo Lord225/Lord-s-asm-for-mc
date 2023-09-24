@@ -1,12 +1,14 @@
 import configparser
 from ast import literal_eval
+import os
 
 DEFAULT_SECTION = "lor"
 SHOW_UNKNOWNS = True
+HOME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 config = configparser.ConfigParser()
 
-config.read("settings/default.ini")
+config.read(f"{HOME_DIR}\\settings\\default.ini")
 
 def __getattr__(name):
     if name not in config[DEFAULT_SECTION] and SHOW_UNKNOWNS:

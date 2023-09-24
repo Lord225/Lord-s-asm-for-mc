@@ -14,7 +14,7 @@ def init():
     decoder = json.JSONDecoder()
     try:
         raw = decoder.decode(data)
-        profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}/{raw['profile_name']}", False)
+        profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}\\{raw['profile_name']}", False)
 
         data = list(raw['data'])
     

@@ -11,9 +11,8 @@ def collect_data(data):
     return [line.formatted for line in data]
 
 def save(program, context: Context):
-    outfile = config.output
-    dirname = os.path.dirname(outfile)
-    filename, ext = os.path.splitext(os.path.basename(outfile))
+    dirname = config.output
+    filename, ext = os.path.splitext(os.path.basename(dirname))
     filenames = {}
     if config.save == 'schem':
         exporter.generate_schematic_from_formatted(program, context)
@@ -27,9 +26,8 @@ def save(program, context: Context):
         json.dump(data_to_dump, sys.__stdout__)
         
     else:
-        new_filename = os.path.join(dirname, f"{filename}{ext}")
-        filenames['default'] = new_filename
-        with open(new_filename, 'w') as file:
+        filenames['default'] = filename
+        with open(dirname, 'w') as file:
             collected = [line.formatted for line in program]
             file.write(tabulate(collected, tablefmt = config.tablefmt))
         context.outfiles.append(filenames)
