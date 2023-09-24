@@ -19,24 +19,24 @@ Write-Host "Installing dependencies for 'lords-asm-for-mc' in $root using pip"
 pip install -r requirements.txt
 
 # add # lords-asm-for-mc-begin comment to $profile
-"# lords-asm-for-mc-begin" | Out-File -FilePath $PROFILE -Append
-"# do not edit, remove or change these comments, it is used by 'lords-asm-for-mc' to install and uninstall itself" | Out-File -FilePath $PROFILE -Append
+"# lords-asm-for-mc-begin" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
+"# do not edit, remove or change these comments, it is used by 'lords-asm-for-mc' to install and uninstall itself" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
 
 # add alias to compile.py
 $compile = Join-Path $root "compile.py"
-"function lor { $input | python `"$compile`" @args }" | Out-File -FilePath $PROFILE -Append
+"function lor { `$input | python `"$compile`" @args }" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
 
 # add alias to send.py
-$send = Join-Path $root "tools" "send.py"
-"function rfsend { $input | python `"$send`" @args }" | Out-File -FilePath $PROFILE -Append
+$send = Join-Path $root "tools/send.py"
+"function rfsend { `$input | python `"$send`" @args }" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
 
 Write-Host "Alias 'lor' and 'rfsend' created in $PROFILE"
 
 # add $root to the PATH, if not already there
-"`$env:PATH  += `";$root`"" | Out-File -FilePath $PROFILE -Append
+"`$env:PATH  += `";$root`"" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
 Write-Host "Added '$root' to the PATH"
 
-"# lords-asm-for-mc-end" | Out-File -FilePath $PROFILE -Append
+"# lords-asm-for-mc-end" | Out-File -FilePath $PROFILE -Append -Encoding ASCII
 
 Write-Host "Done"
 Write-Host "You may need to restart your PowerShell session for changes to take effect"
