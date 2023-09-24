@@ -325,14 +325,14 @@ tokens = [
     ("jl", 1, True), 
     ("je", 2, False), 
     ("jne", 3, False), 
-    ("jae", 4, True), 
-    ("jb", 5, True),
+    ("jae", 4, False), 
+    ("jb", 5, False),
     # Rev args
     ("jg", 1, False), 
-    ("ja", 5, False),
+    ("ja", 5, True),
 
     ("jle", 0, False), 
-    ("jbe", 4, False),
+    ("jbe", 4, True),
 ]
 
 for token, value, rev in tokens:

@@ -295,26 +295,26 @@
                     "r1": "arg1"
                 }
             },
-            "branch jae imm": {
+            "branch jae ": {
                 "pattern": "jae reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
-            "branch jb imm": {
+            "branch jb ": {
                 "pattern": "jb reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg1",
+                    "r2": "arg2",
                     "offset": "offset",
-                    "r1": "arg2"
+                    "r1": "arg1"
                 }
             },
             "branch jg ": {
@@ -328,15 +328,15 @@
                     "r1": "arg1"
                 }
             },
-            "branch ja ": {
+            "branch ja imm": {
                 "pattern": "ja reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 5,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
             "branch jle ": {
@@ -350,15 +350,15 @@
                     "r1": "arg1"
                 }
             },
-            "branch jbe ": {
+            "branch jbe imm": {
                 "pattern": "jbe reg[{arg1:num}], reg[{arg2:num}], {offset:offset_label}",
                 "command_layout": "branch",
                 "bin": {
                     "pridec": 2,
                     "secdec": 4,
-                    "r2": "arg2",
+                    "r2": "arg1",
                     "offset": "offset",
-                    "r1": "arg1"
+                    "r1": "arg2"
                 }
             },
             "branch jge ++": {
