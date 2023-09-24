@@ -14,7 +14,7 @@ Program kompilujący całkowicie customowy assembler, przyjmując schemat komend
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
 
 ### Zapisz
-Skompiluj i zapisz. (plik domylśny to `program.lor`)
+Skompiluj i zapisz. (plik domylśny to `program.lor`, zapisze do `out/compiled.txt`)
 ```
 lor -s pad -c 
 ```
