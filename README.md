@@ -165,3 +165,6 @@ rsh reg[2] // Maro rozwineło się trzy razy, za każdym razem podstawiając sie
 rsh reg[2]
 rsh reg[2]
 ```
+## Limity
+Aktualnie nie ma możliwości prostego parsowania sufixów i prefixów przykładowo:
+`r0`, `r1` nie da się łatwo zgeneralizować do `rN`
