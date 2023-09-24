@@ -66,6 +66,8 @@ lor --new-profile my-cpu --home
 Twoje repozytorium z profilem powinno wyglądać jak to: https://github.com/Lord225/potados lub https://github.com/Lord225/potados-code
 * Pliki profilu powinny być w głównym folerze
 * nazwa repozytorium to nazwa profilu
+
+To repozytorium pozwala na używanie komendy `--install` i składni `#profile "https://github.com/Lord225/potados"`
 ```
 root/
   potados.jsonc
