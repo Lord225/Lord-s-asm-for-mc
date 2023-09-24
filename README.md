@@ -1,6 +1,13 @@
 # Lord-s-asm-for-mc
 Program kompilujący całkowicie customowy assembler, przyjmując schemat komend w pliku `json`
 
+# Instalacja
+* Sklonuj repo lub pobierz jako zip i wypakuj
+* Uruchom `setup.ps1` w powershellu lub `setup.sh` w bash'u
+  * skrypt doda alias do kompilatora nazwany `lor`. Możesz teraz otworzyć dowolny folder i wpisać `lor` aby plik
+  * skrypt doda również komende sendrf. Pozwala wysyłać schematici na redstonefun.pl
+* Możesz cofnąć zmiany uruchamając skrypt `revert`
+
 ## Możliwości
 ### Syntax
 Program daje dużo swobody w formie i wyglądzie komend.
@@ -71,30 +78,54 @@ rsh reg[2]
 ## Przykłady
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
 
-Uruchom i zapisz.
+### Zapisz
+Skompiluj i zapisz. (plik domylśny to `program.lor`)
 ```
-python compile.py --run --comments --save pad 
+lor -s pad -c 
 ```
-Zapisz jako schematic (Jeżeli dostępne)
+Zapisz jako schematic
 ```
-python compile.py --save schem 
+lor compile.py -s schem 
 ```
-Uruchom ze wszystkimi narzędziami do debugowwania
+Wgraj schematic na serwer
 ```
-python compile.py --run --logs
+lor | rfsend --nick NICK --pass PASS -c
+```
+### Emuluj
+Uruchom emulator z logami
+```
+lor --run --logs
 ```
 Skompiluj inny plik niż domyślny, zapisz z inną nazwą
 ```
-python compile.py -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
+lor -i src/nazwa_pliku.lor -o compiled/output.txt --save pad
 ```
 Zapisz jako json
 ```
-python compile.py --save py
+lor --save py
 ```
-Przekierowanie outputu do pliku (wyłącz breakpointy)
+
+### Twórz
+Sprawdź jakie profile są zainstalowane (folder `profiles`)
 ```
-python compile.py --run --logs > output.txt
+lor --installed
 ```
+
+Zainstaluj profil z repo na githubie (wymagany `git`)
+```
+lor --install <GIT LINK>
+```
+
+Stwórz własny profil!
+```
+lor --new-profile my-cpu
+```
+
+Stwórz własny profil, zapisz odrazu w głównym folderze
+```
+lor --new-profile my-cpu --home
+```
+
 ## ArgParser
 ### -i --input
 Ścieżka pliku wejściowego z programem, 
