@@ -63,7 +63,7 @@ lor --new-profile my-cpu --home
 ```
 
 ### Jak stworzyć repo?
-Twoje repozytorium z profilem powinno wyglądać jak to: [https://github.com/Lord225/potados]
+Twoje repozytorium z profilem powinno wyglądać jak to: https://github.com/Lord225/potados lub https://github.com/Lord225/potados-code
 * Pliki profilu powinny być w głównym folerze
 * nazwa repozytorium to nazwa profilu
 ```
