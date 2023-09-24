@@ -11,6 +11,8 @@ Program kompilujący całkowicie customowy assembler, przyjmując schemat komend
   * skrypt modyfikuje profil powershella. Możesz go zobaczyć wpisując `code $profile` 
 * Możesz cofnąć zmiany uruchamając skrypt `revert`
 
+W powershell uruchamianie skryptów może być wyłączone. Można to łatwo włączyć wpisując `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+
 ## Przykłady
 Prawdopodobnie będziesz chciał to uruchomić w jeden z następujących sposobów:
 
