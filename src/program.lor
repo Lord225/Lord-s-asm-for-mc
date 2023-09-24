@@ -1,0 +1,4 @@
+#profile potados
+
+.CORE0 
+    int 0

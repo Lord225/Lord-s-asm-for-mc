@@ -24,11 +24,11 @@ pip install -r requirements.txt
 
 # add alias to compile.py
 $compile = Join-Path $root "compile.py"
-"function lor { python `"$compile`" @args }" | Out-File -FilePath $PROFILE -Append
+"function lor { $input | python `"$compile`" @args }" | Out-File -FilePath $PROFILE -Append
 
 # add alias to send.py
 $send = Join-Path $root "tools" "send.py"
-"function rfsend { python `"$send`" @args }" | Out-File -FilePath $PROFILE -Append
+"function rfsend { $input | python `"$send`" @args }" | Out-File -FilePath $PROFILE -Append
 
 Write-Host "Alias 'lor' and 'rfsend' created in $PROFILE"
 

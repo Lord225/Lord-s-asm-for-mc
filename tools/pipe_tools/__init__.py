@@ -1,9 +1,10 @@
 import sys 
 import json
 import path
-sys.path.append(str(path.Path(__file__).abspath().parent.parent.parent))
 import core
 import core.config as config
+
+sys.path.append(str(config.HOME_DIR))
 
 def init():
     """
@@ -12,9 +13,10 @@ def init():
     
     data = ''.join(list(sys.stdin))
     decoder = json.JSONDecoder()
+
     try:
         raw = decoder.decode(data)
-        profile = core.profile.profile.load_profile_from_file(f"{config.default_json_profile_path}\\{raw['profile_name']}", False)
+        profile = core.profile.profile.load_profile_from_file(f"{raw['profile_name']}", False)
 
         data = list(raw['data'])
     
