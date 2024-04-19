@@ -34,19 +34,13 @@ parser.set_defaults(feature=False)
 parserargs = vars(parser.parse_args())
 
 def process_response(response: requests.Response):
-    respnse_anchor = f'<p style="color: '
-    anch = response.text.find(respnse_anchor)
-    
-    if anch == -1:
+    data = response.json()
+
+    if 'error' in data:
+        return data['error']
+    else:
         print("Error: Got unexpected response from server")
         exit()
-    
-    end = response.text.find("</p>", anch)
-
-    message = response.text[anch:end]
-    message = message[message.find(">")+1:]
-
-    return message    
 
 if __name__ == "__main__":
     import pipe_tools
@@ -81,13 +75,9 @@ if __name__ == "__main__":
 
     response = requests.post('https://redstonefun.pl/schem-upload/index.php', data=data, files=files)
 
-    message = process_response(response).strip()
+    error_code = process_response(response)
 
-    send_schem = "Schemat <b>{name}</b> został przesłany na serwer."
-    bad_data = "Podano nieprawidłowy nick lub hasło."
-    same_name = "Istnieje już schematic z taką nazwą."
-
-    if send_schem.format_map({'name':filename}) == message:
+    if error_code == 0:
         print("Schematic has been uploaded!", end='\n\n')
         command = f"/schem load {filename}"
         if parserargs['copy']:
@@ -95,12 +85,24 @@ if __name__ == "__main__":
             clipboard.copy(command)
         else:
             print(command)
-    elif bad_data == message:
-        print("Bad login or password")
+    elif error_code == 1:
+        print("Invalid username or password")
         exit()
-    elif same_name == message:
-        print("schem with that name exists")
+    elif error_code == 2:
+        print("The schematic is too large")
+        exit()
+    elif error_code == 3:
+        print("A schematic with this name already exists")
+        exit()
+    elif error_code == 4:
+        print("You can only upload schematics")
+        exit()
+    elif error_code == 5:
+        print("Server encountered an error during upload")
+        exit()
+    elif error_code == 6:
+        print("Missing data. Make sure you have provided username, password and file to upload")
         exit()
     else:
-        print(f"Other error: {message}")
+        print(f"Other error: {error_code}")
         exit()
