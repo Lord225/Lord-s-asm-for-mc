@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     if error_code == 0:
         print("Schematic has been uploaded!", end='\n\n')
-        command = f"/schem load {parserargs['nick']}@{filename}"
+        command = f"/load {filename}"
         if parserargs['copy']:
             print(f"Command has been copied! ({command})")
             clipboard.copy(command)
