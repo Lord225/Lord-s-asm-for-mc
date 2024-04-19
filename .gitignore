@@ -4,4 +4,4 @@ out/*.txt
 out/*.schem
 *.pyc
 output.txt
-core/cache
+cache
