@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     file = core.save.exporter.generate_schematic(stream, schem.layout, schem.blank_name, schem.low_state, schem.high_state)
     
-    filename = f"{parserargs['nick']}_{hashlib.sha1(random.randbytes(10)).hexdigest()[:10]}.schem"
+    filename = f"{hashlib.sha1(random.randbytes(10)).hexdigest()[:10]}.schem"
     full_path = os.path.join(f"{os.getcwd()}\\core\\cache\\{filename}")
     
     file.write_file(full_path)
