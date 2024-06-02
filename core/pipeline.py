@@ -48,6 +48,23 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
         ]
     return pipeline
 
+def make_preproces_pipeline_for_reditor() -> List[Tuple[str, Callable]]:
+    pipeline = \
+        [
+            ('load', load.loading.load_lines),
+            ('strip data', load.loading.strip),
+            ('remove comments', load.comments.remove_comments),
+            ('remove empty lines', load.loading.remove_empty_lines),
+            ('solve defs', preprocesor.definitions.definition_solver),
+            ('remove defs', preprocesor.definitions.remove_definitions),
+            ('apply consts', preprocesor.definitions.apply_consts),
+            ('find macros', preprocesor.macros.find_macros),
+            ('apply macros', preprocesor.macros.apply_all_macros),
+            ('find meta', preprocesor.meta.get_metadata),
+            ('remove preprocesor cmds', preprocesor.meta.remove_known_preprocesor_instructions),
+        ]
+    return pipeline
+
 def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     """
     Pipieline that is responsible for parsing the lines from preprocesing pipeline
