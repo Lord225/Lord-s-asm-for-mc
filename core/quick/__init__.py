@@ -37,5 +37,5 @@ def pack_adresses(instructions):
             output[adress+i] = cell
     return output
 
-
-
+def preproces(program, profile: Profile):
+    pass # do stuff
