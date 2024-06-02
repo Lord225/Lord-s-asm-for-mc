@@ -13,8 +13,6 @@ config.read(os.path.join(HOME_DIR, "settings", "default.ini"))
 if DEFAULT_SECTION not in config:
     config[DEFAULT_SECTION] = {}
 
-
-
 def __getattr__(name):
     if name not in config[DEFAULT_SECTION] and SHOW_UNKNOWNS:
         print(f"Unknown configuration token: {name}")
