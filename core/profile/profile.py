@@ -37,7 +37,7 @@ def load_json_profile(profile_path):
         return loaded
     
     # check if profile is in default profiles folder
-    loaded = load(f"{config.HOME_DIR}\\{profile_path}")
+    loaded = load(os.path.join(config.HOME_DIR, profile_path))
     if loaded is not None:
         return loaded
     raise error.ProfileLoadError(f"Cannot find Profile under {profile_path}")
@@ -221,7 +221,7 @@ def load_profile_from_file(path, load_emulator = True) -> Profile:
         import core.install_profiles as install_profiles
         path = install_profiles.download_and_install_profile(path, quiter=True)
 
-    path = f"{config.default_json_profile_path}\\{path}"
+    path = os.path.join(str(config.default_json_profile_path), str(path))
     profile, base_folder = load_json_profile(path)
     emulator = get_emulator(base_folder, profile) if load_emulator else None
 
