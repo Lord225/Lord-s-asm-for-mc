@@ -8,7 +8,10 @@ from core.save.formatter import as_values
 
 
 def translate(program, profile: Profile):
-    program = [Line(line, line_index_in_file=-1) for line in program]
+    # check if program is list of strings or list of Line objects
+    if isinstance(program[0], str):
+        program = [Line(line, line_index_in_file=-1) for line in program]
+    
     parser_pipeline = core.pipeline.make_parser_pipeline()
     
     partial_save_pipeline = [('fill addresses', core.save.fill.fill_empty_addresses),
@@ -38,4 +41,9 @@ def pack_adresses(instructions):
     return output
 
 def preproces(program, profile: Profile):
-    pass
+    pipeline = core.pipeline.make_preproces_pipeline_for_reditor()
+
+    program, context = core.pipeline.exec_pipeline(pipeline, program, Context(profile), progress_bar_name=None)
+
+    return program, context
+
