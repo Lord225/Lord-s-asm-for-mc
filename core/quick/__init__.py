@@ -19,9 +19,7 @@ def translate(program, profile: Profile):
                              ('add comments', core.save.add_comments.add_comments)]
 
     program, context = core.pipeline.exec_pipeline(parser_pipeline, program, Context(profile), progress_bar_name=None)
-    config.override_from_dict({'save': 'bin'})
     program, context = core.pipeline.exec_pipeline(partial_save_pipeline, program, context, progress_bar_name=None)
-    config.override_from_dict({'save': None})
     return program, context
 
 def gather_instructions(program, adressing: AdressingMode):
