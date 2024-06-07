@@ -3,6 +3,7 @@ from core.context import Context
 import core.error as error
 import core.profile.patterns as patterns
 import core.parse.match_expr as match_expr
+import json
 
 class SectionMeta:
     find_section = patterns.Pattern(".{label:token}")
@@ -20,6 +21,16 @@ class SectionMeta:
             self.offset = other.offset
         if other.write is not None:
             self.write = other.write
+
+    def __repr__(self):
+        return f"SectionMeta({self.name}, {self.offset}, {self.write})"
+    
+
+    def __dict__(self):
+        return {'name': self.name, 'offset': self.offset, 'write': self.write}
+
+    def toJSON(self):
+        return json.dumps(self.__dict__())
 
         
 
