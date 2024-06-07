@@ -142,6 +142,26 @@ def make_format_pipeline()  -> List[Tuple[str, Callable]]:
         ]
     return pipeline  # type: ignore
 
+def make_reditor_format_pipeline()  -> List[Tuple[str, Callable]]:
+    """
+    Pipieline that is responsible for formatting lines
+    Input:
+    * Output from parsing pipeline
+    Output:
+       - Everything from previous pipeline
+       - `formatted` - list of formated tokens without comments
+    * Context dict
+        - Everything from previous pipeline
+        - `chunk adresses` - adresses of the lines but relative to chunk start adress
+    """
+    pipeline = \
+        [
+            ('fill addresses', save.fill.fill_empty_addresses),
+            ('format', save.formatter.format_output),
+            ('add comments', save.add_comments.add_comments),
+        ]
+    return pipeline  # type: ignore
+
 def check_types(lines, stage):
     for line in lines:
         assert isinstance(line, load.Line), f"Stage {stage} returned wrong datatype."
