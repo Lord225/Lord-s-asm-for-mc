@@ -15,6 +15,7 @@ def translate(program, profile: Profile):
     parser_pipeline = core.pipeline.make_parser_pipeline()
     
     partial_save_pipeline = [('fill addresses', core.save.fill.fill_empty_addresses),
+                             ('add comments', core.save.add_comments.add_comments),
                              ('format', core.save.formatter.format_output)]
 
     program, context = core.pipeline.exec_pipeline(parser_pipeline, program, Context(profile), progress_bar_name=None)
