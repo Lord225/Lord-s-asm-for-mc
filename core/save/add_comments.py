@@ -24,6 +24,8 @@ def get_line_labels(labels, index):
 
 def add_comments(program, context: Context):
     if not config.comments or config.save == 'pip':
+        for line in program:
+            line.formatted_comments = line.formatted.copy()
         return program, context
     profile: Profile = context.get_profile()
     labels = context.physical_adresses
@@ -34,12 +36,14 @@ def add_comments(program, context: Context):
 
         formatted_lenght_diffrence = longest_layout-len(line.formatted) 
 
-        line.formatted.extend(['']*formatted_lenght_diffrence)
-        line.formatted.append(generate_comment(line))
-        line.formatted.append(get_line_labels(labels, i+1))
+        line.formatted_comments = line.formatted.copy() 
+
+        line.formatted_comments.extend(['']*formatted_lenght_diffrence)
+        line.formatted_comments.append(generate_comment(line))
+        line.formatted_comments.append(get_line_labels(labels, i+1))
         if config.show_adresses:
-            line.formatted.append(str(line.physical_adress) if 'physical_adress' in line else "None")
+            line.formatted_comments.append(str(line.physical_adress) if 'physical_adress' in line else "None")
         if config.save_comments_after_lines:
-            line.formatted.append(line.comment if line.has_key("comment") else "")
+            line.formatted_comments.append(line.comment if line.has_key("comment") else "")
 
     return program, context

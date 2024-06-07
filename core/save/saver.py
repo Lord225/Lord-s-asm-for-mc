@@ -28,12 +28,12 @@ def save(program, context: Context):
 
         data_to_dump["data"] = collect_data(program)
         
-        json.dump(data_to_dump, sys.__stdout__)
+        json.dump(data_to_dump, sys.__stdout__) # type: ignore
         
     else:
         filenames['default'] = filename
         with open(dirname, 'w') as file:
-            collected = [line.formatted for line in program]
+            collected = [line.formatted_comments for line in program]
             file.write(tabulate(collected, tablefmt = config.tablefmt))
         context.outfiles.append(filenames)
 
