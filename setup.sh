@@ -24,11 +24,11 @@ echo "# Nie edytuj, nie usuwaj ani nie zmieniaj tych komentarzy; są używane pr
 
 # add alias to compile.py
 compile="$root/compile.py"
-echo "function lor { \$@ | python \"$compile\" \"\$@\"; }" >> "$HOME/.bashrc"
+echo "function lor { \$@ | python3 \"$compile\" \"\$@\"; }" >> "$HOME/.bashrc"
 
 # add alias to send.py
 send="$root/tools/send.py"
-echo "function rfsend { \$@ | python \"$send\" \"\$@\"; }" >> "$HOME/.bashrc"
+echo "function rfsend { \$@ | python3 \"$send\" \"\$@\"; }" >> "$HOME/.bashrc"
 
 echo "Alias 'lor' i 'rfsend' utworzony w $HOME/.bashrc"
 
