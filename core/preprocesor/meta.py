@@ -14,15 +14,6 @@ def get_metadata(program, context: Context):
                 context.profile_name = profile_name
             else:
                 raise
-        elif line.startswith("#init"):
-            _, *args = line.split(' ')
-            settings = ''.join(args)
-            if settings:
-                context.init.append(settings)
-            else:
-                raise
-        elif line.startswith("#global"):
-            context.warnings.append('#global keyword is deprased. Use Section system instead.')
         elif line.startswith("#data"):
             splited = line.split(" ")
             ADRESS_START = -1
@@ -54,13 +45,11 @@ def get_metadata(program, context: Context):
 KNOWON_PREPROCESOR_TOKENS = \
 [ 
     "#profile",
-    "#init",
     "#ifdef",
     "#else",
     "#endif",
     "#macro",
     "#endmacro",
-    "#global",
     "#data",
 ]
 

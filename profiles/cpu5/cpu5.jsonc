@@ -9,53 +9,50 @@
         
         "ARGUMENTS":
         {
-            "variants":
+            "default":
             {
-                "default":
-                {
-                    "r2":{
-                        "size":4,
-                        "encoding":"binrev"
-                    },
-                    "r1":{
-                        "size":4,
-                        "encoding":"binrev"
-                    },
-                    "cu":{
-                        "size":8,
-                        "encoding":"binrev"
-                    }
+                "r2":{
+                    "size":4,
+                    "encoding":"binrev"
                 },
-                "with_a1":
-                {
-                    "a1":{
-                        "size":8,
-                        "encoding":"binrev"
-                    },
-                    "cu":{
-                        "size":8,
-                        "encoding":"binrev"
-                    }
+                "r1":{
+                    "size":4,
+                    "encoding":"binrev"
                 },
-                "long":
+                "cu":{
+                    "size":8,
+                    "encoding":"binrev"
+                }
+            },
+            "with_a1":
+            {
+                "a1":{
+                    "size":8,
+                    "encoding":"binrev"
+                },
+                "cu":{
+                    "size":8,
+                    "encoding":"binrev"
+                }
+            },
+            "long":
+            {
+                "r2":{
+                    "size":4,
+                    "encoding":"binrev"
+                },
+                "r1":{
+                    "size":4,
+                    "encoding":"binrev"
+                },
+                "cu":{
+                    "size":8,
+                    "encoding":"binrev"
+                },
+                "n1":
                 {
-                    "r2":{
-                        "size":4,
-                        "encoding":"binrev"
-                    },
-                    "r1":{
-                        "size":4,
-                        "encoding":"binrev"
-                    },
-                    "cu":{
-                        "size":8,
-                        "encoding":"binrev"
-                    },
-                    "n1":
-                    {
-                        "size":16,
-                        "encoding":"binrev"
-                    }
+                    "size":16,
+                    "encoding":"binrev"
                 }
             }
         },

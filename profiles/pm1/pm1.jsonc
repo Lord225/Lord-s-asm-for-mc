@@ -8,38 +8,36 @@
         "time_per_cycle":3.3,
         
         "ARGUMENTS":{
-            "variants":{
-                "short":{
-                    "CU":{
-                        "size":4
-                    },
-                    "r2":{
-                        "size":2
-                    },
-                    "r1":{
-                        "size":2
-                    }
+            "short":{
+                "CU":{
+                    "size":4
                 },
-                "long":{
-                    "CU":{
-                        "size":4
-                    },
-                    "r2":{
-                        "size":2
-                    },
-                    "r1":{
-                        "size":2
-                    },
-                    "n1":{
-                        "size":8
-                    }
+                "r2":{
+                    "size":2
                 },
-                "inject":
+                "r1":{
+                    "size":2
+                }
+            },
+            "long":{
+                "CU":{
+                    "size":4
+                },
+                "r2":{
+                    "size":2
+                },
+                "r1":{
+                    "size":2
+                },
+                "n1":{
+                    "size":8
+                }
+            },
+            "inject":
+            {
+                "value":
                 {
-                    "value":
-                    {
-                        "size": 8
-                    }
+                    "size": 8
                 }
             }
         },

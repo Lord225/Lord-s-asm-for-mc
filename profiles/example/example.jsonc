@@ -8,27 +8,25 @@
         "time_per_cycle":3.3,
         
         "ARGUMENTS":{
-            "variants":{
-                // Layouts:
-                // AAAABBCCDDDDDDDD
-                //     \ \ \       \_ n1 (8 bit)
-                //      \ \ \________ r1 (2 bit)
-                //       \ \_________ r2 (2 bit)
-                //        \__________ CU (4 bit)
-                "example_layout":{
-                    "CU":{
-                        "size":4
-                    },
-                    "r2":{
-                        "size":2
-                    },
-                    "r1":{
-                        "size":2
-                    },
-                    "n1":{
-                        "size":8,
-                        "encoding":"binrev" // bin, binrev, onehot, onehotrev, unsignedbin, signmodulebin, u2bin (default: bin)
-                    }
+            // Layouts:
+            // AAAABBCCDDDDDDDD
+            //     \ \ \       \_ n1 (8 bit)
+            //      \ \ \________ r1 (2 bit)
+            //       \ \_________ r2 (2 bit)
+            //        \__________ CU (4 bit)
+            "example_layout":{
+                "CU":{
+                    "size":4
+                },
+                "r2":{
+                    "size":2
+                },
+                "r1":{
+                    "size":2
+                },
+                "n1":{
+                    "size":8,
+                    "encoding":"binrev" // bin, binrev, onehot, onehotrev, unsignedbin, signmodulebin, u2bin (default: bin)
                 }
             }
         },

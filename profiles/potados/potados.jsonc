@@ -6,145 +6,143 @@
         "emulator": "potados_emulator",
         "time_per_cycle": 3.3,
         "ARGUMENTS": {
-            "variants": {
-                "const16": {
-                    "pdec": {
-                        "size": 2
-                    },
-                    "const": {
-                        "size": 16
-                    },
-                    "dst": {
-                        "size": 4
-                    }
+            "const16": {
+                "pdec": {
+                    "size": 2
                 },
-                "branch": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "r2": {
-                        "size": 4
-                    },
-                    "pad": {
-                        "size": 1
-                    },
-                    "offset": {
-                        "size": 8
-                    },
-                    "r1": {
-                        "size": 4
-                    }
+                "const": {
+                    "size": 16
                 },
-                "aluimm": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "r2": {
-                        "size": 4
-                    },
-                    "I": {
-                        "size": 1
-                    },
-                    "R1": {
-                        "size": 8
-                    },
-                    "dst": {
-                        "size": 4
-                    }
+                "dst": {
+                    "size": 4
+                }
+            },
+            "branch": {
+                "pridec": {
+                    "size": 2
                 },
-                "alufpu": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "r2": {
-                        "size": 4
-                    },
-                    "flags": {
-                        "size": 5
-                    },
-                    "r1": {
-                        "size": 4
-                    },
-                    "dst": {
-                        "size": 4
-                    }
+                "secdec": {
+                    "size": 3
                 },
-                "indirectlsh": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "ptr": {
-                        "size": 4
-                    },
-                    "3th": {
-                        "size": 3
-                    },
-                    "lsh": {
-                        "size": 2
-                    },
-                    "offset": {
-                        "size": 4
-                    },
-                    "srcdst": {
-                        "size": 4
-                    }
+                "r2": {
+                    "size": 4
                 },
-                "indirect": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "ptr": {
-                        "size": 4
-                    },
-                    "3th": {
-                        "size": 3
-                    },
-                    "offset": {
-                        "size": 6
-                    },
-                    "srcdst": {
-                        "size": 4
-                    }
+                "pad": {
+                    "size": 1
                 },
-                "other": {
-                    "pridec": {
-                        "size": 2
-                    },
-                    "secdec": {
-                        "size": 3
-                    },
-                    "src": {
-                        "size": 4
-                    },
-                    "3th": {
-                        "size": 5
-                    },
-                    "r1": {
-                        "size": 4
-                    },
-                    "dst": {
-                        "size": 4
-                    }
+                "offset": {
+                    "size": 8
                 },
-                "inject": {
-                    "value": {
-                        "size": 22
-                    }
+                "r1": {
+                    "size": 4
+                }
+            },
+            "aluimm": {
+                "pridec": {
+                    "size": 2
+                },
+                "secdec": {
+                    "size": 3
+                },
+                "r2": {
+                    "size": 4
+                },
+                "I": {
+                    "size": 1
+                },
+                "R1": {
+                    "size": 8
+                },
+                "dst": {
+                    "size": 4
+                }
+            },
+            "alufpu": {
+                "pridec": {
+                    "size": 2
+                },
+                "secdec": {
+                    "size": 3
+                },
+                "r2": {
+                    "size": 4
+                },
+                "flags": {
+                    "size": 5
+                },
+                "r1": {
+                    "size": 4
+                },
+                "dst": {
+                    "size": 4
+                }
+            },
+            "indirectlsh": {
+                "pridec": {
+                    "size": 2
+                },
+                "secdec": {
+                    "size": 3
+                },
+                "ptr": {
+                    "size": 4
+                },
+                "3th": {
+                    "size": 3
+                },
+                "lsh": {
+                    "size": 2
+                },
+                "offset": {
+                    "size": 4
+                },
+                "srcdst": {
+                    "size": 4
+                }
+            },
+            "indirect": {
+                "pridec": {
+                    "size": 2
+                },
+                "secdec": {
+                    "size": 3
+                },
+                "ptr": {
+                    "size": 4
+                },
+                "3th": {
+                    "size": 3
+                },
+                "offset": {
+                    "size": 6
+                },
+                "srcdst": {
+                    "size": 4
+                }
+            },
+            "other": {
+                "pridec": {
+                    "size": 2
+                },
+                "secdec": {
+                    "size": 3
+                },
+                "src": {
+                    "size": 4
+                },
+                "3th": {
+                    "size": 5
+                },
+                "r1": {
+                    "size": 4
+                },
+                "dst": {
+                    "size": 4
+                }
+            },
+            "inject": {
+                "value": {
+                    "size": 22
                 }
             }
         },

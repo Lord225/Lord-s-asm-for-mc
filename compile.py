@@ -11,8 +11,6 @@ import core.config as config
 import core.context as contextlib
 import sys
 
-DEBUG_MODE = False
-
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter, 
     description=
@@ -46,9 +44,6 @@ parser.set_defaults(feature=False)
 parser.add_argument('--logs', dest='logmode', action='store_true', help="Show emulator's disassebly")
 parser.set_defaults(feature=False)
 
-parser.add_argument('--why', dest='why_error', action='store_true', help="Program will try harder to find why command cannot be mached")
-parser.set_defaults(feature=True)
-
 parser.add_argument('--install', dest='install', type=str, help="Install profile from github", default = None)
 
 parser.add_argument('--installed', dest='installed', action='store_true', help="Show installed profiles")
@@ -61,8 +56,11 @@ parser.set_defaults(feature=False)
 parser.add_argument('--reassume', dest='reassume', action='store_true', help="Show informations about profile")
 parser.set_defaults(feature=False)
 
+parser.add_argument('--debug', dest='debug', action='store_true', help="Turn on debug mode")
+
 parserargs = parser.parse_args()
 
+DEBUG_MODE = parserargs.debug
 
 def show_warnings(context: contextlib.Context):
     for warning in context.warnings:

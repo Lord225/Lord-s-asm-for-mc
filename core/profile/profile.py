@@ -1,3 +1,4 @@
+import logging
 from .patterns import Pattern
 import json
 from typing import Any, Callable, Literal, Union
@@ -162,9 +163,14 @@ class Profile:
     def __build_arguments(self):
         def load_raw_arguments():
             try:
-                return self.profile["ARGUMENTS"]["variants"]
+                args = self.profile["ARGUMENTS"]
+                if "variants" in args:
+                    logging.warning("'variants' field is deprecated in 'ARGUMENTS' section. Use 'ARGUMENTS' instead.")
+                    return args["variants"]
+            
+                return args
             except KeyError:
-                raise error.ProfileLoadError(f"Profile does not defined `ARGUMENTS/variants` section")
+                raise error.ProfileLoadError(f"Profile does not defined `ARGUMENTS` section")
         def load_defs():
             try:
                 return [definiton for definiton in self.profile["DEFINES"] if isinstance(definiton, str)]
@@ -180,11 +186,12 @@ class Profile:
                 return self.profile["KEYWORDS"]
             except KeyError:
                 raise error.ProfileLoadError(f"Profile does not have `KEYWORDS` section")
+            
         def load_arguments_len():
             try:
-                return {name: sum((int(arg['size']) for arg in val.values())) for name, val in self.profile["ARGUMENTS"]["variants"].items()}
+                return {name: sum((int(arg['size']) for arg in val.values())) for name, val in load_raw_arguments().items()}
             except KeyError:
-                raise error.ProfileLoadError(f"Profile does not have `ARGUMENTS/variants` section")
+                raise error.ProfileLoadError(f"Profile does not have `ARGUMENTSs` section")
         def load_fill():
             try:
                 return self.profile["FILL"] if 'FILL' in self.profile else None
@@ -202,6 +209,7 @@ class Profile:
         if "SCHEMATIC" in self.profile and self.profile["SCHEMATIC"] is not None:
             self.schematic = SchematicInfo(self.profile, self.base_folder)
         else:
+            logging.warning("Profile does not have SCHEMATIC section, schematic export will be disabled.")
             self.schematic = None
 
     def __selfcheck(self):
