@@ -227,5 +227,3 @@ if __name__ == "__main__":
                     input()
                 elif config.onerror == "abort":
                     pass
-        if DEBUG_MODE:
-            print("WARNING: Turn off debug mode before push")

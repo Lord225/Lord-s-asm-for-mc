@@ -30,6 +30,7 @@ def gather_instructions(program, adressing: AdressingMode):
         if 'debug' in line_obj:
             debug[line_obj.physical_adress] = line_obj.debug
     return output, debug
+
 def pack_adresses(instructions):
     output = dict()
     for adress, data in instructions.items():
@@ -46,3 +47,5 @@ def preproces(program, profile: Profile):
 
     return program, context
 
+def language_server(program, context: Context, profile: Profile):
+    pass

@@ -27,7 +27,6 @@ def make_preproces_pipeline() -> List[Tuple[str, Callable]]:
        - `entry` - dict of entrypoints with coresponding labels and offsets
        - `macros` - dict of macros
        - `profile_name` - name of profile
-       - `warnigns` - warnings that occure in this pipeline.
     """
     pipeline = \
         [
@@ -82,7 +81,6 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
     * Context dict
        - Everything from previous pipeline
        - `profile` - profile object
-       - `warnigns` - warnings that occure in this pipeline.
        - `labels` - founed labels with corresponding lines
        - `physical_adress` - founded labels but with adresses in device space
        - `namespace` - idk

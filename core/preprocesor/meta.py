@@ -13,7 +13,7 @@ def get_metadata(program, context: Context):
                     raise error.PreprocesorError(None, "Multiple profiles defitions")
                 context.profile_name = profile_name
             else:
-                raise
+                raise error.PreprocesorError(program_line.line_index_in_file, "Profile name is empty")
         elif line.startswith("#data"):
             splited = line.split(" ")
             ADRESS_START = -1

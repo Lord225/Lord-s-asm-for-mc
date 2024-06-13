@@ -73,6 +73,7 @@ def process_commands(commands: dict):
 
         if len(missing) != 0:
             warnings[cmd_id] = missing
+            logging.warning(f"Command: {cmd_id} does not have one of these fields: {missing}")
     
         cmd['pattern'] = Pattern(cmd['pattern'])
     return commands
@@ -85,10 +86,10 @@ def process_macros(macros: dict):
 
 class ProfileInfo:
     def __init__(self, kwargs: dict):
-        self.name: str = kwargs["Name"]
-        self.arch: str = kwargs["Arch"]
-        self.author: str = kwargs["Author"]
-        self.speed: str = kwargs["time_per_cycle"]
+        self.name: str = kwargs.get("Name", "Unknown")
+        self.arch: str = kwargs.get("Arch", "Unknown")
+        self.author: str = kwargs.get("Author", "Unknown")
+        self.speed: str = kwargs.get("Speed", 1)
     def __str__(self) -> str:
         return f"Name: '{self.name}', Arch: '{self.arch}', Author: '{self.author}', Speed: '{self.speed}'"
         

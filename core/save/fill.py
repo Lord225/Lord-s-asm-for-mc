@@ -1,3 +1,4 @@
+import logging
 import core
 from core.context import Context
 import core.error as error
@@ -12,7 +13,7 @@ def fill_empty_addresses(program, context: Context):
     if config.use_fill == False:
         return program, context
     if profile.fill is None:
-        context.warnings.append("Fill command is not defined in profile. Skipping.")
+        logging.warning("Fill command is not defined in the profile, skipping fill")
         return program, context
 
     fill_command = Line(profile.fill, line_index_in_file=-1)
