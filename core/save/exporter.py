@@ -222,5 +222,5 @@ def generate_schematic(data, layout, blank_name, low_state, high_state):
 
     nbtfile.tags.append(nbt.TAG_Byte_Array(name="BlockData"))
     nbtfile["BlockData"].value = generate_block_data(data, layout, blankschem, high_id, low_id)
-    
+
     return nbtfile
