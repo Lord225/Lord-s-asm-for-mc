@@ -195,35 +195,35 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
         else:
             machine.exec_command(None, cmd, args)
 
-def telemetry_display(program, context: Context):
-    print(f"Displaing collected telemetry data... ({len(GLOBAL_CMD_HISTORY)} points) You can turn this annying thing with log_history set to False in settings (default.ini file)")
-    import matplotlib.pyplot as plt
-    import pandas
-    from collections import Counter
-    from sklearn.preprocessing import OneHotEncoder
-    from scipy.signal import savgol_filter
-    import numpy as np
+# def telemetry_display(program, context: Context):
+#     print(f"Displaing collected telemetry data... ({len(GLOBAL_CMD_HISTORY)} points) You can turn this annying thing with log_history set to False in settings (default.ini file)")
+#     import matplotlib.pyplot as plt
+#     import pandas
+#     from collections import Counter
+#     from sklearn.preprocessing import OneHotEncoder
+#     from scipy.signal import savgol_filter
+#     import numpy as np
 
-    df = pandas.DataFrame(GLOBAL_CMD_HISTORY, columns=['history'])
-    hist = pandas.DataFrame.from_dict(Counter(GLOBAL_CMD_HISTORY), orient='index')
+#     df = pandas.DataFrame(GLOBAL_CMD_HISTORY, columns=['history'])
+#     hist = pandas.DataFrame.from_dict(Counter(GLOBAL_CMD_HISTORY), orient='index')
     
-    encoder = OneHotEncoder(handle_unknown='ignore')
+#     encoder = OneHotEncoder(handle_unknown='ignore')
     
-    encoder_df = pandas.DataFrame(np.array(encoder.fit_transform(df[['history']])), columns=encoder.categories_)
+#     encoder_df = pandas.DataFrame(np.array(encoder.fit_transform(df[['history']])), columns=encoder.categories_)
 
-    rolling = encoder_df.rolling(int(config.telemetry_window_size), min_periods=1).mean().interpolate(method='cubic', limit_direction='both')
-    smoothed = savgol_filter(rolling.T, config.telemetry_window_size, 3)
+#     rolling = encoder_df.rolling(int(config.telemetry_window_size), min_periods=1).mean().interpolate(method='cubic', limit_direction='both')
+#     smoothed = savgol_filter(rolling.T, config.telemetry_window_size, 3)
 
-    hist.plot(kind='bar')
-    plt.xticks(rotation=45)
-    plt.ylabel("Count")
-    plt.xlabel("Ops")
-    plt.title("Command Usage Histogram")
-    plt.show()
+#     hist.plot(kind='bar')
+#     plt.xticks(rotation=45)
+#     plt.ylabel("Count")
+#     plt.xlabel("Ops")
+#     plt.title("Command Usage Histogram")
+#     plt.show()
 
-    plt.plot(smoothed.T, label=rolling.columns)
-    plt.legend()
-    plt.show()
+#     plt.plot(smoothed.T, label=rolling.columns)
+#     plt.legend()
+#     plt.show()
 
 def emulate(program, context: Context):
     global GLOBAL_CURR_ADRESS
@@ -278,8 +278,8 @@ def emulate(program, context: Context):
         print(f"Per command: {(emulate_end_time-emulate_start_time)/emulation_cycles/1000.0:0.2f}us")
     print(f"Machine took: {machine_cycles} steps, estimated execution time: {machine_cycles/float(profile.info.speed):0.1f}s")
     
-    if config.log_history:
-        telemetry_display(program, context)
+    # if config.log_history:
+    #     telemetry_display(program, context)
 
 def __write_program(program, context: Context, machine: EmulatorBase):
     debug_instructions = dict()
