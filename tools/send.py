@@ -3,7 +3,7 @@ import os
 import sys
 
 import path
-sys.path.append(str(path.Path(__file__).abspath().parent.parent))
+sys.path.append(str(path.Path(__file__).parent.parent))
 import core
 import requests
 import hashlib

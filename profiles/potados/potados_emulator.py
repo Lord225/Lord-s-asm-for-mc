@@ -573,27 +573,26 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
     @emulate.log_disassembly(format='xor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_xor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
-        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
+        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r2])
         
         self.regs[dst] = ops.bitwise_xor(r2_imm, r1_imm)
     @emulate.log_disassembly(format='xnor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_xnor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
-        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
+        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r2])
         
         self.regs[dst] = ops.bitwise_not(ops.bitwise_xor(r2_imm, r1_imm))
 
     @emulate.log_disassembly(format='or reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_or(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
-        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
+        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r2])
         
         self.regs[dst] = ops.bitwise_or(r2_imm, r1_imm)
     @emulate.log_disassembly(format='nor reg[{dst}], {r1_neg}reg[{r2}], {r2_neg}reg[{r1}]')
     def alu_nor(self, r1: int, r2: int, dst: int, r1_neg: str, r2_neg: str):
         r1_imm = self.regs[r1] if r1_neg == "" else ops.bitwise_not(self.regs[r1])
-        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r1])
-        
+        r2_imm = self.regs[r2] if r2_neg == "" else ops.bitwise_not(self.regs[r2])
         self.regs[dst] = ops.bitwise_not(ops.bitwise_or(r2_imm, r1_imm))
     
     

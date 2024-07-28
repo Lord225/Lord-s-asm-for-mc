@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import core.config as config
 from core.context import Context
 import core.error as error
@@ -162,7 +163,8 @@ def __execute_debug_command(command: list, machine: EmulatorBase, profile: Profi
     if len(command) == 1:
         command_str: str = command[0]
         if command_str.lower() == 'break':
-            debug.breakpoint()
+            time.sleep(1)
+            #debug.breakpoint()
         elif command_str.lower() == 'ram':
             ram = machine.exec_command(None, 'get_ram_ref', [])
             debug.ram_display(ram, profile.adressing.bin_len, 0, None)
