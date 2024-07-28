@@ -40,7 +40,8 @@ base = \
                         "size": 1
                     },
                     "offset": {
-                        "size": 8
+                        "size": 8,
+                        "encoding": "u2bin",
                     },
                     "r1": {
                         "size": 4
