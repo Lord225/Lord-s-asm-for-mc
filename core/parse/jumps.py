@@ -1,3 +1,4 @@
+import logging
 import core.config as config
 from core.context import Context
 import core.error as error
@@ -52,6 +53,7 @@ def find_labels(program, context: Context):
     for line_obj in program:
         label = match_expr.match_expr(find_labels, line_obj, None)
         if label is not None:
+            logging.debug(f"Matched label in line {line_obj}: {label}")
             if 'label' not in label:
                 raise error.ParserError(line_obj.line_index_in_file, f"Cannot find label '{label}'")
             if label['label'] in context.labels:

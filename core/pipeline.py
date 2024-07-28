@@ -210,7 +210,7 @@ def exec_pipeline(pipeline: List[Tuple[str, Callable]], start: Any, external: co
         
         if config.show_pipeline_output:
             show_output(print, data)
-            pprint.pprint(external)
+            pprint.pprint(external.__dict__)
         return data, external
 
 def show_output(print, data, SPACE = ''):

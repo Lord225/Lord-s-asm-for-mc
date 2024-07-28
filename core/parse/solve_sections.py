@@ -1,3 +1,4 @@
+import logging
 from typing import Dict, List
 import core.config as config
 from core.context import Context
@@ -60,6 +61,7 @@ def calculate_addresses(chunks: dict, sections: Dict[str, SectionMeta], profile:
     
     i = 1
     for section_name, chunk in chunks.items():
+        logging.debug(f"Adress calculation: {i} {section_name}")
         section = sections[section_name]
         offset = section.offset
         write = section.write

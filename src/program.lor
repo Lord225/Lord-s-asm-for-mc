@@ -2,3 +2,5 @@
 
 .CORE0 
     int 0
+    jmp TEST
+TEST:

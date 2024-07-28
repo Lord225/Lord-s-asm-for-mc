@@ -5,6 +5,7 @@ except ModuleNotFoundError as module:
     exit()
 
 import argparse
+import logging
 from typing import Callable
 import core.error as error
 import core.config as config
@@ -85,6 +86,10 @@ def override_debug():
             logmode = True,
             why_error=True
         )
+        logging.basicConfig(
+            level=logging.DEBUG
+        )
+        logging.debug("Logging is set to debug")
 
 if config.init is not None:
     config.override_from_file(config.init)
