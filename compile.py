@@ -161,8 +161,6 @@ def main():
     if config.show_warnings:
         show_warnings(context)
 
-    quick.build_and_upload(output, profile, "Lord225", "maciek")
-
     # Compile and Save
     if config.save in ['bin', 'pip', 'hex', 'pad', "schem"]:
         if config.save == 'schem':
