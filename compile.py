@@ -7,6 +7,7 @@ except ModuleNotFoundError as module:
 import argparse
 import logging
 from typing import Callable
+from core import quick
 import core.error as error
 import core.config as config
 import core.context as contextlib
@@ -159,6 +160,8 @@ def main():
     output, context = core.pipeline.exec_pipeline(parse_pipeline, output, context, progress_bar_name='Parsing')
     if config.show_warnings:
         show_warnings(context)
+
+    quick.build_and_upload(output, profile, "Lord225", "maciek")
 
     # Compile and Save
     if config.save in ['bin', 'pip', 'hex', 'pad', "schem"]:

@@ -1,12 +1,9 @@
-import chunk
 from nbt import nbt
-from typing import List, Iterable
 import numpy as np
 from core.context import Context
 from core.profile.profile import AdressingMode, Profile
 from core.save.formatter import padbin
 from core.emulate.emulator import gather_instructions 
-import numpy as np
 import core.config as config
 import core.error as error
 import os
@@ -157,7 +154,8 @@ def generate_schematic_from(profile: Profile, program, offset, dirname, filename
     data = convert_to_bitstream(data, offset, adressing)
     
     # Generate and save schematic
-    nbt = generate_schematic(data, layout, blank_name, low_state, high_state)
+    blankschem = nbt.NBTFile(blank_name, "rb")
+    nbt = generate_schematic(data, layout, blankschem, low_state, high_state)
     nbt.write_file(new_filename)
 
     filenames.append(new_filename)
@@ -200,8 +198,7 @@ def generate_meta(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile):
     nbtfile.tags.append(metadata)
     return nbtfile
 
-def generate_schematic(data, layout, blank_name, low_state, high_state):
-    blankschem = nbt.NBTFile(blank_name, "rb")
+def generate_schematic(data, layout, blankschem: nbt.NBTFile, low_state, high_state):
     nbtfile = nbt.NBTFile()
 
     nbtfile.name = "Schematic"

@@ -1,3 +1,4 @@
+from nbt import nbt
 import core
 import core.error as error
 import core.config as config
@@ -6,6 +7,7 @@ from core.load.base import Line
 from core.profile.profile import AdressingMode, Profile
 from core.save.formatter import as_values
 
+import io
 
 def translate(program, profile: Profile):
     # check if program is list of strings or list of Line objects
@@ -49,3 +51,67 @@ def preproces(program, profile: Profile):
 
 def language_server(program, context: Context, profile: Profile):
     pass
+
+def build_schematic(program, profile: Profile):
+    schematic = profile.schematic
+
+    data = ''.join(''.join(line["encoded"]) for line in program)
+
+    if schematic is None:
+        raise error.ProfileLoadError("Schematic definition is required for building one")
+
+    blank = nbt.NBTFile(profile.schematic.blank_name)
+    file = core.save.exporter.generate_schematic(data, schematic.layout, blank, schematic.low_state, schematic.high_state)
+
+    return file
+
+import hashlib
+import random
+import requests
+
+
+def process_response(response: requests.Response):
+    data = response.json()
+
+    if 'error' in data:
+        return data['error']
+    else:
+        print("Error: Got unexpected response from server")
+        exit()
+
+def send_schematic(schematic: nbt.NBTFile, nick, passwd):
+    filename = f"{hashlib.sha1(random.randbytes(10)).hexdigest()[:10]}.schem"
+    
+    data = {
+        'nick': nick,
+        'pass': passwd,
+    }
+    files = {
+        'fileToUpload': schematic
+    }
+
+    response = requests.post('https://redstonefun.pl/uploadapi.php', data=data, files=files)
+
+    error_code = process_response(response)
+
+    if error_code == 0:
+        return f"/load {filename}"
+    elif error_code == 1:
+        raise error.CompilerError("Invalid username or password")
+    elif error_code == 2:
+        raise error.CompilerError("The schematic is too large")
+    elif error_code == 3:
+        raise error.CompilerError("A schematic with this name already exists")
+    elif error_code == 4:
+        raise error.CompilerError("You can only upload schematics")
+    elif error_code == 5:
+        raise error.CompilerError("Server encountered an error during upload")
+    elif error_code == 6:
+        raise error.CompilerError("Missing data. Make sure you have provided username, password and file to upload")
+    else:
+        raise error.CompilerError(f"Other error: {error_code}")
+
+def build_and_upload(program, profile: Profile, nick, passwd):
+    schematic = build_schematic(program, profile)
+
+    return send_schematic(schematic, nick, passwd)
