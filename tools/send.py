@@ -75,7 +75,7 @@ if __name__ == "__main__":
         'fileToUpload': open(full_path, "br")
     }
 
-    response = requests.post('https://redstonefun.pl/uploadapi.php', data=data, files=files)
+    response = requests.post('https://api.redstonefun.pl', data=data, files=files)
 
     error_code = process_response(response)
 

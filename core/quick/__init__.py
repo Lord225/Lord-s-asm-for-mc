@@ -94,9 +94,9 @@ def send_schematic(schematic: nbt.NBTFile, nick=None, passwd=None, phpsessid=Non
     }
     
     if nick is not None and passwd is not None:
-        response = requests.post('https://redstonefun.pl/uploadapi.php', data=data, files=files)
+        response = requests.post('https://api.redstonefun.pl', data=data, files=files)
     elif phpsessid is not None:
-        response = requests.post('https://redstonefun.pl/uploadapi.php', files=files, cookies=cookies)
+        response = requests.post('https://api.redstonefun.pl', files=files, cookies=cookies)
     else:
         raise error.CompilerError("You need to pass either nick and passwd or sessionId")
     error_code = process_response(response)
