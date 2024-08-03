@@ -79,9 +79,9 @@ def process_response(response: requests.Response):
         print("Error: Got unexpected response from server")
         exit()
 
-def send_schematic(schematic: nbt.NBTFile, nick, passwd):
+def send_schematic(schematic: nbt.NBTFile, nick=None, passwd=None, phpsessid=None):
     filename = f"{hashlib.sha1(random.randbytes(10)).hexdigest()[:10]}.schem"
-    
+
     data = {
         'nick': nick,
         'pass': passwd,
@@ -89,8 +89,14 @@ def send_schematic(schematic: nbt.NBTFile, nick, passwd):
     files = {
         'fileToUpload': schematic
     }
-
-    response = requests.post('https://redstonefun.pl/uploadapi.php', data=data, files=files)
+    cookies = {
+        'PHPSESSID': phpsessid
+    }
+    
+    if nick is not None and passwd is not None:
+        response = requests.post('https://redstonefun.pl/uploadapi.php', data=data, files=files)
+    elif phpsessid is not None:
+        response = requests.post('https://redstonefun.pl/uploadapi.php', files=files, cookies=cookies)
 
     error_code = process_response(response)
 
