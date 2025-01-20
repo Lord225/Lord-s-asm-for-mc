@@ -29,12 +29,13 @@ help="""Name of file to compile
 Default: src/program.lor""")
 
 parser.add_argument("-o", "--output", type=str, default="./out/compiled.txt", help="Name of file to save in")
-parser.add_argument("-s", "--save", choices=["bin", "pip", "hex", "pad", "schem"], type=str, default = 'pip',
+parser.add_argument("-s", "--save", choices=["txt", "pip", "hex", "pad", "schem", "bin"], type=str, default = 'pip',
 help="""> pad - Build source and save as binary with padding to bytes
-> bin - Build source and save as binary with padding to arguments
+> txt - Build source and save as binary with padding to arguments
 > pip - Build source and dump json to stdout (for pipelining), (standard output will be redirected to stderr)
 > hex - Build source and save as hexadecimal representation of bytes
 > schem - Build source and save as schematic
+> bin - Build source and save as plain text
 Default: pip (will not save)""")
 
 parser.add_argument('-c','--comments', dest='comments', action='store_true', help="Add debug information on the end of every line in output files")
@@ -162,7 +163,7 @@ def main():
         show_warnings(context)
 
     # Compile and Save
-    if config.save in ['bin', 'pip', 'hex', 'pad', "schem"]:
+    if config.save in ['bin', 'pip', 'hex', 'pad', "schem", "txt"]:
         if config.save == 'schem':
             config.override_from_dict(comments = 'False')
         output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving')
@@ -180,7 +181,7 @@ def main():
             core.emulator.custom_emulator.emulate(output, context)
             return
         if isinstance(context.get_profile().emul, Callable):
-            config.override_from_dict(save = 'bin', comments = 'False')
+            config.override_from_dict(save = 'txt', comments = 'False')
             output, context = core.pipeline.exec_pipeline(format_pipeline, output, context, progress_bar_name='Evaluating')
             core.emulator.emulate(output, context)
             return

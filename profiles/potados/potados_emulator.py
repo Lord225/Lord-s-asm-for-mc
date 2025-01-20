@@ -76,7 +76,7 @@ class POTADOS_EMULATOR(emulate.EmulatorBase):
             r2_value = int(command[13:17])
             offset = Binary(command[4:12])
             r1_value = int(command[0:4])
-
+            
             offset = ops.pad_sign_extend(offset, 16)
 
             if sec_decoder == 0:   # jge

@@ -221,3 +221,33 @@ def generate_schematic(data, layout, blankschem: nbt.NBTFile, low_state, high_st
     nbtfile["BlockData"].value = generate_block_data(data, layout, blankschem, high_id, low_id)
 
     return nbtfile
+
+
+def generate_binary_from(profile: Profile, program, offset, dirname, filename):
+    adressing: AdressingMode = profile.adressing
+    word_size = adressing.bin_len
+
+    data, _ = gather_instructions(program, adressing)
+    data = flatten_instructions(data)
+    data = convert_to_bitstream(data, offset, adressing)
+
+    new_filename = os.path.join(dirname, f"{filename}.bin")
+    with open(new_filename, "wb") as file:
+        for i in range(0, len(data), 8):
+            byte = data[i:i+8]
+            byte = int(byte, 2)
+            file.write(byte.to_bytes(1, "big"))
+    
+    return [new_filename]
+
+def generate_binary_from_formatted(program: dict, context: Context):
+    profile: Profile = context.get_profile()
+    
+    # Prepare output filenames
+    outfile = config.output
+    dirname = os.path.dirname(outfile)
+    filename, _ = os.path.splitext(os.path.basename(outfile))
+
+    filenames = generate_binary_from(profile, program, 0, dirname, filename)
+
+    context.outfiles.extend(filenames)

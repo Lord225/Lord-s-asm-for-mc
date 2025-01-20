@@ -22,6 +22,10 @@ def save(program, context: Context):
     if config.save == 'schem':
         exporter.generate_schematic_from_formatted(program, context)
         return program, context
+    
+    if config.save == 'bin':
+        exporter.generate_binary_from_formatted(program, context)
+        return program, context
         
     if config.save == "pip":        
         data_to_dump = { 'profile_name': context.profile_name, "data": dict() }

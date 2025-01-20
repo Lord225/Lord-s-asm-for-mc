@@ -1,0 +1,510 @@
+{
+    "CPU":
+    {
+        "Name": "WVRN Pico",
+        "Arch": "WVRN",
+        "Author": "Q2CK",
+        "emulator":null,
+        "time_per_cycle":2.0,
+        
+        "ARGUMENTS":{
+            "default":{
+                "reg": {
+                    "size":4
+                },
+                "flag": {
+                    "size":1
+                },
+                "op": {
+                    "size":3
+                }
+            },
+            "imm": {
+                "imm": {
+                    "size":4
+                },
+                "flag": {
+                    "size":1
+                },
+                "op": {
+                    "size":3
+                }
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"packed",
+            "bin_len":8,
+            "offset":0
+        },
+
+        "DEFINES":[
+            "__WVRN__",
+            "__WVRN_PICO__",
+            ["zero", "0"],
+            ["acc", "1"],
+            ["flg", "2"],
+            ["seg", "3"],
+            ["tr1", "4"],
+            ["tr2", "5"]
+        ],
+
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":0,
+                "write":0
+            }
+        },
+
+        "SCHEMATIC": null,
+
+        "FILL":"nop",
+
+        "COMMANDS":{
+            "ext": {
+                "pattern": "ext {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 1,
+                    "op": 0
+                }
+            },
+            "sta": {
+                "pattern": "sta {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 0
+                }
+            },
+            "lda": {
+                "pattern": "lda {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 1
+                }
+            },
+            "lda.f": {
+                "pattern": "lda.f {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 1,
+                    "op": 1
+                }
+            },
+
+            "add": {
+                "pattern": "add {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 2
+                }
+            },
+            "add.f": {
+                "pattern": "add.f {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 1,
+                    "op": 2
+                }
+            },
+            "addi": {
+                "pattern": "addi {imm:num}",
+                "command_layout": "imm",
+                "bin": {
+                    "imm": "imm",
+                    "flag": 0,
+                    "op": 3
+                }
+            },
+            "addi.f": {
+                "pattern": "addi.f {imm:num}",
+                "command_layout": "imm",
+                "bin": {
+                    "imm": "imm",
+                    "flag": 0,
+                    "op": 3
+                }
+            },
+
+            "addi.label": {
+                "pattern": "addi {imm:label}",
+                "command_layout": "imm",
+                "bin": {
+                    "imm": "imm",
+                    "flag": 0,
+                    "op": 3
+                }
+            },
+            "addi.label.f": {
+                "pattern": "addi.f {imm:label}",
+                "command_layout": "imm",
+                "bin": {
+                    "imm": "imm",
+                    "flag": 0,
+                    "op": 3
+                }
+            },
+
+            "nand": {
+                "pattern": "nand {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 4
+                }
+            },
+            "nand.f": {
+                "pattern": "nand.f {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 1,
+                    "op": 4
+                }
+            },
+            "ld": {
+                "pattern": "ld {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 5
+                }
+            },
+            "ld.f": {
+                "pattern": "ld.f {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 1,
+                    "op": 5
+                }
+            },
+            "st": {
+                "pattern": "st {reg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "reg": "reg",
+                    "flag": 0,
+                    "op": 6
+                }
+            },
+
+
+            
+            "b.true carry": {
+                "pattern": "bt carry",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  0,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false carry": {
+                "pattern": "bf carry",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 0,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+            "b.true ncarry": {
+                "pattern": "bt ncarry",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  1,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false ncarry": {
+                "pattern": "bf ncarry",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 1,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+            "b.true zero": {
+                "pattern": "bt zero",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  2,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false zero": {
+                "pattern": "bt zero",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  2,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true nzero": {
+                "pattern": "bt nzero",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  3,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false nzero": {
+                "pattern": "bf nzero",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 3,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+
+
+            "b.true odd": {
+                "pattern": "bt odd",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  4,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false odd": {
+                "pattern": "bt odd",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  4,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true nodd": {
+                "pattern": "bt nodd",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  5,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false nodd": {
+                "pattern": "bf nodd",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 5,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+
+            "b.true even": {
+                "pattern": "bt even",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  5,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false even": {
+                "pattern": "bf even",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  5,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true neven": {
+                "pattern": "bt neven",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  4,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false neven": {
+                "pattern": "bf neven",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  4,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+        
+            "b.true sign": {
+                "pattern": "bt sign",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  6,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false sign": {
+                "pattern": "bf sign",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  6,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true nsign": {
+                "pattern": "bt nsign",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 7,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false nsign": {
+                "pattern": "bf nsign",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 7,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+            "b.true overflow": {
+                "pattern": "bt overflow",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  8,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false overflow": {
+                "pattern": "bf overflow",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  8,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true noverflow": {
+                "pattern": "bt noverflow",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 9,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false noverflow": {
+                "pattern": "bf noverflow",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 9,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+
+
+            "b.true true": {
+                "pattern": "bt true",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  0,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false true": {
+                "pattern": "bf true",
+                "command_layout": "default",
+                "bin": {
+                    "reg":  0,
+                    "flag": 0,
+                    "op": 7
+                }
+            },
+            "b.true false": {
+                "pattern": "bt false",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 0,
+                    "flag": 1,
+                    "op": 7
+                }
+            },
+            "b.false false": {
+                "pattern": "bf false",
+                "command_layout": "default",
+                "bin": {
+                    "reg": 0,
+                    "flag": 0,
+                    "op": 7
+                }
+            }
+        },
+        "MACROS": {
+            "b": {
+                "pattern": "b {mode:token}",
+                "process": {},
+                "expansion": [
+                    "bt {mode}"
+                ]
+            },
+            "nop": {
+                "pattern": "nop",
+                "process": {},
+                "expansion": [
+                    "sta 0"
+                ]
+            },
+            "swa": {
+                "pattern": "swa {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta 4",
+                    "lda {src}",
+                    "sta 5",
+                    "lda 4",
+                    "sta {src}",
+                    "lda 5"
+                ]
+            },
+            "swa.f": {
+                "pattern": "swa.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta 4",
+                    "lda.f {src}",
+                    "sta 5",
+                    "lda 4",
+                    "sta {src}",
+                    "lda 5"
+                ]
+            }
+        }
+    }
+}

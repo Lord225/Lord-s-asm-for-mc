@@ -94,7 +94,8 @@ def encode_argument(layout, name, val):
         return encoded
     except error.ParserError as err:
         raise error.ParserError(None, f"{err.info}, Encoding: {encoding.__name__}, Argument: {name}")
-
+    except Exception as err:
+        raise error.ParserError(None, f"Cannot encode {val}, encoder returned invalid value. Error: {err}")
 def get_py(program, context: Context):
     """Returns program line as dict"""
     parsed = program['parsed_command']
@@ -143,9 +144,9 @@ def format_output(program, context: Context):
     
     if config.save == 'pip':
         formatter_function = get_py
-    elif config.save == 'bin':
+    elif config.save == 'txt':
         formatter_function = get_bin
-    elif config.save == 'pad' or config.save == "schem":
+    elif config.save == 'pad' or config.save == "schem" or config.save == "bin":
         formatter_function = get_pad
     elif config.save == 'hex':
         formatter_function = get_raw
