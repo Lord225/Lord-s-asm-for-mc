@@ -3,7 +3,17 @@
         "Name": "WVRN Pico",
         "Arch": "WVRN",
         "Author": "Q2CK",
-        "emulator": null,
+        "emulator": {
+            "output": {
+                "save": {
+                    "save": "bin"
+                },
+                "data": {
+
+                }
+            },
+            "path": "wvrn"
+        },
         "time_per_cycle": 2.0,
         "ARGUMENTS": {
             "default": {

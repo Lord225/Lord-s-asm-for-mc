@@ -14,7 +14,7 @@ def emulate(output, context):
 
     save_settings = emul["output"]["save"]
     data_settings = emul["output"]["data"]
-    emulation_settings = emul["emulation"]
+    emul_cmd = emul["cmd"]
     
     config.override_from_dict(save_settings)
     
@@ -22,7 +22,7 @@ def emulate(output, context):
     
     output, context = core.pipeline.exec_pipeline(save_pipeline, output, context, progress_bar_name='Saving Binary')
 
-    process = [emulation_settings["path"], *emulation_settings["args"]]
+    process = [emul_cmd]
 
     print(f"Calling: {' '.join(process)}")
     print("Emulation Output:\n")
