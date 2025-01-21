@@ -6,6 +6,8 @@ from core.profile.profile import Profile
 import math 
 import random
 import hashlib
+import bitvec
+from bitvec.alias import *
 
 def eval_space(args, evaluation):
     locals().update(args)

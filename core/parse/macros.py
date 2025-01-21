@@ -7,7 +7,7 @@ from core.parse.generate import eval_space
 from core.parse.tokenize import tokenize
 from core.profile import patterns
 from core.profile.profile import Profile
-
+from copy import deepcopy
 
 def serach_for_macros(line_obj, profile: Profile, context: Context):
     for name, pattern in profile.macro_definitions.items():
@@ -21,7 +21,10 @@ def serach_for_macros(line_obj, profile: Profile, context: Context):
 
 def __process(process: dict, args: dict):
     for key, val in process.items():
-        args[key] = eval_space(args, val)
+        try:
+            args[key] = eval_space(args, val)
+        except Exception as e:
+            raise error.ParserError(None, f"Expression '{val}' rised an exeption: '{e}' with args: '{args}'")
     return args
 
 def __subtitue(match, profile: Profile):
@@ -30,8 +33,8 @@ def __subtitue(match, profile: Profile):
 
     macro = profile.macro_definitions[name]
 
-    expansion = macro['expansion']
-    process = macro['process']
+    expansion = macro['expansion'] if 'expansion' in macro else list()
+    process = macro['process'] if 'process' in macro else dict()
 
     arg_map.update(__process(process, arg_map))
 
@@ -44,12 +47,18 @@ def __subtitue(match, profile: Profile):
 
     return expansion_list
 
-def wrap_line(newline, line):
-    return Line(newline, line_index_in_file=line.line_index_in_file, is_macro_expanded=True)
+def wrap_line(newline, line: Line, expanded_command):
+    expanstion = line.expanded_command if 'expanded_command' in line else list()
+    expanstion = deepcopy(expanstion)
+    expanstion.append(expanded_command)
+    return Line(newline, line_index_in_file=line.line_index_in_file, is_macro_expanded=True, expanded_command=expanstion)
 
-def expand_macros_recurent(program, context: Context, limit, expanded_indexes):
+def expand_macros_recurent(program, context: Context, limit, expanded_indexes, macro_stack=None):
     if limit == 0:
-        raise error.ParserError(None, "Macro recursion limit exeeded.")
+        raise error.ParserError(None, "Macro recursion limit exceeded.")
+
+    if macro_stack is None:
+        macro_stack = []
 
     profile: Profile = context.get_profile()
 
@@ -69,7 +78,14 @@ def expand_macros_recurent(program, context: Context, limit, expanded_indexes):
             new_program.append(line)
             continue
 
-        expanded = [wrap_line(exp, line) for exp in __subtitue(matched_macro, profile)]
+        macro_stack.append((line.line_index_in_file, line.line, matched_macro[0]))
+
+        try:
+            expanded_command =  __subtitue(matched_macro, profile)
+            expanded = [wrap_line(exp, line, line.line) for exp in expanded_command]
+        except error.ParserError as e:
+            macro_traceback = " -> ".join([f"line {idx}: {line}" for idx, line, macro in macro_stack])
+            raise error.ParserError(line.line_index_in_file, f"Error while expanding macro: {e}\nThis error originates from:\n{macro_traceback}\nOriginal Line: '{line.line}'")
 
         expanded, context = tokenize(expanded, context)
 
@@ -79,9 +95,11 @@ def expand_macros_recurent(program, context: Context, limit, expanded_indexes):
         new_program.extend(expanded)
 
         modified = True
+
+        macro_stack.pop()
     
     if modified:
-        return expand_macros_recurent(new_program, context, limit-1, new_expanded_indexes)
+        return expand_macros_recurent(new_program, context, limit-1, new_expanded_indexes, macro_stack)
     else:
         return new_program
 
@@ -89,7 +107,7 @@ def expand_procedural_macros(program, context: Context):
     profile: Profile = context.get_profile()
     if profile.macro_definitions is None:
         return program, context
-
-    new_program = expand_macros_recurent(program, context, config.macro_recursion_limit, set(range(len(program))))
     
+    new_program = expand_macros_recurent(program, context, config.macro_recursion_limit, set(range(len(program))))
+
     return new_program, context

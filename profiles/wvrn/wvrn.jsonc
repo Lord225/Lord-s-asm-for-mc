@@ -1,212 +1,183 @@
 {
-    "CPU":
-    {
+    "CPU": {
         "Name": "WVRN Pico",
         "Arch": "WVRN",
         "Author": "Q2CK",
-        "emulator":null,
-        "time_per_cycle":2.0,
-        
-        "ARGUMENTS":{
-            "default":{
-                "reg": {
-                    "size":4
+        "emulator": null,
+        "time_per_cycle": 2.0,
+        "ARGUMENTS": {
+            "default": {
+                "arg": {
+                    "size": 4
                 },
                 "flag": {
-                    "size":1
+                    "size": 1
                 },
                 "op": {
-                    "size":3
-                }
-            },
-            "imm": {
-                "imm": {
-                    "size":4
-                },
-                "flag": {
-                    "size":1
-                },
-                "op": {
-                    "size":3
+                    "size": 3
                 }
             }
         },
-        "ADRESSING":
-        {
-            "mode":"packed",
-            "bin_len":8,
-            "offset":0
+        "ADRESSING": {
+            "mode": "packed",
+            "bin_len": 8,
+            "offset": 0
         },
-
-        "DEFINES":[
+        "DEFINES": [
             "__WVRN__",
             "__WVRN_PICO__",
-            ["zero", "0"],
-            ["acc", "1"],
-            ["flg", "2"],
-            ["seg", "3"],
-            ["tr1", "4"],
-            ["tr2", "5"]
+            [
+                "acc",
+                "1"
+            ],
+            [
+                "flg",
+                "2"
+            ],
+            [
+                "seg",
+                "3"
+            ],
+            [
+                "tr1",
+                "4"
+            ],
+            [
+                "tr2",
+                "5"
+            ]
         ],
-
-        "KEYWORDS":{
-            "ENTRY":{
-                "offset":0,
-                "write":0
+        "KEYWORDS": {
+            "ENTRY": {
+                "offset": 0,
+                "write": 0
             }
         },
-
         "SCHEMATIC": null,
-
-        "FILL":"nop",
-
-        "COMMANDS":{
-            "ext": {
-                "pattern": "ext {reg:num}",
-                "command_layout": "default",
-                "bin": {
-                    "reg": "reg",
-                    "flag": 1,
-                    "op": 0
-                }
-            },
+        "FILL": "nop",
+        "COMMANDS": {
             "sta": {
-                "pattern": "sta {reg:num}",
+                "pattern": "sta {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 0
                 }
             },
             "lda": {
-                "pattern": "lda {reg:num}",
+                "pattern": "lda {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 1
                 }
             },
             "lda.f": {
-                "pattern": "lda.f {reg:num}",
+                "pattern": "lda.f {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 1,
                     "op": 1
                 }
             },
-
             "add": {
-                "pattern": "add {reg:num}",
+                "pattern": "add {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 2
                 }
             },
             "add.f": {
-                "pattern": "add.f {reg:num}",
+                "pattern": "add.f {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 1,
                     "op": 2
                 }
             },
             "addi": {
-                "pattern": "addi {imm:num}",
-                "command_layout": "imm",
+                "pattern": "addi {arg:num}",
+                "command_layout": "default",
                 "bin": {
-                    "imm": "imm",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 3
                 }
             },
             "addi.f": {
-                "pattern": "addi.f {imm:num}",
-                "command_layout": "imm",
-                "bin": {
-                    "imm": "imm",
-                    "flag": 0,
-                    "op": 3
-                }
-            },
-
-            "addi.label": {
-                "pattern": "addi {imm:label}",
-                "command_layout": "imm",
-                "bin": {
-                    "imm": "imm",
-                    "flag": 0,
-                    "op": 3
-                }
-            },
-            "addi.label.f": {
-                "pattern": "addi.f {imm:label}",
-                "command_layout": "imm",
-                "bin": {
-                    "imm": "imm",
-                    "flag": 0,
-                    "op": 3
-                }
-            },
-
-            "nand": {
-                "pattern": "nand {reg:num}",
+                "pattern": "addi.f {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
+                    "flag": 1,
+                    "op": 3
+                }
+            },
+            "nand": {
+                "pattern": "nand {arg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "arg": "arg",
                     "flag": 0,
                     "op": 4
                 }
             },
             "nand.f": {
-                "pattern": "nand.f {reg:num}",
+                "pattern": "nand.f {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 1,
                     "op": 4
                 }
             },
             "ld": {
-                "pattern": "ld {reg:num}",
+                "pattern": "ld {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 5
                 }
             },
             "ld.f": {
-                "pattern": "ld.f {reg:num}",
+                "pattern": "ld.f {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 1,
                     "op": 5
                 }
             },
             "st": {
-                "pattern": "st {reg:num}",
+                "pattern": "st {arg:num}",
                 "command_layout": "default",
                 "bin": {
-                    "reg": "reg",
+                    "arg": "arg",
                     "flag": 0,
                     "op": 6
                 }
             },
-
-
-            
+            "st.f": {
+                "pattern": "st.f {arg:num}",
+                "command_layout": "default",
+                "bin": {
+                    "arg": "arg",
+                    "flag": 1,
+                    "op": 6
+                }
+            },
             "b.true carry": {
                 "pattern": "bt carry",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  0,
+                    "reg": 0,
                     "flag": 1,
                     "op": 7
                 }
@@ -220,12 +191,11 @@
                     "op": 7
                 }
             },
-
             "b.true ncarry": {
                 "pattern": "bt ncarry",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  1,
+                    "reg": 1,
                     "flag": 1,
                     "op": 7
                 }
@@ -239,21 +209,20 @@
                     "op": 7
                 }
             },
-
             "b.true zero": {
                 "pattern": "bt zero",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  2,
+                    "reg": 2,
                     "flag": 1,
                     "op": 7
                 }
             },
             "b.false zero": {
-                "pattern": "bt zero",
+                "pattern": "bf zero",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  2,
+                    "reg": 2,
                     "flag": 0,
                     "op": 7
                 }
@@ -262,7 +231,7 @@
                 "pattern": "bt nzero",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  3,
+                    "reg": 3,
                     "flag": 1,
                     "op": 7
                 }
@@ -276,23 +245,20 @@
                     "op": 7
                 }
             },
-
-
-
             "b.true odd": {
                 "pattern": "bt odd",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  4,
+                    "reg": 4,
                     "flag": 1,
                     "op": 7
                 }
             },
             "b.false odd": {
-                "pattern": "bt odd",
+                "pattern": "bf odd",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  4,
+                    "reg": 4,
                     "flag": 0,
                     "op": 7
                 }
@@ -301,7 +267,7 @@
                 "pattern": "bt nodd",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  5,
+                    "reg": 5,
                     "flag": 1,
                     "op": 7
                 }
@@ -315,13 +281,11 @@
                     "op": 7
                 }
             },
-
-
             "b.true even": {
                 "pattern": "bt even",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  5,
+                    "reg": 5,
                     "flag": 1,
                     "op": 7
                 }
@@ -330,7 +294,7 @@
                 "pattern": "bf even",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  5,
+                    "reg": 5,
                     "flag": 0,
                     "op": 7
                 }
@@ -339,7 +303,7 @@
                 "pattern": "bt neven",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  4,
+                    "reg": 4,
                     "flag": 1,
                     "op": 7
                 }
@@ -348,17 +312,16 @@
                 "pattern": "bf neven",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  4,
+                    "reg": 4,
                     "flag": 0,
                     "op": 7
                 }
             },
-        
             "b.true sign": {
                 "pattern": "bt sign",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  6,
+                    "reg": 6,
                     "flag": 1,
                     "op": 7
                 }
@@ -367,7 +330,7 @@
                 "pattern": "bf sign",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  6,
+                    "reg": 6,
                     "flag": 0,
                     "op": 7
                 }
@@ -390,12 +353,11 @@
                     "op": 7
                 }
             },
-
             "b.true overflow": {
                 "pattern": "bt overflow",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  8,
+                    "reg": 8,
                     "flag": 1,
                     "op": 7
                 }
@@ -404,7 +366,7 @@
                 "pattern": "bf overflow",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  8,
+                    "reg": 8,
                     "flag": 0,
                     "op": 7
                 }
@@ -427,13 +389,11 @@
                     "op": 7
                 }
             },
-
-
             "b.true true": {
                 "pattern": "bt true",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  0,
+                    "reg": 14,
                     "flag": 1,
                     "op": 7
                 }
@@ -442,7 +402,7 @@
                 "pattern": "bf true",
                 "command_layout": "default",
                 "bin": {
-                    "reg":  0,
+                    "reg": 14,
                     "flag": 0,
                     "op": 7
                 }
@@ -451,7 +411,7 @@
                 "pattern": "bt false",
                 "command_layout": "default",
                 "bin": {
-                    "reg": 0,
+                    "reg": 15,
                     "flag": 1,
                     "op": 7
                 }
@@ -460,13 +420,3877 @@
                 "pattern": "bf false",
                 "command_layout": "default",
                 "bin": {
-                    "reg": 0,
+                    "reg": 15,
                     "flag": 0,
                     "op": 7
                 }
             }
         },
         "MACROS": {
+            "lim 0": {
+                "pattern": "lim 0",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 0"
+                ]
+            },
+            "lim 1": {
+                "pattern": "lim 1",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 1"
+                ]
+            },
+            "lim 2": {
+                "pattern": "lim 2",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 2"
+                ]
+            },
+            "lim 3": {
+                "pattern": "lim 3",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 3"
+                ]
+            },
+            "lim 4": {
+                "pattern": "lim 4",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4"
+                ]
+            },
+            "lim 5": {
+                "pattern": "lim 5",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5"
+                ]
+            },
+            "lim 6": {
+                "pattern": "lim 6",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6"
+                ]
+            },
+            "lim 7": {
+                "pattern": "lim 7",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7"
+                ]
+            },
+            "lim 8": {
+                "pattern": "lim 8",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "add acc"
+                ]
+            },
+            "lim 9": {
+                "pattern": "lim 9",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 5"
+                ]
+            },
+            "lim 10": {
+                "pattern": "lim 10",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 11": {
+                "pattern": "lim 11",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 5"
+                ]
+            },
+            "lim 12": {
+                "pattern": "lim 12",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc"
+                ]
+            },
+            "lim 13": {
+                "pattern": "lim 13",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 6"
+                ]
+            },
+            "lim 14": {
+                "pattern": "lim 14",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 15": {
+                "pattern": "lim 15",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 16": {
+                "pattern": "lim 16",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 2",
+                    "addi 6",
+                    "add acc"
+                ]
+            },
+            "lim 17": {
+                "pattern": "lim 17",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 6",
+                    "addi 7"
+                ]
+            },
+            "lim 18": {
+                "pattern": "lim 18",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 19": {
+                "pattern": "lim 19",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 20": {
+                "pattern": "lim 20",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 21": {
+                "pattern": "lim 21",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 22": {
+                "pattern": "lim 22",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 23": {
+                "pattern": "lim 23",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 24": {
+                "pattern": "lim 24",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 25": {
+                "pattern": "lim 25",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 26": {
+                "pattern": "lim 26",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 27": {
+                "pattern": "lim 27",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -6",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 28": {
+                "pattern": "lim 28",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 29": {
+                "pattern": "lim 29",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 30": {
+                "pattern": "lim 30",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "addi 2",
+                    "add acc"
+                ]
+            },
+            "lim 31": {
+                "pattern": "lim 31",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 32": {
+                "pattern": "lim 32",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 4",
+                    "add acc"
+                ]
+            },
+            "lim 33": {
+                "pattern": "lim 33",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 34": {
+                "pattern": "lim 34",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 35": {
+                "pattern": "lim 35",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 36": {
+                "pattern": "lim 36",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 2",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 37": {
+                "pattern": "lim 37",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 38": {
+                "pattern": "lim 38",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "addi 6",
+                    "add acc"
+                ]
+            },
+            "lim 39": {
+                "pattern": "lim 39",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 40": {
+                "pattern": "lim 40",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 7",
+                    "addi 6",
+                    "add acc"
+                ]
+            },
+            "lim 41": {
+                "pattern": "lim 41",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 5",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 42": {
+                "pattern": "lim 42",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 43": {
+                "pattern": "lim 43",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -3",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 44": {
+                "pattern": "lim 44",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 45": {
+                "pattern": "lim 45",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -7",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 46": {
+                "pattern": "lim 46",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -4",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 47": {
+                "pattern": "lim 47",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 48": {
+                "pattern": "lim 48",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 49": {
+                "pattern": "lim 49",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 50": {
+                "pattern": "lim 50",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 51": {
+                "pattern": "lim 51",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 52": {
+                "pattern": "lim 52",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 53": {
+                "pattern": "lim 53",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 5",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 54": {
+                "pattern": "lim 54",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -6",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 55": {
+                "pattern": "lim 55",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 56": {
+                "pattern": "lim 56",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 57": {
+                "pattern": "lim 57",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 58": {
+                "pattern": "lim 58",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 59": {
+                "pattern": "lim 59",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 60": {
+                "pattern": "lim 60",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 6",
+                    "add acc"
+                ]
+            },
+            "lim 61": {
+                "pattern": "lim 61",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 62": {
+                "pattern": "lim 62",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 63": {
+                "pattern": "lim 63",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 64": {
+                "pattern": "lim 64",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 65": {
+                "pattern": "lim 65",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 2",
+                    "addi 7"
+                ]
+            },
+            "lim 66": {
+                "pattern": "lim 66",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 67": {
+                "pattern": "lim 67",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -6",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 68": {
+                "pattern": "lim 68",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 69": {
+                "pattern": "lim 69",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 3",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 70": {
+                "pattern": "lim 70",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 71": {
+                "pattern": "lim 71",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 72": {
+                "pattern": "lim 72",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 73": {
+                "pattern": "lim 73",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 74": {
+                "pattern": "lim 74",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 75": {
+                "pattern": "lim 75",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 76": {
+                "pattern": "lim 76",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 77": {
+                "pattern": "lim 77",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -7",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 78": {
+                "pattern": "lim 78",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 5",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 79": {
+                "pattern": "lim 79",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 80": {
+                "pattern": "lim 80",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 81": {
+                "pattern": "lim 81",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 82": {
+                "pattern": "lim 82",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1",
+                    "add acc"
+                ]
+            },
+            "lim 83": {
+                "pattern": "lim 83",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "addi 3",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 84": {
+                "pattern": "lim 84",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 85": {
+                "pattern": "lim 85",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 86": {
+                "pattern": "lim 86",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "addi -8",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 87": {
+                "pattern": "lim 87",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 88": {
+                "pattern": "lim 88",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 89": {
+                "pattern": "lim 89",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 90": {
+                "pattern": "lim 90",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 91": {
+                "pattern": "lim 91",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 92": {
+                "pattern": "lim 92",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -4"
+                ]
+            },
+            "lim 93": {
+                "pattern": "lim 93",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 94": {
+                "pattern": "lim 94",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 7",
+                    "add acc"
+                ]
+            },
+            "lim 95": {
+                "pattern": "lim 95",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -4",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 96": {
+                "pattern": "lim 96",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 97": {
+                "pattern": "lim 97",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 98": {
+                "pattern": "lim 98",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 99": {
+                "pattern": "lim 99",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 100": {
+                "pattern": "lim 100",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "addi 7",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 101": {
+                "pattern": "lim 101",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 102": {
+                "pattern": "lim 102",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 6"
+                ]
+            },
+            "lim 103": {
+                "pattern": "lim 103",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 104": {
+                "pattern": "lim 104",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 105": {
+                "pattern": "lim 105",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 106": {
+                "pattern": "lim 106",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 2"
+                ]
+            },
+            "lim 107": {
+                "pattern": "lim 107",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 108": {
+                "pattern": "lim 108",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 109": {
+                "pattern": "lim 109",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 110": {
+                "pattern": "lim 110",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 6"
+                ]
+            },
+            "lim 111": {
+                "pattern": "lim 111",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 112": {
+                "pattern": "lim 112",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 113": {
+                "pattern": "lim 113",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 114": {
+                "pattern": "lim 114",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 115": {
+                "pattern": "lim 115",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 116": {
+                "pattern": "lim 116",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 4"
+                ]
+            },
+            "lim 117": {
+                "pattern": "lim 117",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 118": {
+                "pattern": "lim 118",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 6"
+                ]
+            },
+            "lim 119": {
+                "pattern": "lim 119",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 120": {
+                "pattern": "lim 120",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 121": {
+                "pattern": "lim 121",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 122": {
+                "pattern": "lim 122",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 123": {
+                "pattern": "lim 123",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 124": {
+                "pattern": "lim 124",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -4"
+                ]
+            },
+            "lim 125": {
+                "pattern": "lim 125",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 126": {
+                "pattern": "lim 126",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 127": {
+                "pattern": "lim 127",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 128": {
+                "pattern": "lim 128",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 129": {
+                "pattern": "lim 129",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 130": {
+                "pattern": "lim 130",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 131": {
+                "pattern": "lim 131",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 132": {
+                "pattern": "lim 132",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 133": {
+                "pattern": "lim 133",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 134": {
+                "pattern": "lim 134",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -2"
+                ]
+            },
+            "lim 135": {
+                "pattern": "lim 135",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 7"
+                ]
+            },
+            "lim 136": {
+                "pattern": "lim 136",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 137": {
+                "pattern": "lim 137",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 138": {
+                "pattern": "lim 138",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 139": {
+                "pattern": "lim 139",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 140": {
+                "pattern": "lim 140",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 141": {
+                "pattern": "lim 141",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 142": {
+                "pattern": "lim 142",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -2"
+                ]
+            },
+            "lim 143": {
+                "pattern": "lim 143",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -1"
+                ]
+            },
+            "lim 144": {
+                "pattern": "lim 144",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 145": {
+                "pattern": "lim 145",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 146": {
+                "pattern": "lim 146",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 2"
+                ]
+            },
+            "lim 147": {
+                "pattern": "lim 147",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 148": {
+                "pattern": "lim 148",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -4"
+                ]
+            },
+            "lim 149": {
+                "pattern": "lim 149",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 150": {
+                "pattern": "lim 150",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 151": {
+                "pattern": "lim 151",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 152": {
+                "pattern": "lim 152",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 153": {
+                "pattern": "lim 153",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 154": {
+                "pattern": "lim 154",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 155": {
+                "pattern": "lim 155",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 156": {
+                "pattern": "lim 156",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 157": {
+                "pattern": "lim 157",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 158": {
+                "pattern": "lim 158",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 159": {
+                "pattern": "lim 159",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 160": {
+                "pattern": "lim 160",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 161": {
+                "pattern": "lim 161",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 162": {
+                "pattern": "lim 162",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 163": {
+                "pattern": "lim 163",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -3",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 164": {
+                "pattern": "lim 164",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 165": {
+                "pattern": "lim 165",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 166": {
+                "pattern": "lim 166",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 167": {
+                "pattern": "lim 167",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 168": {
+                "pattern": "lim 168",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 169": {
+                "pattern": "lim 169",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -8",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 170": {
+                "pattern": "lim 170",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 171": {
+                "pattern": "lim 171",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -3",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 3"
+                ]
+            },
+            "lim 172": {
+                "pattern": "lim 172",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 173": {
+                "pattern": "lim 173",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "addi -8",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 174": {
+                "pattern": "lim 174",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 3",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 175": {
+                "pattern": "lim 175",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 3",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 176": {
+                "pattern": "lim 176",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -8",
+                    "add acc"
+                ]
+            },
+            "lim 177": {
+                "pattern": "lim 177",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 178": {
+                "pattern": "lim 178",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 179": {
+                "pattern": "lim 179",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 180": {
+                "pattern": "lim 180",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -6",
+                    "add acc"
+                ]
+            },
+            "lim 181": {
+                "pattern": "lim 181",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "nand acc",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 182": {
+                "pattern": "lim 182",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -5",
+                    "add acc"
+                ]
+            },
+            "lim 183": {
+                "pattern": "lim 183",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 5",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 184": {
+                "pattern": "lim 184",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -4",
+                    "add acc"
+                ]
+            },
+            "lim 185": {
+                "pattern": "lim 185",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 186": {
+                "pattern": "lim 186",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 187": {
+                "pattern": "lim 187",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 188": {
+                "pattern": "lim 188",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -8"
+                ]
+            },
+            "lim 189": {
+                "pattern": "lim 189",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 190": {
+                "pattern": "lim 190",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -5",
+                    "add acc"
+                ]
+            },
+            "lim 191": {
+                "pattern": "lim 191",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -1"
+                ]
+            },
+            "lim 192": {
+                "pattern": "lim 192",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 193": {
+                "pattern": "lim 193",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 194": {
+                "pattern": "lim 194",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 195": {
+                "pattern": "lim 195",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 196": {
+                "pattern": "lim 196",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 197": {
+                "pattern": "lim 197",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 198": {
+                "pattern": "lim 198",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 199": {
+                "pattern": "lim 199",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 200": {
+                "pattern": "lim 200",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 201": {
+                "pattern": "lim 201",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 202": {
+                "pattern": "lim 202",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi 5",
+                    "add acc"
+                ]
+            },
+            "lim 203": {
+                "pattern": "lim 203",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 204": {
+                "pattern": "lim 204",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 205": {
+                "pattern": "lim 205",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 5"
+                ]
+            },
+            "lim 206": {
+                "pattern": "lim 206",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "nand acc",
+                    "add acc"
+                ]
+            },
+            "lim 207": {
+                "pattern": "lim 207",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 5",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 208": {
+                "pattern": "lim 208",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 209": {
+                "pattern": "lim 209",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc",
+                    "add acc",
+                    "addi 1"
+                ]
+            },
+            "lim 210": {
+                "pattern": "lim 210",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 211": {
+                "pattern": "lim 211",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 212": {
+                "pattern": "lim 212",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -6",
+                    "add acc"
+                ]
+            },
+            "lim 213": {
+                "pattern": "lim 213",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "addi 7",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 214": {
+                "pattern": "lim 214",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -6",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 215": {
+                "pattern": "lim 215",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 4",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 216": {
+                "pattern": "lim 216",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -8"
+                ]
+            },
+            "lim 217": {
+                "pattern": "lim 217",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -8",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 218": {
+                "pattern": "lim 218",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -3",
+                    "add acc"
+                ]
+            },
+            "lim 219": {
+                "pattern": "lim 219",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 220": {
+                "pattern": "lim 220",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 221": {
+                "pattern": "lim 221",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 222": {
+                "pattern": "lim 222",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -1",
+                    "add acc"
+                ]
+            },
+            "lim 223": {
+                "pattern": "lim 223",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -5"
+                ]
+            },
+            "lim 224": {
+                "pattern": "lim 224",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 225": {
+                "pattern": "lim 225",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 226": {
+                "pattern": "lim 226",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 227": {
+                "pattern": "lim 227",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 7",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 228": {
+                "pattern": "lim 228",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -6",
+                    "add acc"
+                ]
+            },
+            "lim 229": {
+                "pattern": "lim 229",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "addi 7",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 230": {
+                "pattern": "lim 230",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -5",
+                    "add acc"
+                ]
+            },
+            "lim 231": {
+                "pattern": "lim 231",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi 6",
+                    "add acc",
+                    "add acc",
+                    "nand acc"
+                ]
+            },
+            "lim 232": {
+                "pattern": "lim 232",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc",
+                    "add acc"
+                ]
+            },
+            "lim 233": {
+                "pattern": "lim 233",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 234": {
+                "pattern": "lim 234",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -6"
+                ]
+            },
+            "lim 235": {
+                "pattern": "lim 235",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "addi -7"
+                ]
+            },
+            "lim 236": {
+                "pattern": "lim 236",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -2",
+                    "add acc"
+                ]
+            },
+            "lim 237": {
+                "pattern": "lim 237",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 238": {
+                "pattern": "lim 238",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "nand acc",
+                    "addi -8",
+                    "add acc"
+                ]
+            },
+            "lim 239": {
+                "pattern": "lim 239",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc",
+                    "addi -3"
+                ]
+            },
+            "lim 240": {
+                "pattern": "lim 240",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "add acc"
+                ]
+            },
+            "lim 241": {
+                "pattern": "lim 241",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8",
+                    "addi -7"
+                ]
+            },
+            "lim 242": {
+                "pattern": "lim 242",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "add acc"
+                ]
+            },
+            "lim 243": {
+                "pattern": "lim 243",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "addi -7"
+                ]
+            },
+            "lim 244": {
+                "pattern": "lim 244",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6",
+                    "add acc"
+                ]
+            },
+            "lim 245": {
+                "pattern": "lim 245",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7",
+                    "addi -4"
+                ]
+            },
+            "lim 246": {
+                "pattern": "lim 246",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -5",
+                    "add acc"
+                ]
+            },
+            "lim 247": {
+                "pattern": "lim 247",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "nand acc",
+                    "addi -8"
+                ]
+            },
+            "lim 248": {
+                "pattern": "lim 248",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -8"
+                ]
+            },
+            "lim 249": {
+                "pattern": "lim 249",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -7"
+                ]
+            },
+            "lim 250": {
+                "pattern": "lim 250",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -6"
+                ]
+            },
+            "lim 251": {
+                "pattern": "lim 251",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -5"
+                ]
+            },
+            "lim 252": {
+                "pattern": "lim 252",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -4"
+                ]
+            },
+            "lim 253": {
+                "pattern": "lim 253",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -3"
+                ]
+            },
+            "lim 254": {
+                "pattern": "lim 254",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -2"
+                ]
+            },
+            "lim 255": {
+                "pattern": "lim 255",
+                "process": {},
+                "expansion": [
+                    "lda 0",
+                    "addi -1"
+                ]
+            },
+            "lim -1": {
+                "pattern": "lim -1",
+                "process": {},
+                "expansion": [
+                    "lim 255"
+                ]
+            },
+            "lim -2": {
+                "pattern": "lim -2",
+                "process": {},
+                "expansion": [
+                    "lim 254"
+                ]
+            },
+            "lim -3": {
+                "pattern": "lim -3",
+                "process": {},
+                "expansion": [
+                    "lim 253"
+                ]
+            },
+            "lim -4": {
+                "pattern": "lim -4",
+                "process": {},
+                "expansion": [
+                    "lim 252"
+                ]
+            },
+            "lim -5": {
+                "pattern": "lim -5",
+                "process": {},
+                "expansion": [
+                    "lim 251"
+                ]
+            },
+            "lim -6": {
+                "pattern": "lim -6",
+                "process": {},
+                "expansion": [
+                    "lim 250"
+                ]
+            },
+            "lim -7": {
+                "pattern": "lim -7",
+                "process": {},
+                "expansion": [
+                    "lim 249"
+                ]
+            },
+            "lim -8": {
+                "pattern": "lim -8",
+                "process": {},
+                "expansion": [
+                    "lim 248"
+                ]
+            },
+            "lim -9": {
+                "pattern": "lim -9",
+                "process": {},
+                "expansion": [
+                    "lim 247"
+                ]
+            },
+            "lim -10": {
+                "pattern": "lim -10",
+                "process": {},
+                "expansion": [
+                    "lim 246"
+                ]
+            },
+            "lim -11": {
+                "pattern": "lim -11",
+                "process": {},
+                "expansion": [
+                    "lim 245"
+                ]
+            },
+            "lim -12": {
+                "pattern": "lim -12",
+                "process": {},
+                "expansion": [
+                    "lim 244"
+                ]
+            },
+            "lim -13": {
+                "pattern": "lim -13",
+                "process": {},
+                "expansion": [
+                    "lim 243"
+                ]
+            },
+            "lim -14": {
+                "pattern": "lim -14",
+                "process": {},
+                "expansion": [
+                    "lim 242"
+                ]
+            },
+            "lim -15": {
+                "pattern": "lim -15",
+                "process": {},
+                "expansion": [
+                    "lim 241"
+                ]
+            },
+            "lim -16": {
+                "pattern": "lim -16",
+                "process": {},
+                "expansion": [
+                    "lim 240"
+                ]
+            },
+            "lim -17": {
+                "pattern": "lim -17",
+                "process": {},
+                "expansion": [
+                    "lim 239"
+                ]
+            },
+            "lim -18": {
+                "pattern": "lim -18",
+                "process": {},
+                "expansion": [
+                    "lim 238"
+                ]
+            },
+            "lim -19": {
+                "pattern": "lim -19",
+                "process": {},
+                "expansion": [
+                    "lim 237"
+                ]
+            },
+            "lim -20": {
+                "pattern": "lim -20",
+                "process": {},
+                "expansion": [
+                    "lim 236"
+                ]
+            },
+            "lim -21": {
+                "pattern": "lim -21",
+                "process": {},
+                "expansion": [
+                    "lim 235"
+                ]
+            },
+            "lim -22": {
+                "pattern": "lim -22",
+                "process": {},
+                "expansion": [
+                    "lim 234"
+                ]
+            },
+            "lim -23": {
+                "pattern": "lim -23",
+                "process": {},
+                "expansion": [
+                    "lim 233"
+                ]
+            },
+            "lim -24": {
+                "pattern": "lim -24",
+                "process": {},
+                "expansion": [
+                    "lim 232"
+                ]
+            },
+            "lim -25": {
+                "pattern": "lim -25",
+                "process": {},
+                "expansion": [
+                    "lim 231"
+                ]
+            },
+            "lim -26": {
+                "pattern": "lim -26",
+                "process": {},
+                "expansion": [
+                    "lim 230"
+                ]
+            },
+            "lim -27": {
+                "pattern": "lim -27",
+                "process": {},
+                "expansion": [
+                    "lim 229"
+                ]
+            },
+            "lim -28": {
+                "pattern": "lim -28",
+                "process": {},
+                "expansion": [
+                    "lim 228"
+                ]
+            },
+            "lim -29": {
+                "pattern": "lim -29",
+                "process": {},
+                "expansion": [
+                    "lim 227"
+                ]
+            },
+            "lim -30": {
+                "pattern": "lim -30",
+                "process": {},
+                "expansion": [
+                    "lim 226"
+                ]
+            },
+            "lim -31": {
+                "pattern": "lim -31",
+                "process": {},
+                "expansion": [
+                    "lim 225"
+                ]
+            },
+            "lim -32": {
+                "pattern": "lim -32",
+                "process": {},
+                "expansion": [
+                    "lim 224"
+                ]
+            },
+            "lim -33": {
+                "pattern": "lim -33",
+                "process": {},
+                "expansion": [
+                    "lim 223"
+                ]
+            },
+            "lim -34": {
+                "pattern": "lim -34",
+                "process": {},
+                "expansion": [
+                    "lim 222"
+                ]
+            },
+            "lim -35": {
+                "pattern": "lim -35",
+                "process": {},
+                "expansion": [
+                    "lim 221"
+                ]
+            },
+            "lim -36": {
+                "pattern": "lim -36",
+                "process": {},
+                "expansion": [
+                    "lim 220"
+                ]
+            },
+            "lim -37": {
+                "pattern": "lim -37",
+                "process": {},
+                "expansion": [
+                    "lim 219"
+                ]
+            },
+            "lim -38": {
+                "pattern": "lim -38",
+                "process": {},
+                "expansion": [
+                    "lim 218"
+                ]
+            },
+            "lim -39": {
+                "pattern": "lim -39",
+                "process": {},
+                "expansion": [
+                    "lim 217"
+                ]
+            },
+            "lim -40": {
+                "pattern": "lim -40",
+                "process": {},
+                "expansion": [
+                    "lim 216"
+                ]
+            },
+            "lim -41": {
+                "pattern": "lim -41",
+                "process": {},
+                "expansion": [
+                    "lim 215"
+                ]
+            },
+            "lim -42": {
+                "pattern": "lim -42",
+                "process": {},
+                "expansion": [
+                    "lim 214"
+                ]
+            },
+            "lim -43": {
+                "pattern": "lim -43",
+                "process": {},
+                "expansion": [
+                    "lim 213"
+                ]
+            },
+            "lim -44": {
+                "pattern": "lim -44",
+                "process": {},
+                "expansion": [
+                    "lim 212"
+                ]
+            },
+            "lim -45": {
+                "pattern": "lim -45",
+                "process": {},
+                "expansion": [
+                    "lim 211"
+                ]
+            },
+            "lim -46": {
+                "pattern": "lim -46",
+                "process": {},
+                "expansion": [
+                    "lim 210"
+                ]
+            },
+            "lim -47": {
+                "pattern": "lim -47",
+                "process": {},
+                "expansion": [
+                    "lim 209"
+                ]
+            },
+            "lim -48": {
+                "pattern": "lim -48",
+                "process": {},
+                "expansion": [
+                    "lim 208"
+                ]
+            },
+            "lim -49": {
+                "pattern": "lim -49",
+                "process": {},
+                "expansion": [
+                    "lim 207"
+                ]
+            },
+            "lim -50": {
+                "pattern": "lim -50",
+                "process": {},
+                "expansion": [
+                    "lim 206"
+                ]
+            },
+            "lim -51": {
+                "pattern": "lim -51",
+                "process": {},
+                "expansion": [
+                    "lim 205"
+                ]
+            },
+            "lim -52": {
+                "pattern": "lim -52",
+                "process": {},
+                "expansion": [
+                    "lim 204"
+                ]
+            },
+            "lim -53": {
+                "pattern": "lim -53",
+                "process": {},
+                "expansion": [
+                    "lim 203"
+                ]
+            },
+            "lim -54": {
+                "pattern": "lim -54",
+                "process": {},
+                "expansion": [
+                    "lim 202"
+                ]
+            },
+            "lim -55": {
+                "pattern": "lim -55",
+                "process": {},
+                "expansion": [
+                    "lim 201"
+                ]
+            },
+            "lim -56": {
+                "pattern": "lim -56",
+                "process": {},
+                "expansion": [
+                    "lim 200"
+                ]
+            },
+            "lim -57": {
+                "pattern": "lim -57",
+                "process": {},
+                "expansion": [
+                    "lim 199"
+                ]
+            },
+            "lim -58": {
+                "pattern": "lim -58",
+                "process": {},
+                "expansion": [
+                    "lim 198"
+                ]
+            },
+            "lim -59": {
+                "pattern": "lim -59",
+                "process": {},
+                "expansion": [
+                    "lim 197"
+                ]
+            },
+            "lim -60": {
+                "pattern": "lim -60",
+                "process": {},
+                "expansion": [
+                    "lim 196"
+                ]
+            },
+            "lim -61": {
+                "pattern": "lim -61",
+                "process": {},
+                "expansion": [
+                    "lim 195"
+                ]
+            },
+            "lim -62": {
+                "pattern": "lim -62",
+                "process": {},
+                "expansion": [
+                    "lim 194"
+                ]
+            },
+            "lim -63": {
+                "pattern": "lim -63",
+                "process": {},
+                "expansion": [
+                    "lim 193"
+                ]
+            },
+            "lim -64": {
+                "pattern": "lim -64",
+                "process": {},
+                "expansion": [
+                    "lim 192"
+                ]
+            },
+            "lim -65": {
+                "pattern": "lim -65",
+                "process": {},
+                "expansion": [
+                    "lim 191"
+                ]
+            },
+            "lim -66": {
+                "pattern": "lim -66",
+                "process": {},
+                "expansion": [
+                    "lim 190"
+                ]
+            },
+            "lim -67": {
+                "pattern": "lim -67",
+                "process": {},
+                "expansion": [
+                    "lim 189"
+                ]
+            },
+            "lim -68": {
+                "pattern": "lim -68",
+                "process": {},
+                "expansion": [
+                    "lim 188"
+                ]
+            },
+            "lim -69": {
+                "pattern": "lim -69",
+                "process": {},
+                "expansion": [
+                    "lim 187"
+                ]
+            },
+            "lim -70": {
+                "pattern": "lim -70",
+                "process": {},
+                "expansion": [
+                    "lim 186"
+                ]
+            },
+            "lim -71": {
+                "pattern": "lim -71",
+                "process": {},
+                "expansion": [
+                    "lim 185"
+                ]
+            },
+            "lim -72": {
+                "pattern": "lim -72",
+                "process": {},
+                "expansion": [
+                    "lim 184"
+                ]
+            },
+            "lim -73": {
+                "pattern": "lim -73",
+                "process": {},
+                "expansion": [
+                    "lim 183"
+                ]
+            },
+            "lim -74": {
+                "pattern": "lim -74",
+                "process": {},
+                "expansion": [
+                    "lim 182"
+                ]
+            },
+            "lim -75": {
+                "pattern": "lim -75",
+                "process": {},
+                "expansion": [
+                    "lim 181"
+                ]
+            },
+            "lim -76": {
+                "pattern": "lim -76",
+                "process": {},
+                "expansion": [
+                    "lim 180"
+                ]
+            },
+            "lim -77": {
+                "pattern": "lim -77",
+                "process": {},
+                "expansion": [
+                    "lim 179"
+                ]
+            },
+            "lim -78": {
+                "pattern": "lim -78",
+                "process": {},
+                "expansion": [
+                    "lim 178"
+                ]
+            },
+            "lim -79": {
+                "pattern": "lim -79",
+                "process": {},
+                "expansion": [
+                    "lim 177"
+                ]
+            },
+            "lim -80": {
+                "pattern": "lim -80",
+                "process": {},
+                "expansion": [
+                    "lim 176"
+                ]
+            },
+            "lim -81": {
+                "pattern": "lim -81",
+                "process": {},
+                "expansion": [
+                    "lim 175"
+                ]
+            },
+            "lim -82": {
+                "pattern": "lim -82",
+                "process": {},
+                "expansion": [
+                    "lim 174"
+                ]
+            },
+            "lim -83": {
+                "pattern": "lim -83",
+                "process": {},
+                "expansion": [
+                    "lim 173"
+                ]
+            },
+            "lim -84": {
+                "pattern": "lim -84",
+                "process": {},
+                "expansion": [
+                    "lim 172"
+                ]
+            },
+            "lim -85": {
+                "pattern": "lim -85",
+                "process": {},
+                "expansion": [
+                    "lim 171"
+                ]
+            },
+            "lim -86": {
+                "pattern": "lim -86",
+                "process": {},
+                "expansion": [
+                    "lim 170"
+                ]
+            },
+            "lim -87": {
+                "pattern": "lim -87",
+                "process": {},
+                "expansion": [
+                    "lim 169"
+                ]
+            },
+            "lim -88": {
+                "pattern": "lim -88",
+                "process": {},
+                "expansion": [
+                    "lim 168"
+                ]
+            },
+            "lim -89": {
+                "pattern": "lim -89",
+                "process": {},
+                "expansion": [
+                    "lim 167"
+                ]
+            },
+            "lim -90": {
+                "pattern": "lim -90",
+                "process": {},
+                "expansion": [
+                    "lim 166"
+                ]
+            },
+            "lim -91": {
+                "pattern": "lim -91",
+                "process": {},
+                "expansion": [
+                    "lim 165"
+                ]
+            },
+            "lim -92": {
+                "pattern": "lim -92",
+                "process": {},
+                "expansion": [
+                    "lim 164"
+                ]
+            },
+            "lim -93": {
+                "pattern": "lim -93",
+                "process": {},
+                "expansion": [
+                    "lim 163"
+                ]
+            },
+            "lim -94": {
+                "pattern": "lim -94",
+                "process": {},
+                "expansion": [
+                    "lim 162"
+                ]
+            },
+            "lim -95": {
+                "pattern": "lim -95",
+                "process": {},
+                "expansion": [
+                    "lim 161"
+                ]
+            },
+            "lim -96": {
+                "pattern": "lim -96",
+                "process": {},
+                "expansion": [
+                    "lim 160"
+                ]
+            },
+            "lim -97": {
+                "pattern": "lim -97",
+                "process": {},
+                "expansion": [
+                    "lim 159"
+                ]
+            },
+            "lim -98": {
+                "pattern": "lim -98",
+                "process": {},
+                "expansion": [
+                    "lim 158"
+                ]
+            },
+            "lim -99": {
+                "pattern": "lim -99",
+                "process": {},
+                "expansion": [
+                    "lim 157"
+                ]
+            },
+            "lim -100": {
+                "pattern": "lim -100",
+                "process": {},
+                "expansion": [
+                    "lim 156"
+                ]
+            },
+            "lim -101": {
+                "pattern": "lim -101",
+                "process": {},
+                "expansion": [
+                    "lim 155"
+                ]
+            },
+            "lim -102": {
+                "pattern": "lim -102",
+                "process": {},
+                "expansion": [
+                    "lim 154"
+                ]
+            },
+            "lim -103": {
+                "pattern": "lim -103",
+                "process": {},
+                "expansion": [
+                    "lim 153"
+                ]
+            },
+            "lim -104": {
+                "pattern": "lim -104",
+                "process": {},
+                "expansion": [
+                    "lim 152"
+                ]
+            },
+            "lim -105": {
+                "pattern": "lim -105",
+                "process": {},
+                "expansion": [
+                    "lim 151"
+                ]
+            },
+            "lim -106": {
+                "pattern": "lim -106",
+                "process": {},
+                "expansion": [
+                    "lim 150"
+                ]
+            },
+            "lim -107": {
+                "pattern": "lim -107",
+                "process": {},
+                "expansion": [
+                    "lim 149"
+                ]
+            },
+            "lim -108": {
+                "pattern": "lim -108",
+                "process": {},
+                "expansion": [
+                    "lim 148"
+                ]
+            },
+            "lim -109": {
+                "pattern": "lim -109",
+                "process": {},
+                "expansion": [
+                    "lim 147"
+                ]
+            },
+            "lim -110": {
+                "pattern": "lim -110",
+                "process": {},
+                "expansion": [
+                    "lim 146"
+                ]
+            },
+            "lim -111": {
+                "pattern": "lim -111",
+                "process": {},
+                "expansion": [
+                    "lim 145"
+                ]
+            },
+            "lim -112": {
+                "pattern": "lim -112",
+                "process": {},
+                "expansion": [
+                    "lim 144"
+                ]
+            },
+            "lim -113": {
+                "pattern": "lim -113",
+                "process": {},
+                "expansion": [
+                    "lim 143"
+                ]
+            },
+            "lim -114": {
+                "pattern": "lim -114",
+                "process": {},
+                "expansion": [
+                    "lim 142"
+                ]
+            },
+            "lim -115": {
+                "pattern": "lim -115",
+                "process": {},
+                "expansion": [
+                    "lim 141"
+                ]
+            },
+            "lim -116": {
+                "pattern": "lim -116",
+                "process": {},
+                "expansion": [
+                    "lim 140"
+                ]
+            },
+            "lim -117": {
+                "pattern": "lim -117",
+                "process": {},
+                "expansion": [
+                    "lim 139"
+                ]
+            },
+            "lim -118": {
+                "pattern": "lim -118",
+                "process": {},
+                "expansion": [
+                    "lim 138"
+                ]
+            },
+            "lim -119": {
+                "pattern": "lim -119",
+                "process": {},
+                "expansion": [
+                    "lim 137"
+                ]
+            },
+            "lim -120": {
+                "pattern": "lim -120",
+                "process": {},
+                "expansion": [
+                    "lim 136"
+                ]
+            },
+            "lim -121": {
+                "pattern": "lim -121",
+                "process": {},
+                "expansion": [
+                    "lim 135"
+                ]
+            },
+            "lim -122": {
+                "pattern": "lim -122",
+                "process": {},
+                "expansion": [
+                    "lim 134"
+                ]
+            },
+            "lim -123": {
+                "pattern": "lim -123",
+                "process": {},
+                "expansion": [
+                    "lim 133"
+                ]
+            },
+            "lim -124": {
+                "pattern": "lim -124",
+                "process": {},
+                "expansion": [
+                    "lim 132"
+                ]
+            },
+            "lim -125": {
+                "pattern": "lim -125",
+                "process": {},
+                "expansion": [
+                    "lim 131"
+                ]
+            },
+            "lim -126": {
+                "pattern": "lim -126",
+                "process": {},
+                "expansion": [
+                    "lim 130"
+                ]
+            },
+            "lim -127": {
+                "pattern": "lim -127",
+                "process": {},
+                "expansion": [
+                    "lim 129"
+                ]
+            },
             "b": {
                 "pattern": "b {mode:token}",
                 "process": {},
@@ -481,28 +4305,250 @@
                     "sta 0"
                 ]
             },
+            "mov": {
+                "pattern": "mov {dest:token} {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "lda {src}",
+                    "sta {dest}",
+                    "lda tr1"
+                ]
+            },
+            "mov.f": {
+                "pattern": "mov.f {dest:token} {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "lda {src}",
+                    "sta.f {dest}",
+                    "lda tr1"
+                ]
+            },
             "swa": {
                 "pattern": "swa {src:token}",
                 "process": {},
                 "expansion": [
-                    "sta 4",
+                    "sta tr1",
                     "lda {src}",
-                    "sta 5",
-                    "lda 4",
+                    "sta tr2",
+                    "lda tr1",
                     "sta {src}",
-                    "lda 5"
+                    "lda tr2"
                 ]
             },
             "swa.f": {
-                "pattern": "swa.f {src:token}",
+                "pattern": "swa {src:token}",
                 "process": {},
                 "expansion": [
-                    "sta 4",
-                    "lda.f {src}",
-                    "sta 5",
-                    "lda 4",
+                    "sta tr1",
+                    "lda {src}",
+                    "sta tr2",
+                    "lda tr1",
                     "sta {src}",
-                    "lda 5"
+                    "lda.f tr2"
+                ]
+            },
+            "not": {
+                "pattern": "not {src:token}",
+                "process": {},
+                "expansion": [
+                    "lda {src}",
+                    "nand {src}"
+                ]
+            },
+            "not.f": {
+                "pattern": "not.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "lda {src}",
+                    "nand.f {src}"
+                ]
+            },
+            "and": {
+                "pattern": "and {src:token}",
+                "process": {},
+                "expansion": [
+                    "nand {src}",
+                    "nand acc"
+                ]
+            },
+            "and.f": {
+                "pattern": "and {src:token}",
+                "process": {},
+                "expansion": [
+                    "nand {src}",
+                    "nand.f acc"
+                ]
+            },
+            "or": {
+                "pattern": "or.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "nand acc",
+                    "sta tr1",
+                    "not {src}",
+                    "nand.f tr1"
+                ]
+            },
+            "xor": {
+                "pattern": "xor {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "nand {src}",
+                    "sta tr2",
+                    "nand tr1",
+                    "sta tr1",
+                    "lda tr2",
+                    "nand {src}",
+                    "nand{.f} tr1"
+                ]
+            },
+            "xor.f": {
+                "pattern": "xor.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "nand {src}",
+                    "sta tr2",
+                    "nand tr1",
+                    "sta tr1",
+                    "lda tr2",
+                    "nand {src}",
+                    "nand.f tr1"
+                ]
+            },
+            "andi": {
+                "pattern": "andi {src:label} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "and {src}"
+                ]
+            },
+            "andi.f": {
+                "pattern": "andi.f {src:token} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "and.f {src}"
+                ]
+            },
+            "ori": {
+                "pattern": "ori {src:token} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "or{.f} {src}"
+                ]
+            },
+            "ori.f": {
+                "pattern": "ori.f {src:token} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "or.f {src}"
+                ]
+            },
+            "xori": {
+                "pattern": "xori {src:token} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "xor {src}"
+                ]
+            },
+            "xori.f": {
+                "pattern": "xori.f {src:token} {imm:token}",
+                "process": {},
+                "expansion": [
+                    "lim {imm}",
+                    "xor.f {src}"
+                ]
+            },
+            "sub": {
+                "pattern": "sub {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "nand {src}",
+                    "addi 1",
+                    "add tr1"
+                ]
+            },
+            "sub.f": {
+                "pattern": "sub.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "sta tr1",
+                    "nand {src}",
+                    "addi 1",
+                    "add.f tr1"
+                ]
+            },
+            "suba": {
+                "pattern": "suba {src:token}",
+                "process": {},
+                "expansion": [
+                    "nand acc",
+                    "addi 1",
+                    "add {src}"
+                ]
+            },
+            "suba.f": {
+                "pattern": "suba.f {src:token}",
+                "process": {},
+                "expansion": [
+                    "nand acc",
+                    "addi 1",
+                    "add.f {src}"
+                ]
+            },
+            "brc-label": {
+                "pattern": "brc {cond:token} {addr:label}",
+                "process": {},
+                "expansion": [
+                    "brc {cond} {addr}"
+                ]
+            },
+            "brc-const": {
+                "pattern": "brc {cond:token} {addr:num}",
+                "process": {},
+                "expansion": [
+                    "brct {cond} {addr}"
+                ]
+            },
+            "brc-expansion-true": {
+                "pattern": "brct {cond:token} {addr:num}",
+                "process": {
+                    "lowAddr": "u16(int(addr)).low_byte().int()",
+                    "highAddr": "u16(int(addr)).high_byte().int()"
+                },
+                "expansion": [
+                    "lim {lowAddr}",
+                    "sta 3",
+                    "lim {highAddr}",
+                    "bt {cond}"
+                ]
+            },
+            "brc-expansion-false": {
+                "pattern": "brcf {cond:token} {addr:num}",
+                "process": {
+                    "lowAddr": "u16(int(addr)).low_byte().int()",
+                    "highAddr": "u16(int(addr)).high_byte().int()"
+                },
+                "expansion": [
+                    "lim {lowAddr}",
+                    "sta 3",
+                    "lim {highAddr}",
+                    "bf {cond}"
+                ]
+            },
+            "jmp": {
+                "pattern": "jmp {addr:token}",
+                "expansion": [
+                    "brc true {addr}"
                 ]
             }
         }

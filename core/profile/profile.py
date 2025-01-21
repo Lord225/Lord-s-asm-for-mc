@@ -79,9 +79,11 @@ def process_commands(commands: dict):
     return commands
 
 def process_macros(macros: dict):
-    warnings = dict()
     for cmd_id, cmd in macros.items():
-        cmd['pattern'] = Pattern(cmd['pattern'])
+        try:
+            cmd['pattern'] = Pattern(cmd['pattern'])
+        except Exception as err:
+            raise error.ProfileLoadError(f"Cannot load macro: {cmd_id} because of error: {err}")
     return macros
 
 class ProfileInfo:

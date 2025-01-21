@@ -1,0 +1,1953 @@
+{
+    "0": [
+        "lda 0",
+        "addi 0"
+    ],
+    "1": [
+        "lda 0",
+        "addi 1"
+    ],
+    "2": [
+        "lda 0",
+        "addi 2"
+    ],
+    "3": [
+        "lda 0",
+        "addi 3"
+    ],
+    "4": [
+        "lda 0",
+        "addi 4"
+    ],
+    "5": [
+        "lda 0",
+        "addi 5"
+    ],
+    "6": [
+        "lda 0",
+        "addi 6"
+    ],
+    "7": [
+        "lda 0",
+        "addi 7"
+    ],
+    "8": [
+        "lda 0",
+        "addi 4",
+        "add acc"
+    ],
+    "9": [
+        "lda 0",
+        "addi 4",
+        "addi 5"
+    ],
+    "10": [
+        "lda 0",
+        "addi 5",
+        "add acc"
+    ],
+    "11": [
+        "lda 0",
+        "addi 6",
+        "addi 5"
+    ],
+    "12": [
+        "lda 0",
+        "addi 6",
+        "add acc"
+    ],
+    "13": [
+        "lda 0",
+        "addi 7",
+        "addi 6"
+    ],
+    "14": [
+        "lda 0",
+        "addi 7",
+        "add acc"
+    ],
+    "15": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "nand acc"
+    ],
+    "16": [
+        "lda 0",
+        "addi 2",
+        "addi 6",
+        "add acc"
+    ],
+    "17": [
+        "lda 0",
+        "addi 4",
+        "addi 6",
+        "addi 7"
+    ],
+    "18": [
+        "lda 0",
+        "addi 4",
+        "addi 5",
+        "add acc"
+    ],
+    "19": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 7"
+    ],
+    "20": [
+        "lda 0",
+        "addi 5",
+        "add acc",
+        "add acc"
+    ],
+    "21": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7"
+    ],
+    "22": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc"
+    ],
+    "23": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "24": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc"
+    ],
+    "25": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "nand acc"
+    ],
+    "26": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc"
+    ],
+    "27": [
+        "lda 0",
+        "addi -8",
+        "addi -6",
+        "add acc",
+        "nand acc"
+    ],
+    "28": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "29": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "30": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "addi 2",
+        "add acc"
+    ],
+    "31": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "32": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 4",
+        "add acc"
+    ],
+    "33": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "34": [
+        "lda 0",
+        "addi 5",
+        "add acc",
+        "addi 7",
+        "add acc"
+    ],
+    "35": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "36": [
+        "lda 0",
+        "addi 2",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "37": [
+        "lda 0",
+        "addi 4",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "addi 7"
+    ],
+    "38": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "addi 6",
+        "add acc"
+    ],
+    "39": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "addi -3"
+    ],
+    "40": [
+        "lda 0",
+        "addi 7",
+        "addi 7",
+        "addi 6",
+        "add acc"
+    ],
+    "41": [
+        "lda 0",
+        "addi 4",
+        "addi 5",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "42": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc"
+    ],
+    "43": [
+        "lda 0",
+        "addi -8",
+        "addi -3",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "44": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "45": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -7",
+        "add acc",
+        "nand acc"
+    ],
+    "46": [
+        "lda 0",
+        "addi -8",
+        "addi -4",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "47": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "48": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "49": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "50": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "51": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "52": [
+        "lda 0",
+        "addi 7",
+        "addi 6",
+        "add acc",
+        "add acc"
+    ],
+    "53": [
+        "lda 0",
+        "addi 7",
+        "addi 5",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "54": [
+        "lda 0",
+        "addi -8",
+        "addi -6",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "55": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "56": [
+        "lda 0",
+        "addi 7",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "57": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "58": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "59": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "60": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 6",
+        "add acc"
+    ],
+    "61": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "62": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "63": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "64": [
+        "lda 0",
+        "addi 4",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "65": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 2",
+        "addi 7"
+    ],
+    "66": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "67": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -6",
+        "add acc",
+        "nand acc"
+    ],
+    "68": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 5",
+        "add acc",
+        "add acc"
+    ],
+    "69": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 3",
+        "add acc",
+        "addi 7"
+    ],
+    "70": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 7",
+        "add acc"
+    ],
+    "71": [
+        "lda 0",
+        "addi 4",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "72": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "add acc"
+    ],
+    "73": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "addi 7"
+    ],
+    "74": [
+        "lda 0",
+        "addi 5",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "75": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "addi 7"
+    ],
+    "76": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 5",
+        "add acc",
+        "add acc"
+    ],
+    "77": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -7",
+        "add acc",
+        "nand acc"
+    ],
+    "78": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 5",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "79": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "80": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "81": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "82": [
+        "lda 0",
+        "addi 5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1",
+        "add acc"
+    ],
+    "83": [
+        "lda 0",
+        "addi 7",
+        "addi 3",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "84": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "85": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "86": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "addi -8",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "87": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "88": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "89": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "90": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc"
+    ],
+    "91": [
+        "lda 0",
+        "addi 5",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "92": [
+        "lda 0",
+        "addi 5",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -4"
+    ],
+    "93": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "94": [
+        "lda 0",
+        "addi 5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 7",
+        "add acc"
+    ],
+    "95": [
+        "lda 0",
+        "addi -4",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "96": [
+        "lda 0",
+        "addi 5",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "97": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "98": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "99": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "100": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "addi 7",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "101": [
+        "lda 0",
+        "addi 5",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "102": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 6"
+    ],
+    "103": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "104": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "105": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "106": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 2"
+    ],
+    "107": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "108": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc",
+        "add acc"
+    ],
+    "109": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "110": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 6"
+    ],
+    "111": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "112": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "113": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "114": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "115": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "116": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 4"
+    ],
+    "117": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "118": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 6"
+    ],
+    "119": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "120": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -6",
+        "add acc",
+        "add acc"
+    ],
+    "121": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "122": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "123": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "124": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -4"
+    ],
+    "125": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "126": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "127": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "128": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "129": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "130": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7",
+        "add acc"
+    ],
+    "131": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "132": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 5",
+        "add acc",
+        "add acc"
+    ],
+    "133": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "134": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -2"
+    ],
+    "135": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 7"
+    ],
+    "136": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "137": [
+        "lda 0",
+        "addi -8",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "138": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "139": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "140": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "add acc"
+    ],
+    "141": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "142": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -2"
+    ],
+    "143": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -1"
+    ],
+    "144": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "145": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "146": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 2"
+    ],
+    "147": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "148": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -4"
+    ],
+    "149": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "150": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "151": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "152": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "153": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "154": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "155": [
+        "lda 0",
+        "addi -7",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "156": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc",
+        "add acc"
+    ],
+    "157": [
+        "lda 0",
+        "addi -7",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "158": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "159": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "160": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "161": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "162": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "163": [
+        "lda 0",
+        "addi -8",
+        "addi -3",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "164": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -7",
+        "add acc",
+        "add acc"
+    ],
+    "165": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "166": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "167": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "168": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -6",
+        "add acc",
+        "add acc"
+    ],
+    "169": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -8",
+        "add acc",
+        "addi -7"
+    ],
+    "170": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "171": [
+        "lda 0",
+        "addi -8",
+        "addi -3",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 3"
+    ],
+    "172": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -5",
+        "add acc",
+        "add acc"
+    ],
+    "173": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "addi -8",
+        "add acc",
+        "addi -7"
+    ],
+    "174": [
+        "lda 0",
+        "addi 3",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "175": [
+        "lda 0",
+        "addi 3",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "176": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -8",
+        "add acc"
+    ],
+    "177": [
+        "lda 0",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "178": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -7",
+        "add acc"
+    ],
+    "179": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "180": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -6",
+        "add acc"
+    ],
+    "181": [
+        "lda 0",
+        "nand acc",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "182": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -5",
+        "add acc"
+    ],
+    "183": [
+        "lda 0",
+        "addi 4",
+        "addi 5",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "184": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -4",
+        "add acc"
+    ],
+    "185": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "186": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "187": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "188": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -8"
+    ],
+    "189": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "190": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -5",
+        "add acc"
+    ],
+    "191": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -1"
+    ],
+    "192": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "193": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "194": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -6"
+    ],
+    "195": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "196": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "add acc"
+    ],
+    "197": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "198": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "199": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "200": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "201": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "202": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi 5",
+        "add acc"
+    ],
+    "203": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "204": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc",
+        "add acc"
+    ],
+    "205": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 5"
+    ],
+    "206": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "nand acc",
+        "add acc"
+    ],
+    "207": [
+        "lda 0",
+        "addi 5",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "208": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc"
+    ],
+    "209": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc",
+        "add acc",
+        "addi 1"
+    ],
+    "210": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -7",
+        "add acc"
+    ],
+    "211": [
+        "lda 0",
+        "addi 4",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "212": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -6",
+        "add acc"
+    ],
+    "213": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "addi 7",
+        "add acc",
+        "nand acc"
+    ],
+    "214": [
+        "lda 0",
+        "addi -8",
+        "addi -6",
+        "addi -7",
+        "add acc"
+    ],
+    "215": [
+        "lda 0",
+        "addi 4",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "216": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -8"
+    ],
+    "217": [
+        "lda 0",
+        "addi -8",
+        "addi -8",
+        "add acc",
+        "addi -7"
+    ],
+    "218": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -3",
+        "add acc"
+    ],
+    "219": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "220": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc",
+        "addi -6"
+    ],
+    "221": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -7"
+    ],
+    "222": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -1",
+        "add acc"
+    ],
+    "223": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -5"
+    ],
+    "224": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "add acc"
+    ],
+    "225": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "add acc",
+        "addi -3"
+    ],
+    "226": [
+        "lda 0",
+        "addi -8",
+        "addi -7",
+        "add acc"
+    ],
+    "227": [
+        "lda 0",
+        "addi 7",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "228": [
+        "lda 0",
+        "addi -8",
+        "addi -6",
+        "add acc"
+    ],
+    "229": [
+        "lda 0",
+        "addi 6",
+        "addi 7",
+        "add acc",
+        "nand acc"
+    ],
+    "230": [
+        "lda 0",
+        "addi -8",
+        "addi -5",
+        "add acc"
+    ],
+    "231": [
+        "lda 0",
+        "addi 6",
+        "add acc",
+        "add acc",
+        "nand acc"
+    ],
+    "232": [
+        "lda 0",
+        "addi -6",
+        "add acc",
+        "add acc"
+    ],
+    "233": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -7"
+    ],
+    "234": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -6"
+    ],
+    "235": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "addi -7"
+    ],
+    "236": [
+        "lda 0",
+        "addi -8",
+        "addi -2",
+        "add acc"
+    ],
+    "237": [
+        "lda 0",
+        "addi -8",
+        "add acc",
+        "addi -3"
+    ],
+    "238": [
+        "lda 0",
+        "nand acc",
+        "addi -8",
+        "add acc"
+    ],
+    "239": [
+        "lda 0",
+        "addi -7",
+        "add acc",
+        "addi -3"
+    ],
+    "240": [
+        "lda 0",
+        "addi -8",
+        "add acc"
+    ],
+    "241": [
+        "lda 0",
+        "addi -8",
+        "addi -7"
+    ],
+    "242": [
+        "lda 0",
+        "addi -7",
+        "add acc"
+    ],
+    "243": [
+        "lda 0",
+        "addi -6",
+        "addi -7"
+    ],
+    "244": [
+        "lda 0",
+        "addi -6",
+        "add acc"
+    ],
+    "245": [
+        "lda 0",
+        "addi -7",
+        "addi -4"
+    ],
+    "246": [
+        "lda 0",
+        "addi -5",
+        "add acc"
+    ],
+    "247": [
+        "lda 0",
+        "nand acc",
+        "addi -8"
+    ],
+    "248": [
+        "lda 0",
+        "addi -8"
+    ],
+    "249": [
+        "lda 0",
+        "addi -7"
+    ],
+    "250": [
+        "lda 0",
+        "addi -6"
+    ],
+    "251": [
+        "lda 0",
+        "addi -5"
+    ],
+    "252": [
+        "lda 0",
+        "addi -4"
+    ],
+    "253": [
+        "lda 0",
+        "addi -3"
+    ],
+    "254": [
+        "lda 0",
+        "addi -2"
+    ],
+    "255": [
+        "lda 0",
+        "addi -1"
+    ]
+}

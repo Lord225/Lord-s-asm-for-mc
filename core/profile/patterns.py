@@ -31,6 +31,8 @@ class Pattern:
             return self.tokens[id]
         except IndexError:
             return None
+        except Exception as e:
+            raise Exception(f"Error while getting token at position {id}: {e}")
     
     def summarize(self):
         return ' '.join((token[1] for token in self.tokens))
@@ -61,11 +63,11 @@ class Pattern:
                 close_token = self.__get_token_str(i+4)
                 
                 if close_token is None or close_token != Pattern.ARGUMENT_END_SYMBOL:
-                    raise
+                    raise Exception(f"Expected '{Pattern.ARGUMENT_END_SYMBOL}' at position {i+4}")
                 if type_token is None or type_token == Pattern.ARGUMENT_END_SYMBOL:
-                    raise
+                    raise Exception(f"Expected argument type at position {i+3}")
                 if separator is None or separator != Pattern.TOKEN_SEPARATOR_SYMBOL:
-                    raise
+                    raise Exception(f"Expected '{Pattern.TOKEN_SEPARATOR_SYMBOL}' at position {i+2}")
 
                 self.arguments[next_token] = len(processed_tokens)
                 processed_tokens.append((TokenTypes.ARGUMENT, name_token, ArgumentTypes[type_token.upper()]))

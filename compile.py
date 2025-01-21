@@ -24,7 +24,7 @@ It will compile "program.lor" and save it in "output" dir.
 if emulation is avalible add --run to emulate compiled program and --logs to show instructions in console (if avalible)
 """)
 
-parser.add_argument("-i", "--input", type=str, default="./program.lor",
+parser.add_argument("-i", "--input", type=str, default="./src/program.lor",
 help="""Name of file to compile
 Default: src/program.lor""")
 
@@ -195,6 +195,12 @@ def on_compilation_error(err: error.CompilerError):
     print("*"*50) 
     print(f"Error in line {err.line}:" if err.line is not None else f"Error in unknown line:")
     print(f"{err.info}")
+    if err.line_object is not None:
+        if 'is_macro_expanded' in err.line_object:
+            print(f"This originates from macro expansion in line {err.line_object.line_index_in_file}:")
+            for line in err.line_object.expanded_command:
+                print(f"> {line}")
+            print(f">: {err.line_object.line}")
 
 def on_profile_error(err):
     print("*"*50)

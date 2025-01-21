@@ -1,3 +1,4 @@
+import logging
 from .base import *
 from . import tokenize as tokenize
 from . import match_commands as match_commands

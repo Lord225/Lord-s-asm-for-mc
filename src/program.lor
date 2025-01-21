@@ -1,6 +1,5 @@
-#profile potados
+#profile wvrn
 
-.CORE0 
-    int 0
-    jmp TEST
-TEST:
+.ENTRY
+LABEL:
+brc zero LABEL
