@@ -198,10 +198,14 @@ def generate_meta(nbtfile: nbt.NBTFile, blankschem: nbt.NBTFile):
     nbtfile.tags.append(metadata)
     return nbtfile
 
-def generate_schematic(data, layout, blankschem: nbt.NBTFile, low_state, high_state):
+def generate_schematic(data, layout, blankschem: nbt.NBTFile|str, low_state, high_state):
     nbtfile = nbt.NBTFile()
 
     nbtfile.name = "Schematic"
+
+    if isinstance(blankschem, str):
+        blankschem = nbt.NBTFile(blankschem, "rb")
+    
 
     nbtfile, low_id, high_id = generate_palette(nbtfile, blankschem, low_state, high_state)
 

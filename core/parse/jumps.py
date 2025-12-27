@@ -45,7 +45,7 @@ def check_for_new_section(line_obj):
     
     return None  
 
-def find_labels(program, context: Context):
+def find_labels_remove(program, context: Context):
     find_labels = patterns.Pattern("{label:token}:")
     context.labels = dict()
     output = list()
@@ -63,6 +63,24 @@ def find_labels(program, context: Context):
             output.append(line_obj)
     return output, context
 
+def find_labels(program, context: Context):
+    find_labels = patterns.Pattern("{label:token}:")
+    context.labels = dict()
+    output = list()
+    
+    for line_obj in program:
+        label = match_expr.match_expr(find_labels, line_obj, None)
+        if label is not None:
+            logging.debug(f"Matched label in line {line_obj}: {label}")
+            if 'label' not in label:
+                raise error.ParserError(line_obj.line_index_in_file, f"Cannot find label '{label}'")
+            if label['label'] in context.labels:
+                raise error.ParserError(line_obj.line_index_in_file, f"Label '{label['label']}' is not unique")
+            context.labels[label['label']] = len(output)+1
+
+        output.append(line_obj)
+    return output, context
+
 
 def check_section_exists(context: Context):
     profilekeywords = set(context.get_profile().entrypoints)
@@ -76,6 +94,33 @@ def check_section_exists(context: Context):
             raise error.ParserError(None, msg)
         else:
             context.warnings.append(msg)
+
+def find_sections_remove(program, context: Context):
+    output = list()
+    current_section = SectionMeta('default', 0, 0)
+    keysections = {name: SectionMeta(name, val['offset'], val['write']) for name, val in context.get_profile().entrypoints.items()}
+    context.sections = {'default': current_section}
+    
+    for line_obj in program:
+        section = check_for_new_section(line_obj)
+
+        if section is not None:
+            current_section = section
+
+            if current_section.name in keysections:
+                context.sections[current_section.name] = keysections[current_section.name]
+                context.sections[current_section.name].override(current_section)
+            else:
+                context.sections[current_section.name] = current_section
+            
+        else:
+            output.append(line_obj)
+
+        line_obj.section = current_section
+    
+    check_section_exists(context)
+        
+    return output, context
 
 def find_sections(program, context: Context):
     output = list()
@@ -95,9 +140,7 @@ def find_sections(program, context: Context):
             else:
                 context.sections[current_section.name] = current_section
             
-                
-        else:
-            output.append(line_obj)
+        output.append(line_obj)
 
         line_obj.section = current_section
     

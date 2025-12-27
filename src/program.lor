@@ -1,5 +1,17 @@
-#profile wvrn
+#profile potados
 
-.ENTRY
-LABEL:
-brc zero LABEL
+#define STACK_BASE 0x0100 
+
+// Sorting settings
+#define ARRAY_SIZE 0x0010
+
+#define INSERTION_TRESHOLD 14 // (8/16/32) depend on data
+
+//#define USE_QUICK_SORT
+//#define USE_INSERTION
+#define USE_QUICKER_SORT
+
+.CORE0
+    mov reg[1], 11
+    mov reg[2], 10
+    add reg[3], reg[1], reg[2]

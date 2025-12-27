@@ -9,10 +9,9 @@
                     "save": "bin"
                 },
                 "data": {
-
                 }
             },
-            "path": "wvrn"
+            "path": "wvrn ./out/compiled.bin"
         },
         "time_per_cycle": 2.0,
         "ARGUMENTS": {

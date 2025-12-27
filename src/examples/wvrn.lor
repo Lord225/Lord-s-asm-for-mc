@@ -1,16 +1,5 @@
 #profile wvrn
 
 .ENTRY
-lim 8
-nop
-nop
-nop
-nop
-nop
-nop
-nop
 LABEL:
-nop
-nop
-nop
 jmp LABEL

@@ -94,8 +94,8 @@ def make_parser_pipeline() -> List[Tuple[str, Callable]]:
 
             ('apply consts', preprocesor.definitions.apply_consts),
             ('tokenize lines', parse.tokenize.tokenize),
-            ('find sections', parse.jumps.find_sections),
-            ('find labels', parse.jumps.find_labels),
+            ('find sections remove', parse.jumps.find_sections_remove),
+            ('find labels remove', parse.jumps.find_labels_remove),
             
             ('find commands', parse.match_commands.find_commands),
             ('add debug data', parse.debug_heades.add_debug_metadata),

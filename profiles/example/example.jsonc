@@ -44,8 +44,8 @@
 
         "KEYWORDS":{
             "CORE0":{ // Expects .CORE0, defaults offset & write to 0 for this section
-                "offset":0,
-                "write":0
+                "offset":0, // First adress of this section (for labels)
+                "write":0   // Physical address to write to
             }
         },
 
